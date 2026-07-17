@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SwipeFit</title>
+  <meta name="description" content="Swipe through exercises: right to save, left to skip. Your conditions filter risky movements out before you see them.">
+  <meta name="theme-color" content="#101216">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" href="./icon-192.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SwipeFit">
+  <script>
+    // Resolve the theme before styles paint to avoid a light/dark flash.
+    try {
+      var saved = JSON.parse(localStorage.getItem("swipefit") || "{}");
+      var mode = saved.theme === "light" || saved.theme === "dark" ? saved.theme
+        : (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.dataset.theme = mode;
+    } catch (e) { document.documentElement.dataset.theme = "light"; }
+  </script>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <span class="wordmark">Swipe<span class="wordmark-volt">Fit</span></span>
+    </header>
+
+    <main id="main">
+      <!-- ───────────── Setup / Filters ───────────── -->
+      <section id="screen-filters" class="screen">
+        <h1 class="screen-title">Build today's deck</h1>
+        <p class="screen-sub">Pick what to train and what to protect. Only exercises your body can handle make it into the deck.</p>
+
+        <div class="filter-head">
+          <span class="eyebrow">Today's muscles</span>
+          <span class="chip-tools">
+            <button id="btn-groups-all" class="text-btn" type="button">All</button>
+            <span aria-hidden="true">·</span>
+            <button id="btn-groups-none" class="text-btn" type="button">None</button>
+          </span>
+        </div>
+        <div id="group-chips" class="chip-row" role="group" aria-label="Muscle groups"></div>
+        <p class="hint">Nothing selected means every group is in.</p>
+
+        <div class="filter-head protect-head">
+          <span class="eyebrow">Protect</span>
+        </div>
+        <p class="hint">Toggle a condition and every exercise flagged for it is removed from the deck before you ever see it.</p>
+        <div id="condition-chips" class="chip-row" role="group" aria-label="Conditions to avoid"></div>
+
+        <button id="btn-start" class="cta" type="button">
+          <span>Start swiping</span>
+          <span id="match-count" class="cta-count"></span>
+        </button>
+      </section>
+
+      <!-- ───────────── Swipe deck ───────────── -->
+      <section id="screen-deck" class="screen screen-deck" hidden>
+        <div class="deck-top">
+          <span class="eyebrow">The deck</span>
+          <span id="deck-counter" class="deck-counter" aria-live="polite"></span>
+        </div>
+
+        <div id="deck-stage" class="deck-stage">
+          <div id="deck-nodeck" class="deck-message">
+            <span class="deck-message-emoji">🎛️</span>
+            <h2>No deck yet</h2>
+            <p>Pick today's muscles and conditions, then deal the cards.</p>
+            <button id="btn-nodeck-filters" class="cta" type="button">Set up the deck</button>
+          </div>
+          <div id="deck-empty" class="deck-message" hidden>
+            <span class="deck-message-emoji">🏁</span>
+            <h2>You've been through them all!</h2>
+            <p>Every card in this deck has been swiped. Nice work.</p>
+            <button id="btn-empty-routine" class="cta" type="button">See My Routine</button>
+            <button id="btn-empty-filters" class="secondary-btn" type="button">Change filters</button>
+          </div>
+        </div>
+
+        <div class="deck-actions">
+          <button id="btn-skip" class="action-btn action-skip" type="button" aria-label="Skip this exercise (swipe left)">✕</button>
+          <button id="btn-undo" class="action-btn action-undo" type="button" aria-label="Undo last swipe">↺</button>
+          <button id="btn-save" class="action-btn action-save" type="button" aria-label="Save to My Routine (swipe right)">✓</button>
+        </div>
+        <p class="deck-hint">Drag right to save · left to skip · tap a card for details</p>
+      </section>
+
+      <!-- ───────────── My Routine ───────────── -->
+      <section id="screen-routine" class="screen" hidden>
+        <div class="screen-head-row">
+          <h1 class="screen-title">My Routine</h1>
+          <span id="routine-count" class="count-pill"></span>
+        </div>
+        <div id="routine-empty" class="deck-message routine-empty">
+          <span class="deck-message-emoji">🃏</span>
+          <h2>Nothing saved yet</h2>
+          <p>Swipe right on the exercises you want and they'll collect here, grouped by muscle.</p>
+          <button id="btn-routine-swipe" class="cta" type="button">Go swipe</button>
+        </div>
+        <div id="routine-groups"></div>
+        <button id="btn-clear-routine" class="danger-link" type="button" hidden>Clear all &amp; start over</button>
+      </section>
+
+      <!-- ───────────── Settings / About ───────────── -->
+      <section id="screen-settings" class="screen" hidden>
+        <h1 class="screen-title">Settings</h1>
+
+        <div class="setting-block">
+          <span class="eyebrow">Appearance</span>
+          <div class="seg" role="group" aria-label="Theme">
+            <button class="seg-btn" data-theme-choice="system" type="button">System</button>
+            <button class="seg-btn" data-theme-choice="light" type="button">Light</button>
+            <button class="seg-btn" data-theme-choice="dark" type="button">Dark</button>
+          </div>
+        </div>
+
+        <div class="setting-block">
+          <span class="eyebrow">Deck</span>
+          <button id="btn-open-filters" class="secondary-btn" type="button">Edit muscles &amp; conditions</button>
+        </div>
+
+        <div class="setting-block">
+          <span class="eyebrow">Your data</span>
+          <button id="btn-export" class="secondary-btn" type="button">Export my data (JSON)</button>
+          <p class="hint">Everything lives in this browser's storage — clearing site data wipes it. The export file is your only backup.</p>
+        </div>
+
+        <div class="setting-block">
+          <span class="eyebrow">About</span>
+          <p id="about-stats" class="hint"></p>
+          <p class="hint">SwipeFit is a personal filtering tool, not medical advice. The condition tags are conservative defaults, not a professional assessment — listen to your own body and your doctor.</p>
+        </div>
+      </section>
+    </main>
+
+    <nav class="tabbar" aria-label="Screens">
+      <button class="tab-btn" data-screen="filters" type="button"><span class="tab-ico" aria-hidden="true">🎛️</span><span>Setup</span></button>
+      <button class="tab-btn" data-screen="deck" type="button"><span class="tab-ico" aria-hidden="true">🔥</span><span>Swipe</span></button>
+      <button class="tab-btn" data-screen="routine" type="button"><span class="tab-ico" aria-hidden="true">📋</span><span>Routine</span></button>
+      <button class="tab-btn" data-screen="settings" type="button"><span class="tab-ico" aria-hidden="true">⚙️</span><span>Settings</span></button>
+    </nav>
+  </div>
+
+  <div id="modal" class="modal-backdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <h2 id="modal-title"></h2>
+      <p id="modal-text"></p>
+      <div class="modal-actions">
+        <button id="modal-cancel" class="secondary-btn" type="button">Cancel</button>
+        <button id="modal-confirm" class="danger-btn" type="button">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <noscript><p style="padding:2rem;text-align:center">SwipeFit needs JavaScript — everything runs on your device, nothing is sent anywhere.</p></noscript>
+
+  <script src="./exercises.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
