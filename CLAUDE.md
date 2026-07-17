@@ -33,7 +33,10 @@ exercises from the deck before the user ever sees them.
 
 - Validate dataset: `node validate.js`
 - Serve locally (service worker needs HTTP): `python -m http.server 8642` from this folder
-- Deploy: drag the folder onto Netlify Drop, or push to GitHub Pages. All paths are relative, so subpath hosting works.
+- Deploy: live at <https://dirkragesmith.github.io/swipefit/>, served from the `gh-pages`
+  branch of <https://github.com/DirkRageSmith/swipefit>. To ship: `git push origin main main:gh-pages`
+  (push BOTH branches or the site goes stale). All paths are relative, so subpath hosting works.
+- Commits use the GitHub no-reply author email (repo-local git config) — keep it that way; the repo is public.
 
 ## Smoke-test checklist (run at the end of every session)
 

@@ -10,12 +10,8 @@ runs in your browser and stays on your device.
 
 ## Install on your phone
 
-The app needs to be opened from a real web address (https) for install + offline to
-work properly. The easiest way to get one:
-
-1. Zip or drag this whole folder onto **Netlify Drop** — <https://app.netlify.com/drop> —
-   (free, no account needed for a temporary site), or publish it with **GitHub Pages**.
-2. Open the resulting URL on your phone, then:
+**The app is live at <https://dirkragesmith.github.io/swipefit/>** (GitHub Pages,
+deployed from this repo). Open that URL on your phone, then:
 
 **iPhone (Safari):** tap the **Share** button (square with an up arrow) → scroll down →
 **Add to Home Screen** → **Add**. iOS doesn't show an install prompt on its own — this
