@@ -102,6 +102,14 @@ that select an equipment bundle (Phase B), never per-exercise tags. Split today'
 over-broad "Bodyweight": true floor moves = `["bodyweight"]`, but pull-ups/chin-ups/
 hanging raises = `["pull-up-bar"]`.
 
+**Canonical meanings (decided during the Back batch — resolve stand-ins with these):**
+- **`bench` = any sturdy elevated surface** (flat bench, box, step, chair, solid table).
+  Covers: press on it, step on it, elevate your feet, dip *between two*, and grip/*row
+  under* it. So inverted/table rows and bench/chair dips are `["bench"]` — not a gap.
+- **Pull-anchor rule:** overhead bar → `pull-up-bar`; suspension straps → `trx`; a sturdy
+  surface → `bench`; improvised (towel on a door) → `bodyweight`. There is no separate
+  `low-bar`/`dip-bars`/`rings` id — collapse those into `bench`/`pull-up-bar`/`trx`.
+
 ### 5b. Additive metadata (fill for ALL exercises, including the existing 170)
 
 Today's app ignores these; Phases C–F switch them on. They are **recommended, not
@@ -148,6 +156,10 @@ Not now — but the field is here so we never have to migrate for it.
   `Full Body/Cardio` + `["Quads","Shoulders", ...]`. This keeps the deck predictable.
   (Open app-logic question for Phase B: whether a muscle filter optionally *also* surfaces
   exercises that hit it as a secondary — a UI toggle, not a schema change.)
+  **Forearms/grip is deliberately NOT a group yet** — adding it now would create an empty
+  group (fails the ≥5 check) and a dead filter chip. Don't use `"Forearms"` as a muscle
+  tag; map grip-heavy moves' secondary to `"Biceps"` or omit. Add a Forearms group later,
+  together with a grip/forearm exercise section, so it launches populated.
 - `CONDITIONS` stays the 9 existing ids (`lower-back`, `knee`, `shoulder`, `wrist`,
   `neck`, `hip`, `high-impact`, `balance`, `pregnancy`). `avoidIf` = array of these.
 - `difficulty` ∈ `Beginner` | `Intermediate` | `Advanced`.
