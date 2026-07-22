@@ -102,7 +102,10 @@ hanging raises = `["pull-up-bar"]`.
 
 ### 5b. Additive metadata (fill for ALL exercises, including the existing 170)
 
-Today's app ignores these; Phases C–F switch them on. Keep them honest and taggable:
+Today's app ignores these; Phases C–F switch them on. They are **recommended, not
+hard-required** — `validate.js` only *warns* on a missing/blank metadata field, so a batch
+that fumbles one still integrates (only the §5c structural/safety fields fail the build).
+Keep them honest and taggable:
 
 - `mechanic`: `"Compound"` | `"Isolation"`
 - `pattern`: one of `"Horizontal Push"`, `"Vertical Push"`, `"Horizontal Pull"`,
@@ -112,15 +115,37 @@ Today's app ignores these; Phases C–F switch them on. Keep them honest and tag
 - `unilateral`: `true` | `false` (one side at a time?)
 - `focus`: array, subset of `["strength","hypertrophy","endurance","power","mobility"]`
 - `homeFriendly`: `true` | `false` (doable with dumbbells/bench/bodyweight only)
+- `aliases`: array of common alternate names, e.g.
+  `["DB Incline Press", "Incline DB Press", "Incline Dumbbell Press"]`. Add it now while
+  the set is small — search, NL queries ("dumbbell chest press"), voice, and AI
+  substitution all need it, and without it we'd write special-case matching code forever.
+- `category`: `"strength"` (default) | `"conditioning"` | `"stretch"` | `"mobility"` |
+  `"warmup"` | `"cooldown"` | `"rehab"` | `"carry"`. For the ~500 deck this is `"strength"`
+  for almost everything and `"conditioning"`/`"carry"` for the Full Body/Cardio group. It
+  exists now so the future library (§5d) never needs a schema change.
 
 **Deliberately NOT tagged** (fake precision — keep the data trustworthy): calories,
 exact setup time, range-of-motion degrees, "strength curve." If we ever want workout
 duration we'll estimate it from set/rep/rest at generation time, not per-exercise guesses.
 
+### 5d. Future: the library grows to ~1,200 via `category` (no schema change)
+
+The ~500 deck is **Exercise DB v1** — all `category: "strength"`/`"conditioning"`. The
+schema already supports growing it, as a *later* data phase, into a full training
+reference without touching code: ~150 rehab/prehab, ~150 stretches, ~100 mobility drills,
+~75 warm-ups, ~75 cooldowns, ~100 carries/conditioning → ~1,100–1,200 total. Still tiny
+next to commercial DBs, and it's all just more rows behind the same `category` filter.
+Not now — but the field is here so we never have to migrate for it.
+
 ### 5c. Unchanged contracts
 
 - `MUSCLE_GROUPS` stays the 11 existing names. `muscleGroup` = one; `secondaryMuscles` =
-  array, all from the 11.
+  array, all from the 11. **Rule:** `muscleGroup` is the *primary training stimulus a user
+  thinks of when searching for the exercise*; `secondaryMuscles` captures every other
+  meaningful contributor. So pull-ups = `Back` + `["Biceps", ...]`, thrusters =
+  `Full Body/Cardio` + `["Quads","Shoulders", ...]`. This keeps the deck predictable.
+  (Open app-logic question for Phase B: whether a muscle filter optionally *also* surfaces
+  exercises that hit it as a secondary — a UI toggle, not a schema change.)
 - `CONDITIONS` stays the 9 existing ids (`lower-back`, `knee`, `shoulder`, `wrist`,
   `neck`, `hip`, `high-impact`, `balance`, `pregnancy`). `avoidIf` = array of these.
 - `difficulty` ∈ `Beginner` | `Intermediate` | `Advanced`.
@@ -128,20 +153,44 @@ duration we'll estimate it from set/rep/rest at generation time, not per-exercis
 
 ---
 
-## 6. ⭐ DELEGATED TASK — the ~500-exercise deck (copy this section to ChatGPT)
+## 6. ⭐ DELEGATED TASK — the ~500-exercise deck (for ChatGPT)
 
-> **Brief for ChatGPT.** Generate a fresh SwipeFit exercise library of **~500 real,
-> common exercises** as one JavaScript array literal named `EXERCISES`, ready to paste
-> into `exercises.js`. Every object must have **exactly these keys** and obey every rule.
-> Output only the array (plus, if you like, the `MUSCLE_GROUPS`/`EQUIPMENT`/`CONDITIONS`
-> arrays above it). Do not add prose between objects.
+### 6.1 Production pipeline (batches, not one blob)
+
+Don't generate 500 in one shot — it won't fit reliably and one fix later is painful.
+Build it like a data project:
+
+1. **Constitution** — the taxonomy is fixed in §5 (11 groups, 15 equipment ids, 12
+   patterns, 5 focuses, 9 injury tags, difficulty + naming + de-dup rules). Nothing gets
+   generated until those enums are the shared reference.
+2. **Pilot batch — Chest (48) FIRST.** ChatGPT generates just Chest; Matt pastes it here;
+   Claude format-proofs it against the real schema (a scratch `validate` run) and fixes
+   the spec if anything's off. This catches a spec bug at 48 objects instead of 500. Do
+   **not** deploy the pilot — it only proves the pipeline.
+3. **Remaining batches** — one muscle group per response (table below), each self-QA'd by
+   ChatGPT before it's handed over.
+4. **Cross-batch QA** (ChatGPT, before Claude sees the full set): duplicate ids, duplicate
+   moves under different names, inconsistent injury tags, wrong patterns, impossible
+   equipment/`homeFriendly` combos, missing metadata, difficulty + muscle-balance skew.
+5. **Integration** (Claude) — §6.3.
+
+Copy the brief in §6.2 into ChatGPT. Run it once per muscle group.
+
+> **Brief for ChatGPT.** Generate one muscle-group batch of the SwipeFit exercise library
+> as a JavaScript array of objects, ready to paste into `exercises.js`. **Do Chest first
+> as a pilot; wait for the go-ahead before the other groups.** Every object must have
+> **exactly these keys** and obey every rule. Output only the array; no prose between
+> objects.
 >
-> **Object shape (all keys required):**
+> **Object shape.** The first 10 keys are REQUIRED (a missing/invalid one fails the
+> build). The rest are RECOMMENDED — fill them, but a slip only produces a validator
+> warning, not a failure:
 > ```js
 > {
+>   // ── REQUIRED (hard-validated) ──
 >   id: "db-incline-bench-press",         // permanent, unique, kebab-case ^[a-z0-9-]+$
 >   name: "Incline Dumbbell Bench Press",
->   muscleGroup: "Chest",                 // exactly one of the 11 groups
+>   muscleGroup: "Chest",                 // exactly one of the 11 groups (primary stimulus)
 >   secondaryMuscles: ["Shoulders", "Triceps"], // subset of the 11 groups (may be [])
 >   equipment: ["dumbbell", "bench"],     // array of EQUIPMENT ids; ["bodyweight"] if none
 >   difficulty: "Intermediate",           // Beginner | Intermediate | Advanced
@@ -149,12 +198,15 @@ duration we'll estimate it from set/rep/rest at generation time, not per-exercis
 >   description: "Two sentences: setup/execution, then the most common mistake.",
 >   avoidIf: ["shoulder"],                // subset of the 9 condition ids (may be [])
 >   icon: "🏋️",                           // one emoji
+>   // ── RECOMMENDED (soft-validated: warn only) ──
 >   mechanic: "Compound",                 // Compound | Isolation
 >   pattern: "Horizontal Push",           // one of the 12 patterns in §5b
 >   force: "Push",                        // Push | Pull | Static | Explosive
 >   unilateral: false,
 >   focus: ["strength", "hypertrophy"],   // subset of the 5 focuses in §5b
->   homeFriendly: false                   // true iff doable with only dumbbell/bench/bodyweight
+>   homeFriendly: false,                  // true iff doable with only dumbbell/bench/bodyweight
+>   aliases: ["Incline DB Press", "Incline Dumbbell Press"], // common alternate names
+>   category: "strength"                  // strength (default) | conditioning | carry | ...
 > }
 > ```
 >
@@ -188,19 +240,23 @@ duration we'll estimate it from set/rep/rest at generation time, not per-exercis
 >
 > Spread across ALL the equipment types (not just dumbbells) and all three difficulties.
 > Include real variations: grips, angles, tempos, unilateral versions, banded/cable/
-> machine/kettlebell/TRX variants. No duplicate ids. Keep `cue` to one line and
-> `description` to ~two sentences. **Do not invent calories, setup time, ROM degrees, or
-> "strength curve" — those keys are intentionally absent.** Produce the whole array in one
-> go (or clearly numbered batches by muscle group that concatenate cleanly).
+> machine/kettlebell/TRX variants. Keep `cue` to one line and `description` to ~two
+> sentences. **Do not invent calories, setup time, ROM degrees, or "strength curve" —
+> those keys are intentionally absent.** Produce **one muscle group per response** (Chest
+> first as the pilot). Ids must be unique within the batch **and** globally across batches;
+> before finishing a batch, self-check for duplicate ids and for the same movement appearing
+> under two names.
 
-### Handback → integration (Claude does this)
+### 6.3 Handback → integration (Claude does this)
 
-1. Drop GPT's array into `exercises.js`; extend `EQUIPMENT` to the §5a list; add the
-   metadata fields to the exports.
-2. Update `validate.js`: `equipment` is now an array (each ∈ EQUIPMENT), validate the new
-   enum fields, raise the size bound to ~400–600, keep the ≥5-per-group and
-   avoidIf-∈-conditions checks. Run it — **data doesn't ship until `node validate.js` is
-   green.**
+1. Drop GPT's arrays into `exercises.js`; extend `EQUIPMENT` to the §5a list; add
+   `aliases`/`category` and the other metadata to the exports.
+2. Update `validate.js`: **hard-fail** on the §5c core (ids unique + kebab-case,
+   `equipment` an array of valid ids, group/condition/difficulty enums, all required keys
+   present); **warn-only** on missing/invalid metadata (§5b) and print coverage (per-group,
+   per-equipment, per-category, metadata completeness). Raise the size bound to ~400–600;
+   keep the ≥5-per-group and avoidIf-∈-conditions checks. **Data doesn't ship until the
+   hard checks are green.**
 3. Migrate the filter to the superset test (§5a); bump `schemaVersion` → 3 with a
    migration; rebuild the gear filter UI from the new `EQUIPMENT` (+ location presets in
    Phase B). Reconcile the user's saved routine by matching old ids/names where possible;
@@ -213,8 +269,10 @@ duration we'll estimate it from set/rep/rest at generation time, not per-exercis
 ## 7. Tier 1 roadmap (sequenced — build in this order)
 
 **Phase A — Data & schema (unblocks everything).**
-GPT delivers the ~500 deck (§6); Claude integrates (§5, §6 handback). Ships the richer
-library + array-based gear model. *Do this first.*
+ChatGPT delivers the ~500 deck as per-group batches, Chest first as a pilot (§6.1); Claude
+format-proofs the pilot, then integrates the full set (§5, §6.3). Ships the richer library,
+the array-based gear model, and `aliases`/`category` (the latter future-proofs the ~1,200
+DB in §5d). *Do this first.*
 
 **Phase B — Onboarding & personalization axes.**
 Turn setup into a short, swipe-friendly questionnaire that sets the filters we already
