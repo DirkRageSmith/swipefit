@@ -1,7 +1,7 @@
 /*
- * SwipeFit dataset. Chest, Back, Shoulders fully produced (all equipment types). Remaining
- * groups are placeholders carried from the original 170 (equipment normalized to arrays),
- * replaced batch by batch. equipment = array of EQUIPMENT ids. Run `node validate.js`.
+ * SwipeFit dataset. Chest, Back, Shoulders, Biceps fully produced (all equipment types).
+ * Remaining groups are placeholders carried from the original 170 (equipment normalized to
+ * arrays), replaced batch by batch. equipment = array of EQUIPMENT ids. Run `node validate.js`.
  */
 
 const MUSCLE_GROUPS = [
@@ -5019,7 +5019,61 @@ const EXERCISES = [
     "category": "conditioning"
   },
   {
-    "id": "db-curl",
+    "id": "underhand-towel-curl",
+    "name": "Underhand Towel Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Grip a towel and curl against your own opposing hand resistance.",
+    "description": "Create tension through the biceps without external weight. Avoid using body momentum instead of controlled resistance.",
+    "avoidIf": [],
+    "icon": "🧺",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Self Resistance Towel Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "self-resisted-biceps-curl",
+    "name": "Self-Resisted Biceps Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Use one arm to resist the curling motion of the other arm.",
+    "description": "Match resistance between your arms throughout the movement. Avoid relaxing tension at the bottom.",
+    "avoidIf": [],
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bodyweight Biceps Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-biceps-curl",
     "name": "Dumbbell Biceps Curl",
     "muscleGroup": "Biceps",
     "secondaryMuscles": [],
@@ -5027,101 +5081,161 @@ const EXERCISES = [
       "dumbbell"
     ],
     "difficulty": "Beginner",
-    "cue": "Elbows pinned to your sides; curl up, lower for a slow three-count.",
-    "description": "Curl a dumbbell in each hand to your shoulders without letting your elbows drift forward or your torso swing. The lowering half is where the growth is, so take it slow.",
+    "cue": "Curl the dumbbells upward while keeping your elbows near your sides.",
+    "description": "Lower the weights slowly after each repetition. Avoid swinging your torso to lift the dumbbells.",
     "avoidIf": [],
-    "icon": "💪"
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Curl",
+      "Dumbbell Curl"
+    ],
+    "category": "strength"
   },
   {
-    "id": "hammer-curl",
-    "name": "Hammer Curl",
+    "id": "dumbbell-hammer-curl",
+    "name": "Dumbbell Hammer Curl",
     "muscleGroup": "Biceps",
     "secondaryMuscles": [],
     "equipment": [
       "dumbbell"
     ],
     "difficulty": "Beginner",
-    "cue": "Palms facing each other the whole rep, like swinging a hammer.",
-    "description": "A curl with a neutral grip — palms facing your body throughout — that hits the brachialis and forearms and is the most wrist-friendly curl for most people. Same rules: elbows glued to your ribs, no swinging.",
+    "cue": "Curl the dumbbells with palms facing each other.",
+    "description": "Maintain a neutral wrist position throughout the curl. Avoid letting your elbows drift forward.",
     "avoidIf": [],
-    "icon": "🔨"
+    "icon": "🔨",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Hammer Curl"
+    ],
+    "category": "strength"
   },
   {
-    "id": "concentration-curl",
-    "name": "Concentration Curl",
+    "id": "dumbbell-concentration-curl",
+    "name": "Dumbbell Concentration Curl",
     "muscleGroup": "Biceps",
     "secondaryMuscles": [],
     "equipment": [
       "dumbbell"
     ],
     "difficulty": "Beginner",
-    "cue": "Elbow braced against your inner thigh — nothing moves but the forearm.",
-    "description": "Seated, lean forward and brace your elbow against your inner thigh, then curl a single dumbbell with total strictness. The bracing removes every cheat, so the weight will be humbling.",
+    "cue": "Brace your arm against your inner thigh and curl slowly.",
+    "description": "Focus on squeezing the biceps through the full movement. Avoid rotating your shoulder to assist.",
     "avoidIf": [],
-    "icon": "💪"
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Concentration DB Curl"
+    ],
+    "category": "strength"
   },
   {
-    "id": "incline-db-curl",
+    "id": "incline-dumbbell-curl",
     "name": "Incline Dumbbell Curl",
     "muscleGroup": "Biceps",
     "secondaryMuscles": [],
     "equipment": [
-      "dumbbell"
+      "dumbbell",
+      "bench"
     ],
     "difficulty": "Intermediate",
-    "cue": "Lie back on an incline bench and let your arms hang behind your body line.",
-    "description": "Curling while lying back on a 45–60° incline bench puts the biceps under stretch at the bottom, letting the arms hang fully. Skip it if the stretched shoulder position feels tweaky at the front.",
-    "avoidIf": [
-      "shoulder"
-    ],
-    "icon": "💪"
-  },
-  {
-    "id": "db-preacher-bench-curl",
-    "name": "Bench Preacher Curl",
-    "muscleGroup": "Biceps",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Drape your arm over the incline bench back; curl with no swing.",
-    "description": "Set the bench upright and drape your upper arm over the top of the backrest, then curl a dumbbell with the arm fully supported. The pad kills momentum and stretches the biceps hard — lower under control and stop short of a locked elbow.",
-    "avoidIf": [
-      "wrist"
-    ],
-    "icon": "💪"
-  },
-  {
-    "id": "db-spider-curl",
-    "name": "Spider Curl",
-    "muscleGroup": "Biceps",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Chest on an incline bench, arms hanging straight down; curl up.",
-    "description": "Lie chest-down on an incline bench with your arms hanging straight toward the floor and curl the dumbbells up. Hanging vertically keeps tension on the biceps through the whole rep with zero body english.",
+    "cue": "Curl from a stretched position while seated on an incline bench.",
+    "description": "Control the bottom stretch before curling upward. Avoid letting your shoulders roll forward.",
     "avoidIf": [],
-    "icon": "🕷️"
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Incline DB Curl"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-zottman-curl",
-    "name": "Zottman Curl",
+    "id": "spider-dumbbell-curl",
+    "name": "Spider Dumbbell Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Curl dumbbells while lying chest-down on an incline bench.",
+    "description": "Keep the upper arms fixed while squeezing the biceps. Avoid allowing your shoulders to move.",
+    "avoidIf": [],
+    "icon": "🕷️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Spider Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "zottman-dumbbell-curl",
+    "name": "Zottman Dumbbell Curl",
     "muscleGroup": "Biceps",
     "secondaryMuscles": [],
     "equipment": [
       "dumbbell"
     ],
     "difficulty": "Intermediate",
-    "cue": "Curl up palms-up, rotate to palms-down, lower slowly.",
-    "description": "Curl the dumbbells up with palms facing up, rotate at the top so your palms face down, then lower slowly in that grip. You get a biceps curl on the way up and a forearm-building reverse curl on the way down.",
+    "cue": "Curl with palms up and lower with palms facing down.",
+    "description": "Control the lowering phase to train both biceps and forearms. Avoid rushing the rotation.",
     "avoidIf": [],
-    "icon": "🔄"
+    "icon": "🔄",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Zottman Curl"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-cross-curl",
+    "id": "cross-body-hammer-curl",
     "name": "Cross-Body Hammer Curl",
     "muscleGroup": "Biceps",
     "secondaryMuscles": [],
@@ -5129,76 +5243,107 @@ const EXERCISES = [
       "dumbbell"
     ],
     "difficulty": "Beginner",
-    "cue": "Curl each dumbbell across your body toward the opposite shoulder.",
-    "description": "With a neutral grip, curl each dumbbell diagonally across your body toward the opposite shoulder, alternating arms. The cross-body path emphasises the brachialis and the thickness of the upper arm.",
+    "cue": "Curl the dumbbell diagonally toward the opposite shoulder.",
+    "description": "Keep your elbow controlled as you cross the body. Avoid twisting your torso.",
     "avoidIf": [],
-    "icon": "💪"
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Cross Body DB Hammer Curl"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-drag-curl",
+    "id": "dumbbell-drag-curl",
     "name": "Dumbbell Drag Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drag the dumbbells upward while keeping elbows behind your torso.",
+    "description": "Focus on squeezing the biceps in the shortened position. Avoid turning it into a standard curl.",
+    "avoidIf": [],
+    "icon": "⬆️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Drag Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "reverse-dumbbell-curl",
+    "name": "Reverse Dumbbell Curl",
     "muscleGroup": "Biceps",
     "secondaryMuscles": [],
     "equipment": [
       "dumbbell"
     ],
     "difficulty": "Intermediate",
-    "cue": "Drag the dumbbells straight up your torso, elbows drifting back.",
-    "description": "Curl the dumbbells while dragging them up close to your body, letting your elbows travel backward instead of staying pinned. The path keeps the biceps working without the shoulders taking over — expect to use less weight.",
-    "avoidIf": [],
-    "icon": "💪"
-  },
-  {
-    "id": "db-reverse-curl",
-    "name": "Reverse Curl",
-    "muscleGroup": "Biceps",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Palms facing down; curl up keeping the knuckles high.",
-    "description": "Curl the dumbbells with an overhand (palms-down) grip, which shifts work onto the forearms and the outer biceps. Go lighter than a normal curl — the grip is much weaker this way.",
+    "cue": "Curl dumbbells with palms facing downward.",
+    "description": "Keep your wrists neutral throughout the movement. Avoid bending your wrists backward.",
     "avoidIf": [
       "wrist"
     ],
-    "icon": "💪"
+    "icon": "🔄",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Reverse Curl"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-waiter-curl",
-    "name": "Waiter Curl",
+    "id": "dumbbell-waiter-curl",
+    "name": "Dumbbell Waiter Curl",
     "muscleGroup": "Biceps",
     "secondaryMuscles": [],
     "equipment": [
       "dumbbell"
     ],
-    "difficulty": "Beginner",
-    "cue": "Cup one dumbbell in both hands like a tray; curl to your chin.",
-    "description": "Hold a single dumbbell vertically in both cupped hands like a tray and curl it to your chin, elbows tight to your body. The centred load makes it a simple, joint-friendly way to hit both biceps together.",
+    "difficulty": "Intermediate",
+    "cue": "Hold the dumbbell like a waiter carrying a tray and curl upward.",
+    "description": "Maintain shoulder position while emphasizing the biceps squeeze. Avoid pressing the weight upward.",
     "avoidIf": [],
-    "icon": "🤵"
+    "icon": "🍽️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Waiter Curl"
+    ],
+    "category": "strength"
   },
   {
-    "id": "chinup-hold",
-    "name": "Chin-Up Hold",
-    "muscleGroup": "Biceps",
-    "secondaryMuscles": [
-      "Back",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "pull-up-bar"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Pull to the top of a chin-up and hold, chin over the bar.",
-    "description": "Hold the top position of a chin-up with your chin over the bar for time, palms facing you. A brutal bodyweight biceps and grip builder that also feeds your chin-up strength.",
-    "avoidIf": [
-      "shoulder"
-    ],
-    "icon": "🧗"
-  },
-  {
-    "id": "db-21s",
+    "id": "dumbbell-twenty-one-curl",
     "name": "Dumbbell 21s",
     "muscleGroup": "Biceps",
     "secondaryMuscles": [],
@@ -5206,10 +5351,619 @@ const EXERCISES = [
       "dumbbell"
     ],
     "difficulty": "Intermediate",
-    "cue": "Seven bottom-half reps, seven top-half, seven full — no rest.",
-    "description": "One set of 21s is seven curls through the bottom half of the range, seven through the top half, then seven full curls, back to back. The partial ranges torch the biceps with surprisingly light weight.",
+    "cue": "Perform partial curls in three seven-repetition ranges.",
+    "description": "Maintain strict control through each section. Avoid using momentum as fatigue increases.",
     "avoidIf": [],
-    "icon": "💪"
+    "icon": "2️⃣1️⃣",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB 21s"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "seated-alternating-dumbbell-curl",
+    "name": "Seated Alternating Dumbbell Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl one dumbbell at a time while seated upright.",
+    "description": "Keep your back supported and focus on each arm individually. Avoid lifting your shoulder with the curl.",
+    "avoidIf": [],
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Alternating DB Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "incline-hammer-dumbbell-curl",
+    "name": "Incline Hammer Dumbbell Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Curl dumbbells with neutral grips while seated on an incline bench.",
+    "description": "Control the stretch at the bottom of each repetition. Avoid letting your shoulders roll forward.",
+    "avoidIf": [],
+    "icon": "🔨",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Incline Hammer Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "prone-dumbbell-curl",
+    "name": "Prone Dumbbell Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Curl dumbbells while lying face down on an incline bench.",
+    "description": "Keep the upper arms fixed against gravity. Avoid lifting your shoulders away from the bench.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Chest Supported DB Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "ez-bar-biceps-curl",
+    "name": "EZ-Bar Biceps Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "ez-bar"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl the EZ-bar upward while keeping your elbows close to your sides.",
+    "description": "Lower the bar slowly after each repetition. Avoid swinging your torso to generate momentum.",
+    "avoidIf": [],
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "EZ Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "ez-bar-preacher-curl",
+    "name": "EZ-Bar Preacher Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "ez-bar",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Curl the EZ-bar from the preacher pad while keeping your upper arms fixed.",
+    "description": "Control the bottom stretch before curling upward. Avoid locking your elbows aggressively.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "EZ Preacher Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "ez-bar-reverse-curl",
+    "name": "EZ-Bar Reverse Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "ez-bar"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Curl the EZ-bar with your palms facing downward.",
+    "description": "Keep your wrists neutral throughout the movement. Avoid bending your wrists under load.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "🔄",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "EZ Reverse Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "ez-bar-drag-curl",
+    "name": "EZ-Bar Drag Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "ez-bar"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drag the bar upward while pulling your elbows behind your torso.",
+    "description": "Focus on squeezing the biceps in the shortened position. Avoid turning the movement into a row.",
+    "avoidIf": [],
+    "icon": "⬆️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "EZ Drag Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-biceps-curl",
+    "name": "Barbell Biceps Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl the barbell upward without moving your elbows.",
+    "description": "Maintain strict form and control the lowering phase. Avoid leaning back to lift heavier weight.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "BB Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "wide-grip-barbell-curl",
+    "name": "Wide-Grip Barbell Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Use a wider grip and curl the bar with controlled motion.",
+    "description": "Keep your elbows stable throughout the movement. Avoid shifting your shoulders forward.",
+    "avoidIf": [],
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Wide BB Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "close-grip-barbell-curl",
+    "name": "Close-Grip Barbell Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Curl with a narrow grip while keeping your elbows fixed.",
+    "description": "Maintain tension through the biceps throughout the set. Avoid excessive wrist bending.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Narrow BB Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-twenty-one-curl",
+    "name": "Barbell 21s",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Complete seven lower, seven upper, and seven full curls.",
+    "description": "Keep constant tension through all three ranges. Avoid using momentum during the final repetitions.",
+    "avoidIf": [],
+    "icon": "2️⃣1️⃣",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy",
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "BB 21s"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-biceps-curl",
+    "name": "Cable Biceps Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl the cable handle upward while keeping tension constant.",
+    "description": "Control the return as the cable pulls your arms down. Avoid leaning backward.",
+    "avoidIf": [],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "rope-hammer-cable-curl",
+    "name": "Rope Hammer Cable Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl the rope attachment with your palms facing each other.",
+    "description": "Keep your elbows close to your body. Avoid swinging the rope upward.",
+    "avoidIf": [],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Rope Cable Hammer Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "high-cable-double-biceps-curl",
+    "name": "High Cable Double-Biceps Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Curl both cable handles toward your head like a front double-biceps pose.",
+    "description": "Maintain shoulder position while squeezing the biceps. Avoid letting your elbows drop.",
+    "avoidIf": [],
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "High Cable Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-arm-cable-biceps-curl",
+    "name": "Single-Arm Cable Biceps Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl one cable handle upward while keeping your upper arm still.",
+    "description": "Focus on full contraction of the working arm. Avoid rotating your torso.",
+    "avoidIf": [],
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "One Arm Cable Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-preacher-curl",
+    "name": "Cable Preacher Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Curl the cable handle from a preacher curl setup.",
+    "description": "Keep your upper arm supported and control the stretch. Avoid lifting your shoulder off the pad.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Scott Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "machine-preacher-biceps-curl",
+    "name": "Machine Preacher Biceps Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl the machine handles while keeping your upper arms against the pad.",
+    "description": "Use the machine resistance for controlled repetitions. Avoid lifting your elbows from the pad.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Preacher Curl Machine"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "machine-biceps-curl",
+    "name": "Machine Biceps Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl the machine handles through the full range of motion.",
+    "description": "Maintain steady tension throughout the movement. Avoid bouncing the weight stack.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Biceps Curl Machine"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "resistance-band-biceps-curl",
+    "name": "Resistance Band Biceps Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl the band upward while keeping your elbows stationary.",
+    "description": "Maintain tension throughout the entire movement. Avoid leaning backward for assistance.",
+    "avoidIf": [],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "resistance-band-hammer-curl",
+    "name": "Resistance Band Hammer Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl the band with palms facing inward.",
+    "description": "Keep wrists neutral and control the band resistance. Avoid shrugging your shoulders.",
+    "avoidIf": [],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Hammer Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-biceps-curl",
+    "name": "Kettlebell Biceps Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Curl the kettlebell upward while keeping your elbow fixed.",
+    "description": "Control the uneven load throughout the curl. Avoid rotating your wrist under tension.",
+    "avoidIf": [],
+    "icon": "🔔",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-biceps-curl",
+    "name": "TRX Biceps Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lean back and curl your body upward using the suspension handles.",
+    "description": "Maintain a rigid body position throughout the movement. Avoid letting your hips sag.",
+    "avoidIf": [],
+    "icon": "〰️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Suspension Biceps Curl"
+    ],
+    "category": "strength"
   },
   {
     "id": "bench-dip",
