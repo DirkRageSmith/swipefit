@@ -1,40 +1,51 @@
 /* ─────────────────────────────────────────────────────────────
-   SwipeFit — volt & ink
-   Theme is driven by html[data-theme="light|dark"], set by an
-   inline script before paint and by app.js afterwards.
+   SwipeFit — ink, white & electric
+   Dark (near-black) is the default look: white type, blue = save,
+   red = skip. Theme is driven by html[data-theme="light|dark"],
+   set by an inline script before paint and by app.js afterwards.
+   (--volt / --volt-soft are kept as aliases for the primary accent
+   so older rules keep working — they now resolve to the blue.)
    ───────────────────────────────────────────────────────────── */
 
 :root {
-  --volt: #b8e232;
-  --volt-soft: rgba(184, 226, 50, 0.35);
-  --ink: #171a1e;
-  --save: #1fbf6b;
-  --nope: #ff4757;
+  --blue: #1f6feb;
+  --red: #e5322f;
+  --volt: var(--blue);
+  --volt-soft: rgba(31, 111, 235, 0.16);
+  --save: var(--blue);
+  --nope: var(--red);
+  --on-accent: #ffffff;
 
-  --bg: #f2f3ef;
+  --bg: #f4f5f7;
   --surface: #ffffff;
-  --surface-2: #e9ebe3;
-  --text: #171a1e;
-  --muted: #646b74;
-  --border: rgba(23, 26, 30, 0.1);
-  --shadow-card: 0 18px 40px rgba(23, 26, 30, 0.16), 0 3px 10px rgba(23, 26, 30, 0.08);
-  --shadow-soft: 0 6px 18px rgba(23, 26, 30, 0.08);
+  --surface-2: #eceef2;
+  --text: #0c0d10;
+  --muted: #5c636e;
+  --border: rgba(12, 13, 16, 0.10);
+  --shadow-card: 0 18px 40px rgba(12, 13, 16, 0.14), 0 3px 10px rgba(12, 13, 16, 0.07);
+  --shadow-soft: 0 6px 18px rgba(12, 13, 16, 0.08);
 
   --radius: 22px;
   --radius-sm: 12px;
 }
 
 html[data-theme="dark"] {
-  --volt: #c9f24b;
-  --volt-soft: rgba(201, 242, 75, 0.28);
-  --bg: #101216;
-  --surface: #1a1d23;
-  --surface-2: #242830;
-  --text: #f1f2ed;
-  --muted: #99a0aa;
-  --border: rgba(241, 242, 237, 0.1);
-  --shadow-card: 0 18px 40px rgba(0, 0, 0, 0.5), 0 3px 10px rgba(0, 0, 0, 0.35);
-  --shadow-soft: 0 6px 18px rgba(0, 0, 0, 0.3);
+  --blue: #3d8bff;
+  --red: #ff4d57;
+  --volt: var(--blue);
+  --volt-soft: rgba(61, 139, 255, 0.20);
+  --save: var(--blue);
+  --nope: var(--red);
+  --on-accent: #ffffff;
+
+  --bg: #0a0b0d;
+  --surface: #15171c;
+  --surface-2: #1f232b;
+  --text: #ffffff;
+  --muted: #9aa1ac;
+  --border: rgba(255, 255, 255, 0.11);
+  --shadow-card: 0 18px 44px rgba(0, 0, 0, 0.6), 0 3px 10px rgba(0, 0, 0, 0.4);
+  --shadow-soft: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -99,8 +110,7 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
 }
 
 .wordmark-volt {
-  background: linear-gradient(transparent 58%, var(--volt-soft) 42%);
-  padding-right: 0.15em;
+  color: var(--blue);
 }
 
 #main {
@@ -166,8 +176,8 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
   width: 100%;
   margin-top: 22px;
   padding: 16px 20px;
-  background: var(--volt);
-  color: var(--ink);
+  background: var(--blue);
+  color: var(--on-accent);
   font-weight: 800;
   font-size: 1.05rem;
   border-radius: 16px;
@@ -180,7 +190,7 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
 .cta-count {
   font-weight: 700;
   font-size: 0.85rem;
-  background: rgba(23, 26, 30, 0.14);
+  background: rgba(255, 255, 255, 0.22);
   padding: 3px 10px;
   border-radius: 999px;
   font-variant-numeric: tabular-nums;
@@ -284,6 +294,19 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
   background: color-mix(in srgb, var(--nope) 14%, var(--surface));
   border-color: var(--nope);
   color: var(--text);
+}
+
+.chip-equip[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--blue) 16%, var(--surface));
+  border-color: var(--blue);
+  color: var(--text);
+}
+
+.chip-equip[aria-pressed="true"]::before {
+  content: "✓";
+  font-size: 0.85em;
+  font-weight: 900;
+  color: var(--blue);
 }
 
 .chip-cond[aria-pressed="true"]::before {
@@ -446,10 +469,9 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
   color: var(--muted);
 }
 
-.tag.diff-beginner { background: color-mix(in srgb, var(--save) 16%, var(--surface)); color: var(--save); }
-.tag.diff-intermediate { background: color-mix(in srgb, #f59e0b 18%, var(--surface)); color: #b97a06; }
-html[data-theme="dark"] .tag.diff-intermediate { color: #f5b23c; }
-.tag.diff-advanced { background: color-mix(in srgb, var(--nope) 14%, var(--surface)); color: var(--nope); }
+.tag.diff-beginner { background: color-mix(in srgb, var(--blue) 16%, var(--surface)); color: var(--blue); }
+.tag.diff-intermediate { background: var(--surface-2); color: var(--muted); }
+.tag.diff-advanced { background: color-mix(in srgb, var(--nope) 16%, var(--surface)); color: var(--nope); }
 
 .flip-hint {
   color: var(--muted);

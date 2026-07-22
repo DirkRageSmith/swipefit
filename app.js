@@ -26,22 +26,26 @@
 
   // ── Persistent state (localStorage, schema-versioned) ────
   const STORAGE_KEY = "swipefit";
-  const SCHEMA_VERSION = 1;
+  const SCHEMA_VERSION = 2;
+  const EQUIPMENT_SET = new Set(EQUIPMENT);
 
   const defaultState = () => ({
     schemaVersion: SCHEMA_VERSION,
-    filters: { groups: [], conditions: [] },
+    // equipment defaults to everything owned (all of EQUIPMENT); empty === all, like groups.
+    filters: { groups: [], equipment: EQUIPMENT.slice(), conditions: [] },
     routine: [], // [{ id, sets, notes }] — references exercises by permanent id only
-    theme: "system",
+    theme: "dark",
   });
 
   function migrate(data) {
     if (!data || typeof data !== "object") return defaultState();
-    // Future schema bumps: inspect data.schemaVersion and transform here.
     const out = defaultState();
+    const fromVersion = typeof data.schemaVersion === "number" ? data.schemaVersion : 1;
     const filters = data.filters || {};
     out.filters.groups = Array.isArray(filters.groups)
       ? filters.groups.filter((g) => GROUP_BY_NAME[g]) : [];
+    out.filters.equipment = Array.isArray(filters.equipment)
+      ? filters.equipment.filter((e) => EQUIPMENT_SET.has(e)) : EQUIPMENT.slice();
     out.filters.conditions = Array.isArray(filters.conditions)
       ? filters.conditions.filter((c) => CONDITION_IDS.has(c)) : [];
     out.routine = Array.isArray(data.routine)
@@ -49,7 +53,10 @@
           .filter((r) => r && typeof r.id === "string")
           .map((r) => ({ id: r.id, sets: String(r.sets || ""), notes: String(r.notes || "") }))
       : [];
-    out.theme = ["system", "light", "dark"].includes(data.theme) ? data.theme : "system";
+    out.theme = ["system", "light", "dark"].includes(data.theme) ? data.theme : "dark";
+    // v1→v2 (one-time): the app now defaults to a black theme. Flip the old "system"
+    // default to dark once. Guarded on version so a later deliberate "System" pick sticks.
+    if (fromVersion < 2 && out.theme === "system") out.theme = "dark";
     return out;
   }
 
@@ -57,7 +64,16 @@
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return defaultState();
-      return migrate(JSON.parse(raw));
+      const parsed = JSON.parse(raw);
+      const migrated = migrate(parsed);
+      // Persist right away if we bumped the schema, so one-time migrations (e.g. the
+      // v1 "system"→dark flip) can't re-run on later loads. Inlined because the shared
+      // `state`/saveState aren't defined until after loadState() returns.
+      const wasVersion = typeof parsed.schemaVersion === "number" ? parsed.schemaVersion : 1;
+      if (wasVersion !== SCHEMA_VERSION) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated)); } catch (_) {}
+      }
+      return migrated;
     } catch (err) {
       console.warn("SwipeFit: couldn't read saved data, starting fresh.", err);
       return defaultState();
@@ -115,10 +131,12 @@
 
   function eligiblePool() {
     const groups = state.filters.groups;
+    const equip = state.filters.equipment;
     const inRoutine = new Set(state.routine.map((r) => r.id));
     return EXERCISES.filter(
       (ex) =>
         (groups.length === 0 || groups.includes(ex.muscleGroup)) &&
+        (equip.length === 0 || equip.includes(ex.equipment)) &&
         passesConditions(ex) &&
         !inRoutine.has(ex.id) &&
         !sessionSkipped.has(ex.id)
@@ -142,11 +160,22 @@
     renderDeck();
   }
 
-  // Safety: if a condition is toggled mid-session, purge matching cards from
-  // the live deck immediately — never rely on the next "Start swiping".
+  function matchesFilters(ex) {
+    const groups = state.filters.groups;
+    const equip = state.filters.equipment;
+    return (
+      (groups.length === 0 || groups.includes(ex.muscleGroup)) &&
+      (equip.length === 0 || equip.includes(ex.equipment)) &&
+      passesConditions(ex)
+    );
+  }
+
+  // Safety: if a condition (or gear/group) is toggled mid-session, purge the now-
+  // ineligible cards from the live deck immediately — never rely on the next
+  // "Start swiping". Conditions are the safety-critical case; equipment/groups ride along.
   function purgeActiveDeck() {
     if (!deckBuilt) return;
-    deck = deck.slice(0, deckIndex).concat(deck.slice(deckIndex).filter(passesConditions));
+    deck = deck.slice(0, deckIndex).concat(deck.slice(deckIndex).filter(matchesFilters));
     renderDeck();
   }
 
@@ -182,6 +211,26 @@
       });
       gWrap.appendChild(btn);
     });
+
+    const eWrap = $("#equipment-chips");
+    if (eWrap) {
+      eWrap.innerHTML = "";
+      EQUIPMENT.forEach((name) => {
+        const btn = el("button", "chip chip-equip", name);
+        btn.type = "button";
+        btn.setAttribute("aria-pressed", String(state.filters.equipment.includes(name)));
+        btn.addEventListener("click", () => {
+          const i = state.filters.equipment.indexOf(name);
+          if (i === -1) state.filters.equipment.push(name);
+          else state.filters.equipment.splice(i, 1);
+          saveState();
+          btn.setAttribute("aria-pressed", String(i === -1));
+          purgeActiveDeck();
+          updateMatchCount();
+        });
+        eWrap.appendChild(btn);
+      });
+    }
 
     const cWrap = $("#condition-chips");
     cWrap.innerHTML = "";
@@ -563,7 +612,7 @@
     const mode = resolvedTheme();
     document.documentElement.dataset.theme = mode;
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.content = mode === "dark" ? "#101216" : "#f2f3ef";
+    if (meta) meta.content = mode === "dark" ? "#0a0b0d" : "#f4f5f7";
     $$(".seg-btn").forEach((b) =>
       b.classList.toggle("seg-active", b.dataset.themeChoice === state.theme)
     );
@@ -703,7 +752,7 @@
   // ── Boot ─────────────────────────────────────────────────
   function renderAboutStats() {
     $("#about-stats").textContent =
-      "Phase 1 · " + EXERCISES.length + " exercises · " + MUSCLE_GROUPS.length +
+      EXERCISES.length + " exercises · " + MUSCLE_GROUPS.length +
       " muscle groups · " + CONDITIONS.length + " conditions · all data on-device";
   }
 

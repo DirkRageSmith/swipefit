@@ -7,9 +7,11 @@ exercises from the deck before the user ever sees them.
 ## Ground rules (don't relitigate these in any session)
 
 - Plain HTML/CSS/JS, no frameworks, no build step, no backend, no login, no external network calls.
-- All user data lives in `localStorage` on-device, under a `schemaVersion` key. User data references exercises only by their permanent `id`.
-- Exercise data and the conditions list live in `exercises.js`, separate from app logic in `app.js`.
-- Every `avoidIf` tag must exactly match a condition id; the filter UI is generated from the conditions array.
+- All user data lives in `localStorage` on-device, under a `schemaVersion` key (now **2**). User data references exercises only by their permanent `id`.
+- Exercise data, the conditions list, and the `EQUIPMENT` list live in `exercises.js`, separate from app logic in `app.js`.
+- **Equipment constraint (Matt's home setup): the library is Bodyweight + Dumbbell only** (a bench is assumed, used within those). `validate.js` enforces it against the `EQUIPMENT` array — if you ever add another type, extend `EQUIPMENT` deliberately.
+- Every `avoidIf` tag must match a condition id; every `equipment` must be in `EQUIPMENT`. The muscle/gear/condition filter UIs are all generated from their arrays, never hardcoded.
+- Default theme is **dark** (near-black, white type, blue = save / red = skip). Light theme still exists via the Settings toggle.
 - Every feature must keep working fully offline once installed. Anything added must be vendored locally, never pulled from a CDN.
 - No HTML5 drag-and-drop API — this app is mobile-first and it doesn't work on touch.
 - Bump the cache version string in `sw.js` in ANY session that changes app files, or installed users never receive updates.
@@ -23,7 +25,7 @@ exercises from the deck before the user ever sees them.
 | `index.html` | App shell, all four screens, inline theme bootstrap |
 | `styles.css` | All styling (light/dark via `html[data-theme]`) |
 | `app.js` | All logic (state, deck, swipe, routine, settings) |
-| `exercises.js` | `MUSCLE_GROUPS`, `CONDITIONS`, `EXERCISES` data (also `module.exports` for Node) |
+| `exercises.js` | `MUSCLE_GROUPS`, `EQUIPMENT`, `CONDITIONS`, `EXERCISES` data (also `module.exports` for Node) |
 | `sw.js` | Service worker — bump `CACHE_VERSION` on any change |
 | `manifest.json` | PWA manifest |
 | `validate.js` | Dataset integrity check — run `node validate.js` |
@@ -52,7 +54,14 @@ exercises from the deck before the user ever sees them.
 
 Phase 1 — MVP: **done** (initial commit). Swipe deck, filter/condition safety system,
 My Routine with reorder/sets/notes, settings with theme + JSON export, PWA shell
-(manifest + service worker + icons), 99-exercise seed library.
+(manifest + service worker + icons).
+
+2026-07-17 personalization pass (Matt request): library rebuilt to **170 exercises,
+Bodyweight + Dumbbell only** (~evenly split, every group ≥ 8); added a **Gear filter**
+on the setup screen (empty = all, like groups); reskinned to a **black / white / blue /
+red** theme with **dark as the default** (blue = save, red = skip); schema bumped to v2
+with a one-time `system`→`dark` theme migration. Old non-gear exercises were removed —
+any that a user had saved show under "No longer in the library" and stay removable.
 
 Phase 2 — Real PWA install experience:
 
