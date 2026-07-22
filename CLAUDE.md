@@ -7,10 +7,10 @@ exercises from the deck before the user ever sees them.
 ## Ground rules (don't relitigate these in any session)
 
 - Plain HTML/CSS/JS, no frameworks, no build step, no backend, no login, no external network calls.
-- All user data lives in `localStorage` on-device, under a `schemaVersion` key (now **2**). User data references exercises only by their permanent `id`.
-- Exercise data, the conditions list, and the `EQUIPMENT` list live in `exercises.js`, separate from app logic in `app.js`.
-- **Equipment constraint (Matt's home setup): the library is Bodyweight + Dumbbell only** (a bench is assumed, used within those). `validate.js` enforces it against the `EQUIPMENT` array — if you ever add another type, extend `EQUIPMENT` deliberately.
-- Every `avoidIf` tag must match a condition id; every `equipment` must be in `EQUIPMENT`. The muscle/gear/condition filter UIs are all generated from their arrays, never hardcoded.
+- All user data lives in `localStorage` on-device, under a `schemaVersion` key (now **3**). User data references exercises only by their permanent `id`.
+- Exercise data, the conditions list, and the `EQUIPMENT` taxonomy live in `exercises.js`, separate from app logic in `app.js`. See `ROADMAP.md` for the full schema + the product plan.
+- **`equipment` is an ARRAY of `EQUIPMENT` ids** (gating gear needed beyond your body; bodyweight-only = `["bodyweight"]`). `EQUIPMENT` is `[{id,label}]`, 15 types. The gear filter is a **superset test**: an exercise shows only if you own every item it lists. Chest is the fully-produced group; the other 10 are placeholders (dumbbell/bodyweight, arrays) until each is regenerated per ROADMAP §7 Phase A.
+- Every `avoidIf` tag must match a condition id; every `equipment` id must be in `EQUIPMENT`. The muscle/gear/condition filter UIs are all generated from their arrays, never hardcoded.
 - Default theme is **dark** (near-black, white type, blue = save / red = skip). Light theme still exists via the Settings toggle.
 - Every feature must keep working fully offline once installed. Anything added must be vendored locally, never pulled from a CDN.
 - No HTML5 drag-and-drop API — this app is mobile-first and it doesn't work on touch.
