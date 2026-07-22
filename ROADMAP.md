@@ -34,7 +34,9 @@ Everything in the vision sorts into two tiers by **what it costs the architectur
   no rewrite. This is ~80% of the vision. **We build this now.**
 - **Tier 2 — a real architectural leap.** Needs a backend / accounts / cloud / real LLM
   calls / payments. Breaks the offline-only rule and costs money. **Do not start until
-  50–100 real users have validated demand** (friends, Reddit, a gym, closed testing).
+  50–100 real users have validated demand.** The **friends-and-family beta is that gate** —
+  Matt's plan is to hand it round once it's F&F-ready and learn from real usage before
+  spending on any backend.
 
 If a proposed feature can't be done in the browser with `localStorage`, it's Tier 2 by
 definition — park it in §8, don't sneak it into Tier 1.
@@ -259,14 +261,20 @@ Copy the brief in §6.2 into ChatGPT. Run it once per muscle group.
    hard checks are green.**
 3. Migrate the filter to the superset test (§5a); bump `schemaVersion` → 3 with a
    migration; rebuild the gear filter UI from the new `EQUIPMENT` (+ location presets in
-   Phase B). Reconcile the user's saved routine by matching old ids/names where possible;
-   anything unmatched uses the existing "No longer in the library" graceful fallback.
+   Phase B). **Clean swap:** the ~500 replaces the current 170 wholesale — Matt is starting
+   fresh, so no routine reconciliation is needed. (The "No longer in the library" fallback
+   still exists as a safety net for future F&F users across any later data change.)
 4. Bump `sw.js` `CACHE_VERSION`; run the full smoke-test checklist; deploy
    (`git push origin main main:gh-pages`).
 
 ---
 
 ## 7. Tier 1 roadmap (sequenced — build in this order)
+
+**Friends-and-family-ready target:** realistically that's Phases **A–C** done — a real
+library, first-run onboarding that works for someone who isn't Matt, and generated
+sessions. **D–F** (in-workout mode, progress, rule-based adjustments) are polish that can
+land *during* the beta as feedback comes in.
 
 **Phase A — Data & schema (unblocks everything).**
 ChatGPT delivers the ~500 deck as per-group batches, Chest first as a pilot (§6.1); Claude
