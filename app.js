@@ -23,16 +23,34 @@
   CONDITIONS.forEach((c) => { CONDITION_BY_ID[c.id] = c; });
   const EX_BY_ID = {};
   EXERCISES.forEach((ex) => { EX_BY_ID[ex.id] = ex; });
+  const EQUIP_LABEL = {};
+  EQUIPMENT.forEach((e) => { EQUIP_LABEL[e.id] = e.label; });
+  const ALL_EQUIP_IDS = EQUIPMENT.map((e) => e.id);
+
+  // Equipment array of an exercise, defensively coerced to a lowercased array.
+  const equipOf = (ex) =>
+    Array.isArray(ex.equipment) ? ex.equipment : [String(ex.equipment).toLowerCase()];
+
+  // One-tap gear presets for the setup screen (locations map to equipment bundles).
+  const GEAR_PRESETS = [
+    { label: "Bodyweight", gear: ["bodyweight"] },
+    { label: "Home", gear: ["bodyweight", "dumbbell", "bench"] },
+    { label: "Home+", gear: ["bodyweight", "dumbbell", "bench", "resistance-band", "kettlebell", "pull-up-bar"] },
+    { label: "Full gym", gear: ALL_EQUIP_IDS.slice() },
+  ];
 
   // ── Persistent state (localStorage, schema-versioned) ────
   const STORAGE_KEY = "swipefit";
-  const SCHEMA_VERSION = 2;
-  const EQUIPMENT_SET = new Set(EQUIPMENT);
+  const SCHEMA_VERSION = 3;
+  const EQUIPMENT_SET = new Set(ALL_EQUIP_IDS);
+  // Sensible starting gear (Matt's home setup); also the fallback when none is stored.
+  const DEFAULT_GEAR = ["bodyweight", "dumbbell", "bench"];
 
   const defaultState = () => ({
     schemaVersion: SCHEMA_VERSION,
-    // equipment defaults to everything owned (all of EQUIPMENT); empty === all, like groups.
-    filters: { groups: [], equipment: EQUIPMENT.slice(), conditions: [] },
+    // equipment = the gear you own. An exercise shows only if you own ALL it needs
+    // (superset test). Unlike groups, empty here means "nothing shows" — presets fix that.
+    filters: { groups: [], equipment: DEFAULT_GEAR.slice(), conditions: [] },
     routine: [], // [{ id, sets, notes }] — references exercises by permanent id only
     theme: "dark",
   });
@@ -44,8 +62,20 @@
     const filters = data.filters || {};
     out.filters.groups = Array.isArray(filters.groups)
       ? filters.groups.filter((g) => GROUP_BY_NAME[g]) : [];
-    out.filters.equipment = Array.isArray(filters.equipment)
-      ? filters.equipment.filter((e) => EQUIPMENT_SET.has(e)) : EQUIPMENT.slice();
+    // Equipment: lowercase-map old values to the new id taxonomy, keep valid ones.
+    let eq = Array.isArray(filters.equipment)
+      ? filters.equipment.map((e) => String(e).toLowerCase()).filter((e) => EQUIPMENT_SET.has(e))
+      : [];
+    // v2→v3 (one-time): old app was Bodyweight/Dumbbell with a bench always assumed, and
+    // its default meant "all". Bring those users onto an equivalent explicit gear set.
+    if (fromVersion < 3) {
+      if (!eq.length) eq = DEFAULT_GEAR.slice();
+      else {
+        if (!eq.includes("bodyweight")) eq.unshift("bodyweight");
+        if (!eq.includes("bench")) eq.push("bench");
+      }
+    }
+    out.filters.equipment = eq.length ? eq : DEFAULT_GEAR.slice();
     out.filters.conditions = Array.isArray(filters.conditions)
       ? filters.conditions.filter((c) => CONDITION_IDS.has(c)) : [];
     out.routine = Array.isArray(data.routine)
@@ -129,14 +159,19 @@
     return !ex.avoidIf.some((tag) => state.filters.conditions.includes(tag));
   }
 
+  // Superset test: an exercise shows only if you own every piece of gear it needs.
+  function ownsGear(ex) {
+    const owned = new Set(state.filters.equipment);
+    return equipOf(ex).every((e) => owned.has(e));
+  }
+
   function eligiblePool() {
     const groups = state.filters.groups;
-    const equip = state.filters.equipment;
     const inRoutine = new Set(state.routine.map((r) => r.id));
     return EXERCISES.filter(
       (ex) =>
         (groups.length === 0 || groups.includes(ex.muscleGroup)) &&
-        (equip.length === 0 || equip.includes(ex.equipment)) &&
+        ownsGear(ex) &&
         passesConditions(ex) &&
         !inRoutine.has(ex.id) &&
         !sessionSkipped.has(ex.id)
@@ -162,10 +197,9 @@
 
   function matchesFilters(ex) {
     const groups = state.filters.groups;
-    const equip = state.filters.equipment;
     return (
       (groups.length === 0 || groups.includes(ex.muscleGroup)) &&
-      (equip.length === 0 || equip.includes(ex.equipment)) &&
+      ownsGear(ex) &&
       passesConditions(ex)
     );
   }
@@ -212,19 +246,35 @@
       gWrap.appendChild(btn);
     });
 
+    const pWrap = $("#equipment-presets");
+    if (pWrap) {
+      pWrap.innerHTML = "";
+      GEAR_PRESETS.forEach((preset) => {
+        const btn = el("button", "preset-btn", preset.label);
+        btn.type = "button";
+        const active =
+          preset.gear.length === state.filters.equipment.length &&
+          preset.gear.every((g) => state.filters.equipment.includes(g));
+        btn.classList.toggle("preset-active", active);
+        btn.addEventListener("click", () => setEquipment(preset.gear.slice()));
+        pWrap.appendChild(btn);
+      });
+    }
+
     const eWrap = $("#equipment-chips");
     if (eWrap) {
       eWrap.innerHTML = "";
-      EQUIPMENT.forEach((name) => {
-        const btn = el("button", "chip chip-equip", name);
+      EQUIPMENT.forEach((eq) => {
+        const btn = el("button", "chip chip-equip", eq.label);
         btn.type = "button";
-        btn.setAttribute("aria-pressed", String(state.filters.equipment.includes(name)));
+        btn.setAttribute("aria-pressed", String(state.filters.equipment.includes(eq.id)));
         btn.addEventListener("click", () => {
-          const i = state.filters.equipment.indexOf(name);
-          if (i === -1) state.filters.equipment.push(name);
+          const i = state.filters.equipment.indexOf(eq.id);
+          if (i === -1) state.filters.equipment.push(eq.id);
           else state.filters.equipment.splice(i, 1);
           saveState();
           btn.setAttribute("aria-pressed", String(i === -1));
+          renderPresetStates();
           purgeActiveDeck();
           updateMatchCount();
         });
@@ -263,6 +313,28 @@
     state.filters.groups = all ? MUSCLE_GROUPS.map((g) => g.name) : [];
     saveState();
     renderFilterChips();
+  }
+
+  function setEquipment(list) {
+    state.filters.equipment = list;
+    saveState();
+    renderFilterChips();
+    purgeActiveDeck();
+    updateMatchCount();
+  }
+
+  // Refresh only the preset buttons' active state (after a single-chip toggle).
+  function renderPresetStates() {
+    const pWrap = $("#equipment-presets");
+    if (!pWrap) return;
+    Array.from(pWrap.children).forEach((btn, idx) => {
+      const preset = GEAR_PRESETS[idx];
+      if (!preset) return;
+      const active =
+        preset.gear.length === state.filters.equipment.length &&
+        preset.gear.every((g) => state.filters.equipment.includes(g));
+      btn.classList.toggle("preset-active", active);
+    });
   }
 
   // ── Deck screen ──────────────────────────────────────────
@@ -325,7 +397,7 @@
     body.appendChild(el("h2", "card-name", ex.name));
     body.appendChild(el("p", "card-cue", ex.cue));
     const tags = el("div", "tag-row");
-    tags.appendChild(el("span", "tag", ex.equipment));
+    equipOf(ex).forEach((e) => tags.appendChild(el("span", "tag", EQUIP_LABEL[e] || e)));
     tags.appendChild(el("span", "tag diff-" + ex.difficulty.toLowerCase(), ex.difficulty));
     body.appendChild(tags);
     front.appendChild(body);
@@ -493,7 +565,7 @@
     const top = el("div", "routine-item-top");
     top.appendChild(el("span", "routine-item-icon", ex ? ex.icon : "❓"));
     const name = el("span", "routine-item-name", ex ? ex.name : "(no longer in the library)");
-    if (ex) name.appendChild(el("span", "routine-item-equip", ex.equipment + " · " + ex.difficulty));
+    if (ex) name.appendChild(el("span", "routine-item-equip", equipOf(ex).map((e) => EQUIP_LABEL[e] || e).join(" · ") + " · " + ex.difficulty));
     top.appendChild(name);
 
     if (ex) {

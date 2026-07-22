@@ -1,2120 +1,4405 @@
 /*
- * SwipeFit dataset: muscle groups, equipment, avoid-conditions, and the library.
+ * SwipeFit dataset: muscle groups, equipment taxonomy, avoid-conditions, and the library.
  *
- * EQUIPMENT CONSTRAINT (Matt's home setup, 2026-07-17): every exercise uses only
- * "Bodyweight" or "Dumbbell". A flat/adjustable bench is assumed available and is
- * used within those (dumbbell bench press, bench dips, step-ups, split squats…) —
- * bench is not its own equipment type. If a future session adds Barbell/Machine/etc.,
- * add it to EQUIPMENT and loosen the check in validate.js deliberately.
- *
- * Contract (see CLAUDE.md):
- * - The filter UIs are generated from MUSCLE_GROUPS, EQUIPMENT, and CONDITIONS —
- *   never hardcode them in app.js.
- * - Every exercise's `avoidIf` entries must exactly match a CONDITIONS id.
- * - Every `muscleGroup` / `secondaryMuscles` entry must exactly match a MUSCLE_GROUPS name.
- * - Every `equipment` value must be in EQUIPMENT.
- * - Exercise `id`s are permanent — user data references them, so never rename or reuse one.
- * - Run `node validate.js` after any edit to this file.
- *
- * Tagging philosophy: conservative. If a movement commonly aggravates a condition,
- * it's tagged, even though many people with that condition could do it. Err on the
- * side of over-tagging — the user is choosing what to rule out.
+ * SCHEMA (see ROADMAP.md): equipment is an ARRAY of EQUIPMENT ids (gating items needed
+ * beyond your body; bodyweight-only = ["bodyweight"]). Chest is the first fully-produced
+ * group (ChatGPT, 46 exercises, all equipment types). The other groups are carried over
+ * from the original 170 with equipment normalized to arrays — they get replaced batch by
+ * batch as each muscle group is generated. Run `node validate.js` after any edit.
  */
 
 const MUSCLE_GROUPS = [
-  { name: "Chest", color: "#ff6b6b" },
-  { name: "Back", color: "#4d9dff" },
-  { name: "Shoulders", color: "#ffa62b" },
-  { name: "Biceps", color: "#a98bff" },
-  { name: "Triceps", color: "#ff74c3" },
-  { name: "Core/Abs", color: "#2dd4bf" },
-  { name: "Glutes", color: "#ff8f4d" },
-  { name: "Quads", color: "#38bdf8" },
-  { name: "Hamstrings", color: "#a3e635" },
-  { name: "Calves", color: "#34d3e0" },
-  { name: "Full Body/Cardio", color: "#8b7cff" },
+  {
+    "name": "Chest",
+    "color": "#ff6b6b"
+  },
+  {
+    "name": "Back",
+    "color": "#4d9dff"
+  },
+  {
+    "name": "Shoulders",
+    "color": "#ffa62b"
+  },
+  {
+    "name": "Biceps",
+    "color": "#a98bff"
+  },
+  {
+    "name": "Triceps",
+    "color": "#ff74c3"
+  },
+  {
+    "name": "Core/Abs",
+    "color": "#2dd4bf"
+  },
+  {
+    "name": "Glutes",
+    "color": "#ff8f4d"
+  },
+  {
+    "name": "Quads",
+    "color": "#38bdf8"
+  },
+  {
+    "name": "Hamstrings",
+    "color": "#a3e635"
+  },
+  {
+    "name": "Calves",
+    "color": "#34d3e0"
+  },
+  {
+    "name": "Full Body/Cardio",
+    "color": "#8b7cff"
+  }
 ];
 
-// Only what Matt owns. The Gear filter on the setup screen is built from this.
-const EQUIPMENT = ["Bodyweight", "Dumbbell"];
+const EQUIPMENT = [
+  {
+    "id": "bodyweight",
+    "label": "Bodyweight"
+  },
+  {
+    "id": "dumbbell",
+    "label": "Dumbbells"
+  },
+  {
+    "id": "bench",
+    "label": "Bench"
+  },
+  {
+    "id": "resistance-band",
+    "label": "Resistance Band"
+  },
+  {
+    "id": "kettlebell",
+    "label": "Kettlebell"
+  },
+  {
+    "id": "pull-up-bar",
+    "label": "Pull-Up Bar"
+  },
+  {
+    "id": "cable",
+    "label": "Cable Machine"
+  },
+  {
+    "id": "machine",
+    "label": "Machine"
+  },
+  {
+    "id": "barbell",
+    "label": "Barbell"
+  },
+  {
+    "id": "ez-bar",
+    "label": "EZ Bar"
+  },
+  {
+    "id": "trx",
+    "label": "Suspension (TRX)"
+  },
+  {
+    "id": "box",
+    "label": "Box / Step"
+  },
+  {
+    "id": "medicine-ball",
+    "label": "Medicine Ball"
+  },
+  {
+    "id": "ab-wheel",
+    "label": "Ab Wheel"
+  },
+  {
+    "id": "jump-rope",
+    "label": "Jump Rope"
+  }
+];
 
 const CONDITIONS = [
-  { id: "lower-back", label: "Lower Back Issues" },
-  { id: "knee", label: "Knee Issues" },
-  { id: "shoulder", label: "Shoulder Issues" },
-  { id: "wrist", label: "Wrist Issues" },
-  { id: "neck", label: "Neck Issues" },
-  { id: "hip", label: "Hip Issues" },
-  { id: "high-impact", label: "High Impact / Jumping" },
-  { id: "balance", label: "Balance Issues" },
-  { id: "pregnancy", label: "Pregnancy" },
+  {
+    "id": "lower-back",
+    "label": "Lower Back Issues"
+  },
+  {
+    "id": "knee",
+    "label": "Knee Issues"
+  },
+  {
+    "id": "shoulder",
+    "label": "Shoulder Issues"
+  },
+  {
+    "id": "wrist",
+    "label": "Wrist Issues"
+  },
+  {
+    "id": "neck",
+    "label": "Neck Issues"
+  },
+  {
+    "id": "hip",
+    "label": "Hip Issues"
+  },
+  {
+    "id": "high-impact",
+    "label": "High Impact / Jumping"
+  },
+  {
+    "id": "balance",
+    "label": "Balance Issues"
+  },
+  {
+    "id": "pregnancy",
+    "label": "Pregnancy"
+  }
 ];
 
 const EXERCISES = [
-  // ─────────────────────────── CHEST ───────────────────────────
-  {
-    id: "pushup-standard",
-    name: "Standard Push-Up",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Triceps", "Shoulders", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Body in a straight line, lower your chest to just above the floor.",
-    description: "From a high plank with hands slightly wider than your shoulders, lower as one rigid unit until your chest nearly touches the floor, then press up. Watch for sagging hips and elbows flaring straight out to the sides.",
-    avoidIf: ["wrist", "shoulder"],
-    icon: "💪",
-  },
-  {
-    id: "pushup-incline",
-    name: "Incline Push-Up",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Triceps", "Shoulders"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Hands on the bench — the higher the surface, the easier the rep.",
-    description: "A push-up with your hands elevated on the bench, which takes load off your arms and wrists and makes it the friendliest push-up variation. Keep the same rigid plank line; don't let the hips pike up.",
-    avoidIf: ["wrist"],
-    icon: "💪",
-  },
-  {
-    id: "pushup-knee",
-    name: "Knee Push-Up",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Triceps", "Shoulders"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Straight line from knees to head — don't hinge at the hips.",
-    description: "A push-up from the knees to reduce the load, with a mat under the kneecaps. Squeeze your glutes and keep a straight line from knees to shoulders; the common mistake is bending at the hips so only the arms move.",
-    avoidIf: ["wrist", "knee"],
-    icon: "💪",
-  },
-  {
-    id: "pushup-wide",
-    name: "Wide Push-Up",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Shoulders"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Hands wider than shoulders, chest leads the way down.",
-    description: "A push-up with a wider hand placement that shifts emphasis onto the chest and away from the triceps. The wider angle asks more of the shoulder joint, so keep the range comfortable rather than maximal.",
-    avoidIf: ["wrist", "shoulder"],
-    icon: "💪",
-  },
-  {
-    id: "pushup-decline",
-    name: "Decline Push-Up",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Shoulders", "Triceps"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Feet up on the bench, hands on the floor — presses the upper chest.",
-    description: "With your feet on the bench and hands on the floor, the decline shifts work to the upper chest and front shoulders and adds bodyweight to the press. Keep the hips from sagging and don't let the neck crane.",
-    avoidIf: ["wrist", "shoulder"],
-    icon: "💪",
-  },
-  {
-    id: "pushup-diamond-chest",
-    name: "Close Push-Up",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Triceps"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Hands close under your chest, elbows brushing your ribs.",
-    description: "A push-up with hands close together under the chest and elbows tracking along your sides, loading the inner chest and triceps hard. The narrow hand base is demanding on the wrists — elevate the hands if they complain.",
-    avoidIf: ["wrist", "shoulder"],
-    icon: "💎",
-  },
-  {
-    id: "db-bench-press",
-    name: "Dumbbell Bench Press",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Triceps", "Shoulders"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Lower the dumbbells to chest level, elbows about 45° from your body.",
-    description: "Lie on the flat bench with a dumbbell in each hand at chest level and press them up over your chest, then lower with control. Dumbbells let each shoulder find its own path — don't bounce them off your chest or bend your wrists back.",
-    avoidIf: ["shoulder"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-incline-press",
-    name: "Incline Dumbbell Press",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Shoulders", "Triceps"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Set the bench to about 30° — steeper turns it into a shoulder press.",
-    description: "A dumbbell press on a bench inclined to roughly 30 degrees, emphasising the upper chest. Press up and slightly back over your collarbones, keep your feet planted, and brace lightly rather than arching hard.",
-    avoidIf: ["shoulder"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-decline-press",
-    name: "Decline Dumbbell Press",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Triceps"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Slight decline; press the dumbbells up and slightly toward your feet.",
-    description: "A dumbbell press with the bench set to a mild decline, targeting the lower chest. If you don't have a decline bench, a floor press covers the same lower-chest emphasis more safely.",
-    avoidIf: ["shoulder"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-floor-press",
-    name: "Dumbbell Floor Press",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Triceps"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Lie on the floor; elbows stop at the ground, then press up.",
-    description: "A dumbbell press performed lying on the floor, so your upper arms rest at the floor and can't drop into a deep, achy stretch. The limited range makes it the most shoulder-friendly chest press and a great option on cranky days.",
-    avoidIf: [],
-    icon: "🏋️",
-  },
-  {
-    id: "db-chest-fly",
-    name: "Dumbbell Chest Fly",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Shoulders"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Arms open like hugging a barrel — elbows stay slightly bent throughout.",
-    description: "Lying on the bench, open your arms wide with a soft elbow bend until you feel a chest stretch, then squeeze the dumbbells back together above you. Go light — the stretched position is where flies cause trouble.",
-    avoidIf: ["shoulder"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-floor-fly",
-    name: "Floor Dumbbell Fly",
-    muscleGroup: "Chest",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Same hugging arc, but your elbows rest on the floor at the bottom.",
-    description: "A dumbbell fly done on the floor so the ground caps how far your arms can open, protecting the shoulder from the deep stretch. A gentle way to train the chest-squeeze pattern with light weight.",
-    avoidIf: [],
-    icon: "🏋️",
-  },
-  {
-    id: "db-squeeze-press",
-    name: "Dumbbell Squeeze Press",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Triceps"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Press two dumbbells together hard the whole set, push straight up.",
-    description: "Hold two dumbbells touching each other over your chest and press up while actively squeezing them together, which fires the inner chest through the whole rep. Neutral grip and constant squeeze make it easy on the shoulders.",
-    avoidIf: [],
-    icon: "🏋️",
-  },
-  {
-    id: "db-pullover",
-    name: "Dumbbell Pullover",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Back", "Triceps"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Both hands under one dumbbell; lower it back over your head in an arc.",
-    description: "Lying across or along the bench, hold one dumbbell over your chest and lower it in an arc behind your head with slightly bent arms, feeling the stretch, then pull it back. Keep the range to where your shoulders stay comfortable.",
-    avoidIf: ["shoulder"],
-    icon: "🏋️",
-  },
-  {
-    id: "pushup-archer",
-    name: "Archer Push-Up",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Triceps", "Shoulders", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Shift toward one arm as it bends; the other stays straight out wide.",
-    description: "A wide push-up where you lower toward one hand while the far arm stays straight, loading most of your bodyweight onto the working side. A big step toward a one-arm push-up — demanding on the wrist and shoulder.",
-    avoidIf: ["wrist", "shoulder"],
-    icon: "🏹",
-  },
-  {
-    id: "pushup-tempo",
-    name: "Slow Tempo Push-Up",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Triceps", "Shoulders", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Three seconds down, pause an inch off the floor, then press.",
-    description: "A standard push-up slowed right down, taking three counts to lower and pausing just off the floor before pressing. The extra time under tension makes bodyweight feel much heavier without any equipment.",
-    avoidIf: ["wrist", "shoulder"],
-    icon: "🐢",
-  },
-  {
-    id: "db-guillotine-press",
-    name: "Neutral-Grip Dumbbell Press",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Triceps", "Shoulders"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Palms facing each other; press straight up over your chest.",
-    description: "A flat dumbbell press with palms facing each other the whole way, which keeps the shoulders in a friendlier position than palms-forward pressing. A good default press if standard benching nags your shoulders.",
-    avoidIf: [],
-    icon: "🏋️",
-  },
-  {
-    id: "pushup-staggered",
-    name: "Staggered Push-Up",
-    muscleGroup: "Chest",
-    secondaryMuscles: ["Triceps", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "One hand forward, one back; swap the lead each set.",
-    description: "A push-up with one hand higher than the other, which subtly shifts load between sides and adds a small anti-rotation demand on the core. Alternate the lead hand so both sides get the harder position.",
-    avoidIf: ["wrist", "shoulder"],
-    icon: "💪",
-  },
-
-  // ─────────────────────────── BACK ───────────────────────────
-  {
-    id: "db-single-row",
-    name: "One-Arm Dumbbell Row",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Biceps", "Shoulders"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Brace a hand on the bench; pull the dumbbell to your hip, not your armpit.",
-    description: "With one hand and knee on the bench, row a dumbbell from a dead hang up to your hip pocket, leading with the elbow. The bench support spares the lower back, but keep your spine long and don't twist to heave the weight.",
-    avoidIf: [],
-    icon: "🚣",
-  },
-  {
-    id: "db-bent-row",
-    name: "Bent-Over Dumbbell Row",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Biceps", "Hamstrings", "Core/Abs"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Hinge to ~45°, flat back, row both dumbbells to your lower ribs.",
-    description: "Hinge at the hips with a dumbbell in each hand and row them to your lower ribcage while holding the hinge dead still. Effective but it asks your lower back to hold position — round or jerk and you should lighten the load.",
-    avoidIf: ["lower-back"],
-    icon: "🚣",
-  },
-  {
-    id: "db-chest-supported-row",
-    name: "Chest-Supported Dumbbell Row",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Biceps", "Shoulders"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Chest on an incline bench; row the dumbbells up without lifting your torso.",
-    description: "Lie face-down on an incline bench and row two dumbbells up toward your hips, letting the bench take all the strain off your lower back. The most back-friendly heavy row there is — keep your chest glued to the pad.",
-    avoidIf: [],
-    icon: "🚣",
-  },
-  {
-    id: "pullup",
-    name: "Pull-Up",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Biceps", "Core/Abs", "Shoulders"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Start from a dead hang; pull until your chin clears the bar.",
-    description: "Hang from a bar with an overhand grip just wider than your shoulders and pull until your chin passes the bar, then lower to straight arms. If a full rep isn't there yet, use slow negatives; avoid swinging unless you've trained it.",
-    avoidIf: ["shoulder"],
-    icon: "🧗",
-  },
-  {
-    id: "chinup",
-    name: "Chin-Up",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Biceps", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Underhand grip, shoulder-width — pull your chest toward the bar.",
-    description: "A pull-up with palms facing you, which brings the biceps in strongly and most people find slightly easier. Dead hang to chin-over-bar with no half reps and no dropping like a stone at the bottom.",
-    avoidIf: ["shoulder"],
-    icon: "🧗",
-  },
-  {
-    id: "inverted-row",
-    name: "Inverted Row",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Biceps", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Hang under a sturdy bar or table edge; pull your chest to it, body rigid.",
-    description: "Set a bar around waist height, hang underneath with heels on the floor, and row your chest to the bar while your body stays plank-straight. Walk your feet closer to make it easier, further to make it harder.",
-    avoidIf: ["shoulder"],
-    icon: "🚣",
-  },
-  {
-    id: "superman",
-    name: "Superman Hold",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Glutes", "Hamstrings"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Lift arms and legs a few inches off the floor and hold.",
-    description: "Lie face-down with arms overhead and lift your arms, chest, and legs slightly by squeezing your back and glutes, then lower. Lift to a comfortable height rather than as high as possible — this is gentle endurance work, not a max arch.",
-    avoidIf: ["lower-back", "pregnancy"],
-    icon: "🦸",
-  },
-  {
-    id: "renegade-row",
-    name: "Renegade Row",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Core/Abs", "Shoulders", "Triceps"],
-    equipment: "Dumbbell",
-    difficulty: "Advanced",
-    cue: "Row from a plank on two dumbbells without letting your hips twist.",
-    description: "In a push-up position with each hand on a dumbbell, row one weight to your hip while the rest of you stays square to the floor. It's as much an anti-rotation core drill as a row — if your hips swing, go lighter.",
-    avoidIf: ["wrist", "lower-back", "balance"],
-    icon: "🚣",
-  },
-  {
-    id: "db-pendlay-row",
-    name: "Dumbbell Dead-Stop Row",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Biceps", "Core/Abs"],
-    equipment: "Dumbbell",
-    difficulty: "Advanced",
-    cue: "Hinge over, row explosively, and reset the dumbbells on the floor each rep.",
-    description: "Hinge to near-parallel and row two dumbbells from a dead stop on the floor to your ribs, resetting between every rep. Each rep restarts from zero momentum, which builds power — but the flat-back hinge is strict, so respect your lower back.",
-    avoidIf: ["lower-back"],
-    icon: "🚣",
-  },
-  {
-    id: "db-gorilla-row",
-    name: "Gorilla Row",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Biceps", "Core/Abs"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Dumbbells between your feet; row one while the other rests, alternate.",
-    description: "Stand in a wide hinge over two dumbbells on the floor and row one at a time while the other rests, alternating sides. The offset load and the rest-between-reps make it a bit friendlier than a strict bent row, but the hinge still applies.",
-    avoidIf: ["lower-back"],
-    icon: "🦍",
-  },
-  {
-    id: "db-high-pull",
-    name: "Dumbbell High Pull",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Shoulders", "Biceps"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "From a hinge, pull the dumbbells up to chest height, elbows leading high.",
-    description: "Hinge slightly and pull two dumbbells up toward your chest with your elbows leading high and wide, working the upper back and rear shoulders. Keep it controlled and stop at chest height rather than yanking to the chin.",
-    avoidIf: ["shoulder", "lower-back"],
-    icon: "🚣",
-  },
-  {
-    id: "db-shrug-back",
-    name: "Dumbbell Shrug",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Shoulders"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Lift your shoulders straight up toward your ears, pause, lower.",
-    description: "Stand holding dumbbells at your sides and lift your shoulders straight up toward your ears, pause, and lower — no rolling. Works the upper traps, which take a lot of daily desk-posture abuse.",
-    avoidIf: ["neck"],
-    icon: "🤷",
-  },
-  {
-    id: "db-prone-row-fly",
-    name: "Prone Incline Reverse Fly",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Shoulders"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Chest on an incline bench; open light dumbbells out like wings.",
-    description: "Lying chest-down on an incline bench, raise light dumbbells out to your sides like wings, squeezing your shoulder blades together. Targets the upper back and rear shoulders with zero lower-back strain.",
-    avoidIf: [],
-    icon: "🦅",
-  },
-  {
-    id: "bird-dog-row",
-    name: "Bird-Dog Dumbbell Row",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Biceps", "Core/Abs"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "One knee and hand on the bench; row a light dumbbell, hips square.",
-    description: "Braced on the bench on one knee and hand, row a light dumbbell with the other hand while keeping your hips level and spine neutral. The support makes it kind to the back while adding a quiet anti-rotation challenge.",
-    avoidIf: [],
-    icon: "🐕",
-  },
-  {
-    id: "scapular-pullup",
-    name: "Scapular Pull-Up",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Shoulders"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Hang, then pull your shoulders down without bending your elbows.",
-    description: "Hang from the bar with straight arms and pull your shoulder blades down and together to lift your body an inch — no elbow bend. Builds the shoulder-blade control that healthy pull-ups depend on.",
-    avoidIf: ["shoulder"],
-    icon: "🧗",
-  },
-  {
-    id: "towel-row",
-    name: "Towel Bodyweight Row",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Biceps", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Loop a towel around a sturdy post; lean back and row yourself in.",
-    description: "Loop a strong towel around a fixed vertical post, lean back with straight arms, and pull yourself upright. An anywhere version of the inverted row — adjust difficulty by how far back you lean.",
-    avoidIf: [],
-    icon: "🚣",
-  },
-  {
-    id: "db-svend-back",
-    name: "Wide Dumbbell Pull",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Shoulders", "Biceps"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Chest-supported; pull dumbbells low and wide toward your hips.",
-    description: "Face-down on an incline bench, sweep two dumbbells from hanging in front down and back toward your hips in a wide arc, hitting the lats low. Light weight and a deliberate squeeze beat heavy swinging.",
-    avoidIf: [],
-    icon: "🦅",
-  },
-  {
-    id: "negative-pullup",
-    name: "Pull-Up Negative",
-    muscleGroup: "Back",
-    secondaryMuscles: ["Biceps", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Jump to the top, then lower yourself as slowly as you can.",
-    description: "Start at the top of a pull-up (jump or step up to it) and lower yourself to a dead hang as slowly as possible. Negatives build the exact strength you need before full pull-ups arrive.",
-    avoidIf: ["shoulder"],
-    icon: "🧗",
-  },
-
-  // ───────────────────────── SHOULDERS ─────────────────────────
-  {
-    id: "db-shoulder-press",
-    name: "Seated Dumbbell Shoulder Press",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: ["Triceps"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Press from ear level to straight arms overhead — don't shrug into your neck.",
-    description: "Seated with back support, hold a dumbbell at each side of your head and press overhead until your arms straighten, then lower to ear level. Keep your ribs down instead of arching your lower back to finish.",
-    avoidIf: ["shoulder", "neck"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-standing-press",
-    name: "Standing Dumbbell Press",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: ["Triceps", "Core/Abs"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Brace your abs and glutes; press overhead without leaning back.",
-    description: "Standing with dumbbells at your shoulders, brace your midsection and press them overhead to lockout. Standing recruits the core, but any layback turns it into a lower-back exercise — keep your ribs stacked over your hips.",
-    avoidIf: ["shoulder", "neck", "lower-back"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-lateral-raise",
-    name: "Dumbbell Lateral Raise",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Raise the weights out to shoulder height, pinky slightly up, lower slowly.",
-    description: "Standing with light dumbbells at your sides, raise your arms out until they're parallel to the floor with a slight elbow bend, then lower with control. These stay light — form collapses fast when people chase weight.",
-    avoidIf: ["shoulder"],
-    icon: "💪",
-  },
-  {
-    id: "db-front-raise",
-    name: "Dumbbell Front Raise",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Lift straight in front to eye level, one controlled rep at a time.",
-    description: "Raise a dumbbell straight out in front to about eye level, then lower slowly, keeping a soft elbow. Avoid rocking your torso back to heave the weight up — if you need momentum, it's too heavy.",
-    avoidIf: ["shoulder"],
-    icon: "💪",
-  },
-  {
-    id: "rear-delt-fly",
-    name: "Bent-Over Rear Delt Fly",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: ["Back"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Hinge forward, then open your arms out like wings — light weight, high control.",
-    description: "Hinge until your torso is near-parallel to the floor and raise light dumbbells out to your sides, leading with the elbows to hit the rear shoulders. Rest your chest on an incline bench if the hinge bothers your lower back.",
-    avoidIf: ["shoulder", "lower-back"],
-    icon: "💪",
-  },
-  {
-    id: "arnold-press",
-    name: "Arnold Press",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: ["Triceps"],
-    equipment: "Dumbbell",
-    difficulty: "Advanced",
-    cue: "Start palms facing you, rotate out as you press overhead.",
-    description: "Begin with dumbbells at shoulder height, palms facing you, and rotate your palms outward as you press overhead. The added rotation sweeps through more of the shoulder but demands more from it — keep the weight moderate.",
-    avoidIf: ["shoulder", "neck"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-shrug",
-    name: "Dumbbell Shrug (Shoulders)",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: ["Back"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Straight up toward your ears, pause, straight down — no rolling.",
-    description: "Stand holding dumbbells at your sides and lift your shoulders straight up toward your ears, pause, and lower. Rolling the shoulders under load adds nothing and irritates necks — keep it a clean vertical shrug.",
-    avoidIf: ["neck"],
-    icon: "🤷",
-  },
-  {
-    id: "db-upright-row",
-    name: "Dumbbell Upright Row",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: ["Back", "Biceps"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Pull the dumbbells up your body to chest height, elbows leading — no higher.",
-    description: "Hold dumbbells in front of your thighs and pull them up along your body to about chest height with your elbows leading. Stop at chest height and keep the dumbbells a touch apart — pulling narrow to the chin is the classic impingement recipe.",
-    avoidIf: ["shoulder", "wrist", "neck"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-lateral-lean",
-    name: "Leaning Lateral Raise",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Hold a post with one hand, lean away, raise the far dumbbell out.",
-    description: "Hold a sturdy post and lean away from it, then raise a dumbbell out to the side with the free arm — the lean keeps tension on the shoulder from the very bottom. One arm at a time, light and controlled.",
-    avoidIf: ["shoulder"],
-    icon: "💪",
-  },
-  {
-    id: "db-scaption",
-    name: "Dumbbell Scaption",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Raise the dumbbells up in a Y, thumbs up, to shoulder height.",
-    description: "Raise light dumbbells up and out at about a 30-degree angle from straight ahead (in the plane of the shoulder blade) with thumbs up, forming a Y. This is the most shoulder-friendly raise and a staple for shoulder health.",
-    avoidIf: [],
-    icon: "💪",
-  },
-  {
-    id: "db-w-raise",
-    name: "Prone Y-T-W Raise",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: ["Back"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Chest on the bench; trace Y, then T, then W with light dumbbells.",
-    description: "Face-down on an incline bench, raise very light dumbbells into a Y, then a T, then a W shape, squeezing the shoulder blades each time. A posture and shoulder-health circuit that most people can do often.",
-    avoidIf: [],
-    icon: "🔤",
-  },
-  {
-    id: "pike-pushup",
-    name: "Pike Push-Up",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: ["Triceps"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Hips high in an inverted V; lower the crown of your head toward the floor.",
-    description: "From a downward-dog position with hips high, bend your elbows to lower the top of your head toward the floor, then press back up. A bodyweight overhead press that scales toward the handstand push-up.",
-    avoidIf: ["shoulder", "wrist"],
-    icon: "🔺",
-  },
-  {
-    id: "elevated-pike-pushup",
-    name: "Feet-Elevated Pike Push-Up",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: ["Triceps"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Feet up on the bench, hips stacked high over your hands.",
-    description: "A pike push-up with your feet on the bench so your torso is nearly vertical, putting most of your bodyweight over the shoulders. The closest bodyweight move to a strict overhead press before handstand work.",
-    avoidIf: ["shoulder", "wrist"],
-    icon: "🔺",
-  },
-  {
-    id: "db-cuban-press",
-    name: "Cuban Press",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: ["Back"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Upright row, rotate the dumbbells up, then press — one flowing move.",
-    description: "With light dumbbells, pull into a low upright row, externally rotate your forearms up so the weights point at the ceiling, then press overhead. A rotator-cuff-focused drill — keep it light and smooth, never grindy.",
-    avoidIf: ["shoulder"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-6way-raise",
-    name: "Six-Way Shoulder Raise",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Advanced",
-    cue: "Front raise, out to a T, back to front, then lower — light weight only.",
-    description: "A finisher that raises light dumbbells to the front, sweeps them out to the sides, brings them back to the front, and lowers — hitting every angle of the shoulder in one rep. Humbling with even the lightest dumbbells.",
-    avoidIf: ["shoulder"],
-    icon: "💪",
-  },
-  {
-    id: "db-around-world",
-    name: "Dumbbell Around-the-World",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: ["Chest"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Sweep light dumbbells from your hips up and around to overhead.",
-    description: "Lying or standing, sweep light dumbbells in a wide circle from your thighs out and up to meet overhead, then reverse. Keep it light and the arms nearly straight — the wide arc is only comfortable with control.",
-    avoidIf: ["shoulder"],
-    icon: "🌍",
-  },
-  {
-    id: "wall-handstand-hold",
-    name: "Wall Handstand Hold",
-    muscleGroup: "Shoulders",
-    secondaryMuscles: ["Triceps", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Kick up to the wall, stack shoulders over hands, hold and breathe.",
-    description: "Kick up into a handstand with your heels resting on a wall and hold, stacking your shoulders directly over your hands. A big overhead-strength and balance builder — only attempt it once your shoulders and wrists are ready.",
-    avoidIf: ["shoulder", "wrist", "balance"],
-    icon: "🤸",
-  },
-
-  // ─────────────────────────── BICEPS ───────────────────────────
-  {
-    id: "db-curl",
-    name: "Dumbbell Biceps Curl",
-    muscleGroup: "Biceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Elbows pinned to your sides; curl up, lower for a slow three-count.",
-    description: "Curl a dumbbell in each hand to your shoulders without letting your elbows drift forward or your torso swing. The lowering half is where the growth is, so take it slow.",
-    avoidIf: [],
-    icon: "💪",
-  },
-  {
-    id: "hammer-curl",
-    name: "Hammer Curl",
-    muscleGroup: "Biceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Palms facing each other the whole rep, like swinging a hammer.",
-    description: "A curl with a neutral grip — palms facing your body throughout — that hits the brachialis and forearms and is the most wrist-friendly curl for most people. Same rules: elbows glued to your ribs, no swinging.",
-    avoidIf: [],
-    icon: "🔨",
-  },
-  {
-    id: "concentration-curl",
-    name: "Concentration Curl",
-    muscleGroup: "Biceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Elbow braced against your inner thigh — nothing moves but the forearm.",
-    description: "Seated, lean forward and brace your elbow against your inner thigh, then curl a single dumbbell with total strictness. The bracing removes every cheat, so the weight will be humbling.",
-    avoidIf: [],
-    icon: "💪",
-  },
-  {
-    id: "incline-db-curl",
-    name: "Incline Dumbbell Curl",
-    muscleGroup: "Biceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Lie back on an incline bench and let your arms hang behind your body line.",
-    description: "Curling while lying back on a 45–60° incline bench puts the biceps under stretch at the bottom, letting the arms hang fully. Skip it if the stretched shoulder position feels tweaky at the front.",
-    avoidIf: ["shoulder"],
-    icon: "💪",
-  },
-  {
-    id: "db-preacher-bench-curl",
-    name: "Bench Preacher Curl",
-    muscleGroup: "Biceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Drape your arm over the incline bench back; curl with no swing.",
-    description: "Set the bench upright and drape your upper arm over the top of the backrest, then curl a dumbbell with the arm fully supported. The pad kills momentum and stretches the biceps hard — lower under control and stop short of a locked elbow.",
-    avoidIf: ["wrist"],
-    icon: "💪",
-  },
-  {
-    id: "db-spider-curl",
-    name: "Spider Curl",
-    muscleGroup: "Biceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Chest on an incline bench, arms hanging straight down; curl up.",
-    description: "Lie chest-down on an incline bench with your arms hanging straight toward the floor and curl the dumbbells up. Hanging vertically keeps tension on the biceps through the whole rep with zero body english.",
-    avoidIf: [],
-    icon: "🕷️",
-  },
-  {
-    id: "db-zottman-curl",
-    name: "Zottman Curl",
-    muscleGroup: "Biceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Curl up palms-up, rotate to palms-down, lower slowly.",
-    description: "Curl the dumbbells up with palms facing up, rotate at the top so your palms face down, then lower slowly in that grip. You get a biceps curl on the way up and a forearm-building reverse curl on the way down.",
-    avoidIf: [],
-    icon: "🔄",
-  },
-  {
-    id: "db-cross-curl",
-    name: "Cross-Body Hammer Curl",
-    muscleGroup: "Biceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Curl each dumbbell across your body toward the opposite shoulder.",
-    description: "With a neutral grip, curl each dumbbell diagonally across your body toward the opposite shoulder, alternating arms. The cross-body path emphasises the brachialis and the thickness of the upper arm.",
-    avoidIf: [],
-    icon: "💪",
-  },
-  {
-    id: "db-drag-curl",
-    name: "Dumbbell Drag Curl",
-    muscleGroup: "Biceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Drag the dumbbells straight up your torso, elbows drifting back.",
-    description: "Curl the dumbbells while dragging them up close to your body, letting your elbows travel backward instead of staying pinned. The path keeps the biceps working without the shoulders taking over — expect to use less weight.",
-    avoidIf: [],
-    icon: "💪",
-  },
-  {
-    id: "db-reverse-curl",
-    name: "Reverse Curl",
-    muscleGroup: "Biceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Palms facing down; curl up keeping the knuckles high.",
-    description: "Curl the dumbbells with an overhand (palms-down) grip, which shifts work onto the forearms and the outer biceps. Go lighter than a normal curl — the grip is much weaker this way.",
-    avoidIf: ["wrist"],
-    icon: "💪",
-  },
-  {
-    id: "db-waiter-curl",
-    name: "Waiter Curl",
-    muscleGroup: "Biceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Cup one dumbbell in both hands like a tray; curl to your chin.",
-    description: "Hold a single dumbbell vertically in both cupped hands like a tray and curl it to your chin, elbows tight to your body. The centred load makes it a simple, joint-friendly way to hit both biceps together.",
-    avoidIf: [],
-    icon: "🤵",
-  },
-  {
-    id: "chinup-hold",
-    name: "Chin-Up Hold",
-    muscleGroup: "Biceps",
-    secondaryMuscles: ["Back", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Pull to the top of a chin-up and hold, chin over the bar.",
-    description: "Hold the top position of a chin-up with your chin over the bar for time, palms facing you. A brutal bodyweight biceps and grip builder that also feeds your chin-up strength.",
-    avoidIf: ["shoulder"],
-    icon: "🧗",
-  },
-  {
-    id: "db-21s",
-    name: "Dumbbell 21s",
-    muscleGroup: "Biceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Seven bottom-half reps, seven top-half, seven full — no rest.",
-    description: "One set of 21s is seven curls through the bottom half of the range, seven through the top half, then seven full curls, back to back. The partial ranges torch the biceps with surprisingly light weight.",
-    avoidIf: [],
-    icon: "💪",
-  },
-
-  // ─────────────────────────── TRICEPS ───────────────────────────
-  {
-    id: "bench-dip",
-    name: "Bench Dip",
-    muscleGroup: "Triceps",
-    secondaryMuscles: ["Chest", "Shoulders"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Hands on the bench behind you; lower until elbows hit 90°, no deeper.",
-    description: "With your hands on the bench edge behind you and legs out front, bend your elbows to lower your hips, then press up. Going too deep stresses the shoulder — 90° at the elbow is plenty; bend your knees to make it easier.",
-    avoidIf: ["shoulder", "wrist"],
-    icon: "🪑",
-  },
-  {
-    id: "overhead-db-extension",
-    name: "Overhead Dumbbell Extension",
-    muscleGroup: "Triceps",
-    secondaryMuscles: ["Shoulders"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Both hands under one dumbbell overhead; lower it behind your head, elbows in.",
-    description: "Hold one dumbbell overhead with both hands and bend only at the elbows to lower it behind your head, then press up. Keep your elbows pointing forward and your ribs stacked rather than arching your back.",
-    avoidIf: ["shoulder", "neck"],
-    icon: "🏋️",
-  },
-  {
-    id: "diamond-pushup",
-    name: "Diamond Push-Up",
-    muscleGroup: "Triceps",
-    secondaryMuscles: ["Chest", "Shoulders", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Thumbs and index fingers form a diamond under your chest.",
-    description: "A push-up with hands close together under your chest, thumbs and index fingers touching, shifting the work heavily onto the triceps. The narrow hand position cranks the wrists — elevate or widen slightly if they protest.",
-    avoidIf: ["wrist", "shoulder"],
-    icon: "💎",
-  },
-  {
-    id: "db-kickback",
-    name: "Dumbbell Triceps Kickback",
-    muscleGroup: "Triceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Hinge forward, upper arm parallel to the floor, straighten the elbow fully.",
-    description: "Brace a hand on the bench, raise your upper arm parallel to the floor, and extend the dumbbell back until your arm is completely straight. All the value is in the full extension and the squeeze at lockout — light weight, no swinging.",
-    avoidIf: ["lower-back"],
-    icon: "💪",
-  },
-  {
-    id: "db-skull-crusher",
-    name: "Dumbbell Skull Crusher",
-    muscleGroup: "Triceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Lying down, lower the dumbbells beside your head, elbows pointing up.",
-    description: "Lie on the bench with dumbbells held over your chest and bend at the elbows to lower them beside your ears, then extend up. Dumbbells let your wrists sit neutrally, which most elbows prefer over a straight bar.",
-    avoidIf: ["shoulder"],
-    icon: "💀",
-  },
-  {
-    id: "db-tate-press",
-    name: "Tate Press",
-    muscleGroup: "Triceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Lower the dumbbells toward your chest, elbows flaring out.",
-    description: "Lying on the bench, press two dumbbells up, then lower them toward your chest by flaring the elbows so the weights meet over your sternum, and press back. An old powerlifting move that targets the inner triceps.",
-    avoidIf: ["shoulder"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-jm-press",
-    name: "Dumbbell JM Press",
-    muscleGroup: "Triceps",
-    secondaryMuscles: ["Chest"],
-    equipment: "Dumbbell",
-    difficulty: "Advanced",
-    cue: "Half press, half skull crusher — lower toward your upper chest.",
-    description: "A hybrid of a close press and a skull crusher: lower the dumbbells toward your upper chest with elbows tucked, then press. It blends pressing strength with triceps isolation and is easier on the elbows than a strict skull crusher.",
-    avoidIf: ["shoulder"],
-    icon: "🏋️",
-  },
-  {
-    id: "close-pushup",
-    name: "Close-Grip Push-Up",
-    muscleGroup: "Triceps",
-    secondaryMuscles: ["Chest", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Hands under your shoulders, elbows brushing your ribs as you lower.",
-    description: "A push-up with hands about shoulder-width and elbows tracking tight to your sides, emphasising the triceps over the chest. Keep the elbows in rather than flaring to keep the load where you want it.",
-    avoidIf: ["wrist", "shoulder"],
-    icon: "💪",
-  },
-  {
-    id: "bench-dip-feet-up",
-    name: "Feet-Elevated Bench Dip",
-    muscleGroup: "Triceps",
-    secondaryMuscles: ["Chest", "Shoulders"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Hands on one bench, heels on another; dip to 90° elbows.",
-    description: "A bench dip with your heels raised on a second surface, adding bodyweight to the triceps. Keep the depth to a 90° elbow — the elevated, loaded version is even less forgiving to the shoulders than the standard dip.",
-    avoidIf: ["shoulder", "wrist"],
-    icon: "🪑",
-  },
-  {
-    id: "db-floor-extension",
-    name: "Floor Triceps Extension",
-    muscleGroup: "Triceps",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "On the floor, lower dumbbells beside your head; the floor caps the range.",
-    description: "A lying triceps extension done on the floor so your upper arms rest down and the range is naturally limited. The floor makes it the gentlest way to load the triceps overhead-style if the bench version bothers your shoulders.",
-    avoidIf: [],
-    icon: "💪",
-  },
-  {
-    id: "db-close-press",
-    name: "Close Neutral-Grip Press",
-    muscleGroup: "Triceps",
-    secondaryMuscles: ["Chest", "Shoulders"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Dumbbells touching, elbows tucked; press straight up.",
-    description: "Press two dumbbells held together with a neutral grip while keeping your elbows tucked close to your body, shifting the press onto the triceps. The touching dumbbells and tucked elbows keep it easy on the shoulders.",
-    avoidIf: [],
-    icon: "🏋️",
-  },
-  {
-    id: "db-overhead-single",
-    name: "Single-Arm Overhead Extension",
-    muscleGroup: "Triceps",
-    secondaryMuscles: ["Core/Abs"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "One dumbbell overhead in one hand; lower behind your head, elbow high.",
-    description: "Press one dumbbell overhead and lower it behind your head one arm at a time, keeping the elbow pointing at the ceiling. Working one side at a time exposes and fixes left-right differences; brace your core so you don't lean.",
-    avoidIf: ["shoulder", "neck"],
-    icon: "💪",
-  },
-  {
-    id: "bodyweight-skullcrusher",
-    name: "Bodyweight Triceps Extension",
-    muscleGroup: "Triceps",
-    secondaryMuscles: ["Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Hands on the bench, body straight; bend only at the elbows to lower your head.",
-    description: "In a plank against the bench, bend only at the elbows to lower your forehead toward the bench edge, then extend back — a bodyweight skull crusher. Move your feet back to make it harder; keep the body rigid throughout.",
-    avoidIf: ["wrist", "shoulder", "lower-back"],
-    icon: "💀",
-  },
-
-  // ─────────────────────────── CORE/ABS ───────────────────────────
-  {
-    id: "plank",
-    name: "Plank",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: ["Shoulders", "Glutes"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Forearms down, glutes squeezed, one straight line from head to heels.",
-    description: "Hold a straight-body position on your forearms and toes, squeezing your glutes and bracing your abs like you're about to take a light punch. When the line breaks and your hips sag, the set is over.",
-    avoidIf: [],
-    icon: "🧘",
-  },
-  {
-    id: "side-plank",
-    name: "Side Plank",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: ["Shoulders", "Glutes"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Stacked feet, hips lifted high — don't let them sag toward the floor.",
-    description: "Prop up on one forearm with your elbow under your shoulder and lift your hips into a straight line, targeting the obliques and deep side stabilizers. Drop the bottom knee to the floor for an easier version.",
-    avoidIf: ["shoulder"],
-    icon: "🧘",
-  },
-  {
-    id: "dead-bug",
-    name: "Dead Bug",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Lower back pressed flat while opposite arm and leg reach away.",
-    description: "On your back with arms up and knees bent to 90°, slowly extend one arm overhead and the opposite leg long, keeping your lower back glued to the floor, then switch. Quietly one of the best back-friendly core drills there is.",
-    avoidIf: ["pregnancy"],
-    icon: "🪲",
-  },
-  {
-    id: "bird-dog",
-    name: "Bird Dog",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: ["Glutes", "Back"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "From all fours, reach opposite arm and leg long without tipping your hips.",
-    description: "On hands and knees, extend one arm and the opposite leg until both are level with your torso, pause, and return without letting your hips tip. A rehab-world classic for keeping the spine still while the limbs move.",
-    avoidIf: ["wrist", "knee"],
-    icon: "🐕",
-  },
-  {
-    id: "crunch",
-    name: "Crunch",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Curl your ribs toward your hips — shoulder blades off the floor is far enough.",
-    description: "Lying with knees bent, curl your upper spine forward until your shoulder blades leave the floor, then lower. It's a short movement, not a sit-up — don't yank your head; fingertips behind the ears, elbows wide.",
-    avoidIf: ["lower-back", "neck", "pregnancy"],
-    icon: "🤸",
-  },
-  {
-    id: "situp",
-    name: "Sit-Up",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Roll up one vertebra at a time; exhale on the way up.",
-    description: "From lying with knees bent, curl all the way up to sitting, then roll back down with control. The full range works the abs and hip flexors, but repeated full spinal flexion is what cranky lower backs dislike.",
-    avoidIf: ["lower-back", "neck", "pregnancy"],
-    icon: "🤸",
-  },
-  {
-    id: "russian-twist",
-    name: "Russian Twist",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Lean back to 45°, rotate your chest side to side from the ribs.",
-    description: "Seated, lean back until your abs switch on, then rotate side to side, touching the floor beside each hip. Rotate through the mid-back rather than whipping the arms — skip it if twisting under load bothers your spine.",
-    avoidIf: ["lower-back", "pregnancy"],
-    icon: "🌀",
-  },
-  {
-    id: "lying-leg-raise",
-    name: "Lying Leg Raise",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: ["Quads"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Legs up to vertical, then lower only as far as your lower back stays down.",
-    description: "Lying flat, raise your legs to vertical and lower them toward the floor without letting your lower back peel up — the lowering is the exercise. Bend the knees to make it easier; stop higher the moment your back arches.",
-    avoidIf: ["lower-back", "pregnancy"],
-    icon: "🦵",
-  },
-  {
-    id: "hollow-hold",
-    name: "Hollow Body Hold",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Press your lower back into the floor and hover shoulders and legs — banana shape.",
-    description: "Press your lower back into the floor and lift your shoulders and straight legs a few inches, arms overhead, into a shallow banana shape. Tuck the knees or raise the legs higher to scale it down.",
-    avoidIf: ["lower-back", "neck", "pregnancy"],
-    icon: "🍌",
-  },
-  {
-    id: "hanging-knee-raise",
-    name: "Hanging Knee Raise",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: ["Quads"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Hang from a bar; curl your knees up toward your chest, no swinging.",
-    description: "Hang from a pull-up bar and curl your knees up toward your chest by rolling your pelvis, then lower without swinging. Controlling the swing is the whole skill — a slight backward tuck of the pelvis is what works the abs.",
-    avoidIf: ["shoulder"],
-    icon: "🦵",
-  },
-  {
-    id: "db-weighted-crunch",
-    name: "Weighted Crunch",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Hold a dumbbell on your chest; curl your ribs toward your hips.",
-    description: "A crunch with a light dumbbell held against your chest to add resistance to the abs. Keep it a short curl rather than a full sit-up, and don't let the added weight pull your head forward.",
-    avoidIf: ["lower-back", "neck", "pregnancy"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-side-bend",
-    name: "Dumbbell Side Bend",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Dumbbell in one hand; bend sideways toward it, then pull straight up.",
-    description: "Hold a dumbbell in one hand and bend sideways toward it, then contract the opposite oblique to pull straight back up. Only load one side at a time and keep the motion strictly side-to-side, not twisting.",
-    avoidIf: ["lower-back", "pregnancy"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-suitcase-hold",
-    name: "Suitcase Carry Hold",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: ["Back", "Shoulders"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Hold one dumbbell at your side and stand tall — don't let it tip you.",
-    description: "Hold a single heavy dumbbell at one side and either stand tall or walk, resisting the pull that wants to bend you sideways. An anti-lateral-flexion drill that quietly builds a strong, stable core and grip.",
-    avoidIf: [],
-    icon: "🧳",
-  },
-  {
-    id: "reverse-crunch",
-    name: "Reverse Crunch",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Knees bent, curl your hips off the floor toward your ribs.",
-    description: "Lying on your back with knees bent, curl your hips up off the floor toward your ribcage using your lower abs, then lower slowly. It's a small, controlled roll of the pelvis — no throwing the legs for momentum.",
-    avoidIf: ["lower-back", "pregnancy"],
-    icon: "🤸",
-  },
-  {
-    id: "bicycle-crunch",
-    name: "Bicycle Crunch",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Opposite elbow toward opposite knee, slow and deliberate.",
-    description: "Lying down, bring one elbow toward the opposite knee while extending the other leg, then switch in a slow pedaling motion. The rotation hits the obliques — go slow rather than fast and don't tug on your neck.",
-    avoidIf: ["lower-back", "neck", "pregnancy"],
-    icon: "🚲",
-  },
-  {
-    id: "plank-shoulder-tap",
-    name: "Plank Shoulder Tap",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: ["Shoulders"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "From a high plank, tap each hand to the opposite shoulder, hips still.",
-    description: "In a high plank with feet wide, tap one hand to the opposite shoulder while keeping your hips from rocking, then alternate. The anti-rotation demand is the point — the slower and stiller your hips, the harder it works.",
-    avoidIf: ["wrist", "shoulder"],
-    icon: "🧘",
-  },
-  {
-    id: "v-up",
-    name: "V-Up",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: ["Quads"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Reach hands to toes, folding into a V, then lower with control.",
-    description: "Lying flat, simultaneously lift your straight legs and torso to reach your hands toward your toes, folding into a V, then lower. A demanding full-length ab move — bend the knees or do tuck-ups to scale it down.",
-    avoidIf: ["lower-back", "neck", "pregnancy"],
-    icon: "✅",
-  },
-  {
-    id: "hollow-rock",
-    name: "Hollow Rock",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Hold the banana shape and rock gently from shoulders to hips.",
-    description: "Get into a hollow hold, then rock your whole rigid body back and forth like a rocking chair without losing the banana shape. The rocking adds a dynamic challenge on top of the hollow hold's tension.",
-    avoidIf: ["lower-back", "neck", "pregnancy"],
-    icon: "🍌",
-  },
-  {
-    id: "toe-touch-crunch",
-    name: "Toe-Touch Crunch",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Legs up to vertical; reach your hands toward your toes.",
-    description: "Lying with your legs pointed straight up, crunch up and reach your hands toward your toes, then lower your shoulders back down. Keeping the legs vertical takes the hip flexors out and puts the focus on the upper abs.",
-    avoidIf: ["neck", "pregnancy"],
-    icon: "🦶",
-  },
-  {
-    id: "plank-reach",
-    name: "Plank Reach-Out",
-    muscleGroup: "Core/Abs",
-    secondaryMuscles: ["Shoulders", "Back"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "From a forearm plank, reach one arm forward without shifting your hips.",
-    description: "In a forearm plank, extend one arm straight out in front of you and hold briefly before switching, keeping your hips square and level. Removing a support point makes the core fight hard to stop any rotation.",
-    avoidIf: ["shoulder"],
-    icon: "🧘",
-  },
-
-  // ─────────────────────────── GLUTES ───────────────────────────
-  {
-    id: "glute-bridge",
-    name: "Glute Bridge",
-    muscleGroup: "Glutes",
-    secondaryMuscles: ["Hamstrings", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Drive through your heels and squeeze your glutes to lift your hips.",
-    description: "Lying with knees bent and feet flat, drive your hips up until your body is straight from knees to shoulders, squeeze hard, and lower. The lift should come from the glutes — think 'tuck and lift', not 'arch and push'.",
-    avoidIf: ["pregnancy"],
-    icon: "🌉",
-  },
-  {
-    id: "db-hip-thrust",
-    name: "Dumbbell Hip Thrust",
-    muscleGroup: "Glutes",
-    secondaryMuscles: ["Hamstrings", "Quads"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Upper back on the bench, dumbbell over your hips — drive up to a flat tabletop.",
-    description: "With your upper back on the bench and a dumbbell held across your hips (pad it), drive your hips up until your torso is level, chin tucked, then lower. The heaviest direct glute loading you can do with dumbbells.",
-    avoidIf: ["hip", "pregnancy"],
-    icon: "🏋️",
-  },
-  {
-    id: "single-leg-glute-bridge",
-    name: "Single-Leg Glute Bridge",
-    muscleGroup: "Glutes",
-    secondaryMuscles: ["Hamstrings", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "One foot down, one leg extended — hips rise level, no tilting.",
-    description: "A glute bridge on one leg with the other held straight or hugged in, which doubles the load on the working glute. Keep the hips level as you rise — a tilting pelvis means the lower back is out-voting the glute.",
-    avoidIf: ["pregnancy"],
-    icon: "🌉",
-  },
-  {
-    id: "donkey-kick",
-    name: "Donkey Kick",
-    muscleGroup: "Glutes",
-    secondaryMuscles: ["Hamstrings", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "From all fours, press one flexed foot toward the ceiling, knee bent at 90°.",
-    description: "On hands and knees, keep one knee bent at 90° and press that foot toward the ceiling by squeezing the glute, then lower without touching down. Stop where your back would start to arch — the range is smaller than momentum wants.",
-    avoidIf: ["wrist", "knee"],
-    icon: "🐴",
-  },
-  {
-    id: "fire-hydrant",
-    name: "Fire Hydrant",
-    muscleGroup: "Glutes",
-    secondaryMuscles: ["Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "From all fours, lift one bent knee out to the side without tilting your hips.",
-    description: "On hands and knees, lift one bent leg out to the side while keeping both hips square to the floor, then lower. Works the side glutes that stabilize every step — height doesn't matter, keeping the torso still does.",
-    avoidIf: ["wrist", "knee", "hip"],
-    icon: "🚒",
-  },
-  {
-    id: "clamshell",
-    name: "Clamshell",
-    muscleGroup: "Glutes",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Lie on your side, knees bent, and open the top knee — feet stay together.",
-    description: "Lying on your side with knees bent and stacked, keep your feet touching and lift the top knee open without rolling your pelvis back, then close slowly. A physical-therapy staple for the deep side glutes.",
-    avoidIf: [],
-    icon: "🐚",
-  },
-  {
-    id: "db-frog-pump",
-    name: "Dumbbell Frog Pump",
-    muscleGroup: "Glutes",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Soles of the feet together, knees wide; pump the hips up, dumbbell on the hips.",
-    description: "Lying on your back with the soles of your feet together and knees splayed out, hold a light dumbbell on your hips and pump them up, squeezing the glutes at the top. The frog position biases the work toward the glutes over the hamstrings.",
-    avoidIf: ["pregnancy"],
-    icon: "🐸",
-  },
-  {
-    id: "db-bulgarian-glute",
-    name: "Dumbbell B-Stance Hip Thrust",
-    muscleGroup: "Glutes",
-    secondaryMuscles: ["Hamstrings"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Back on the bench; one foot flat, the other just as a kickstand.",
-    description: "A hip thrust with most of the weight on one foot while the other rests lightly forward as a kickstand, so one glute does the lion's share. A dumbbell on the hips loads it; keep both hips rising level.",
-    avoidIf: ["hip", "pregnancy"],
-    icon: "🏋️",
-  },
-  {
-    id: "step-through-lunge",
-    name: "Curtsy Lunge",
-    muscleGroup: "Glutes",
-    secondaryMuscles: ["Quads", "Hamstrings"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Step one leg diagonally behind the other and lower into a curtsy.",
-    description: "From standing, step one foot diagonally behind and across the other, then bend both knees into a curtsy before returning. The crossed angle targets the side glutes strongly — keep your front knee tracking over your foot.",
-    avoidIf: ["knee", "balance", "hip"],
-    icon: "💃",
-  },
-  {
-    id: "db-single-rdl-glute",
-    name: "Dumbbell Kickstand RDL",
-    muscleGroup: "Glutes",
-    secondaryMuscles: ["Hamstrings", "Back"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "One foot back on its toes as a kickstand; hinge and drive the front glute.",
-    description: "Hold dumbbells and place one foot slightly back on its toes for balance, then hinge over the front leg and stand by squeezing that glute. The kickstand gives you the single-leg glute focus without the full balance demand.",
-    avoidIf: ["lower-back"],
-    icon: "🦵",
-  },
-  {
-    id: "hip-abduction-side",
-    name: "Side-Lying Leg Raise",
-    muscleGroup: "Glutes",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "On your side, raise the top leg straight up, toes pointing forward.",
-    description: "Lying on your side, raise the top leg straight up with the toes pointing forward (not up), then lower slowly to work the side glute. Keeping the toe forward rather than rotated up keeps the focus on the glute, not the hip flexor.",
-    avoidIf: [],
-    icon: "🦵",
-  },
-  {
-    id: "db-sumo-squat-glute",
-    name: "Dumbbell Sumo Squat",
-    muscleGroup: "Glutes",
-    secondaryMuscles: ["Quads", "Hamstrings"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Wide stance, toes out; hold one dumbbell low and squat between your heels.",
-    description: "Take a wide stance with toes turned out, hold a dumbbell hanging between your legs, and squat straight down, driving your knees out. The wide stance shifts emphasis onto the glutes and inner thighs.",
-    avoidIf: ["knee", "hip"],
-    icon: "🏋️",
-  },
-  {
-    id: "glute-bridge-march",
-    name: "Glute Bridge March",
-    muscleGroup: "Glutes",
-    secondaryMuscles: ["Core/Abs", "Hamstrings"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Hold a bridge and slowly lift one foot, then the other — hips stay level.",
-    description: "Hold the top of a glute bridge and slowly march one foot up at a time while keeping your hips from dropping or tilting. The support glute has to work overtime to keep everything level.",
-    avoidIf: ["pregnancy"],
-    icon: "🌉",
-  },
-  {
-    id: "reverse-hyper-bench",
-    name: "Bench Reverse Hyper",
-    muscleGroup: "Glutes",
-    secondaryMuscles: ["Hamstrings", "Back"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Hips on the bench edge, torso down; raise straight legs to level, no higher.",
-    description: "Lie face-down with your hips at the edge of the bench and legs hanging, then raise your straight legs up to body level by squeezing the glutes. Stop at level rather than swinging higher, which just arches the lower back.",
-    avoidIf: ["lower-back"],
-    icon: "🍑",
-  },
-  {
-    id: "db-good-glute-morning",
-    name: "Dumbbell Hip Hinge",
-    muscleGroup: "Glutes",
-    secondaryMuscles: ["Hamstrings", "Back"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Dumbbells at your sides; push your hips straight back, then stand tall.",
-    description: "Hold light dumbbells at your sides and push your hips straight back with a flat back until you feel the glutes and hamstrings load, then drive your hips forward to stand. The foundational hinge pattern — master it light before loading heavy.",
-    avoidIf: ["lower-back"],
-    icon: "🍑",
-  },
-
-  // ─────────────────────────── QUADS ───────────────────────────
-  {
-    id: "bodyweight-squat",
-    name: "Bodyweight Squat",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes", "Hamstrings", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Sit back and down between your hips, chest up, heels planted.",
-    description: "Feet about shoulder width, sit down between your hips as deep as comfortable and stand back up, knees tracking in line with the toes. The most useful pattern in the library — the depth that feels strong is your depth.",
-    avoidIf: ["knee"],
-    icon: "🦵",
-  },
-  {
-    id: "goblet-squat",
-    name: "Goblet Squat",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes", "Core/Abs"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Hug one dumbbell at your chest — it counterbalances you into a deeper squat.",
-    description: "Hold a dumbbell vertically against your chest and squat; the front-loaded weight acts as a counterbalance so most people squat deeper and more upright. The thinking person's first loaded squat.",
-    avoidIf: ["knee"],
-    icon: "🏋️",
-  },
-  {
-    id: "forward-lunge",
-    name: "Forward Lunge",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes", "Hamstrings"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Step forward, lower the back knee toward the floor, push back to standing.",
-    description: "Step forward into a split stance and lower until both knees near 90°, then push off the front foot to return. The braking of the forward step is what makes it harder on the knees than its reverse cousin.",
-    avoidIf: ["knee", "balance"],
-    icon: "🦵",
-  },
-  {
-    id: "reverse-lunge",
-    name: "Reverse Lunge",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes", "Hamstrings"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Step backward into the lunge — easier on the knees than stepping forward.",
-    description: "Step one foot backward and lower the back knee toward the floor, then drive through the front heel to stand. Removing the forward braking step makes this the knee-friendlier lunge and easier to balance.",
-    avoidIf: ["knee", "balance"],
-    icon: "🦵",
-  },
-  {
-    id: "bulgarian-split-squat",
-    name: "Bulgarian Split Squat",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes", "Hamstrings", "Core/Abs"],
-    equipment: "Dumbbell",
-    difficulty: "Advanced",
-    cue: "Rear foot on the bench, drop straight down — the front leg does the work.",
-    description: "A split squat with your rear foot on the bench behind you and dumbbells at your sides, loading one leg hard with none of the spinal load of a barbell. Find the foot spacing before adding weight; the balance is half the battle.",
-    avoidIf: ["knee", "balance", "hip"],
-    icon: "🦵",
-  },
-  {
-    id: "wall-sit",
-    name: "Wall Sit",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Back flat on the wall, thighs parallel to the floor, and hold.",
-    description: "Slide down a wall until your thighs are parallel and knees are over your ankles, then hold the invisible chair with your hands off your legs. Raise the seat height (shallower angle) to make it kinder to the knees.",
-    avoidIf: ["knee"],
-    icon: "🪑",
-  },
-  {
-    id: "step-up",
-    name: "Step-Up",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes", "Calves"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Whole foot on the bench; drive through that heel without pushing off the floor leg.",
-    description: "Step onto the bench, driving up through the leading leg until you stand tall on it, then step down with control. The honest version barely pushes off the bottom foot — lower the step if you can't help cheating.",
-    avoidIf: ["knee", "balance"],
-    icon: "🦵",
-  },
-  {
-    id: "db-step-up",
-    name: "Dumbbell Step-Up",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes", "Calves"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Dumbbells at your sides; step up under control, no bouncing off the floor.",
-    description: "A step-up onto the bench holding a dumbbell in each hand, adding real load to a very functional pattern. Keep the movement slow and honest — push through the top foot, don't spring off the bottom one.",
-    avoidIf: ["knee", "balance"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-squat",
-    name: "Dumbbell Squat",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes", "Hamstrings", "Core/Abs"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "A dumbbell in each hand at your sides; squat down and stand tall.",
-    description: "Hold a dumbbell in each hand at your sides and squat to a comfortable depth, then stand. Loading at your sides keeps your torso upright and is an easy way to add weight once bodyweight squats feel light.",
-    avoidIf: ["knee"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-front-squat",
-    name: "Dumbbell Front Squat",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes", "Core/Abs"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Rest dumbbells on your shoulders; squat with an upright chest.",
-    description: "Hold two dumbbells on the front of your shoulders and squat, keeping your torso tall and elbows up. The front-loaded position hammers the quads and demands an upright, braced trunk.",
-    avoidIf: ["knee"],
-    icon: "🏋️",
-  },
-  {
-    id: "split-squat",
-    name: "Static Split Squat",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Feet split front and back; drop straight down, no stepping.",
-    description: "Set your feet in a split stance and lower straight down until the back knee nears the floor, then press up — all reps on one side before switching. Staying in place makes it easier to balance than a lunge while still loading each leg.",
-    avoidIf: ["knee", "balance"],
-    icon: "🦵",
-  },
-  {
-    id: "cossack-squat",
-    name: "Cossack Squat",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes", "Hamstrings"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Wide stance; shift onto one bent leg while the other stays straight.",
-    description: "From a very wide stance, shift your weight down onto one bent leg while the other stays straight with the toe up, then push back to center and switch. A deep, mobility-heavy squat — ease into the depth over time.",
-    avoidIf: ["knee", "hip", "balance"],
-    icon: "🦵",
-  },
-  {
-    id: "pause-squat",
-    name: "Paused Bodyweight Squat",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Sit to the bottom, hold three seconds, then stand.",
-    description: "A bodyweight squat with a three-second pause at the bottom, which removes any bounce and makes the legs work from a dead stop. The pause builds control and makes bodyweight surprisingly challenging.",
-    avoidIf: ["knee"],
-    icon: "🦵",
-  },
-  {
-    id: "wall-sit-march",
-    name: "Wall Sit March",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Hold a wall sit and slowly lift one foot, then the other.",
-    description: "Hold a wall sit and slowly march one foot up at a time while keeping your hips level against the wall. Lifting a foot doubles the load on the standing leg and adds a balance element to the burn.",
-    avoidIf: ["knee"],
-    icon: "🪑",
-  },
-  {
-    id: "sissy-squat",
-    name: "Sissy Squat",
-    muscleGroup: "Quads",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Hold support, rise on your toes, and lean back bending only your knees.",
-    description: "Holding a support for balance, rise onto your toes and lean your torso back as you bend your knees forward, keeping hips and shoulders in line. It isolates the quads intensely and stretches them hard — build up slowly, and skip it if your knees object.",
-    avoidIf: ["knee", "balance"],
-    icon: "🦵",
-  },
-  {
-    id: "heel-elevated-squat",
-    name: "Heel-Elevated Goblet Squat",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Heels on a small plate or wedge; hug a dumbbell and squat deep.",
-    description: "A goblet squat with your heels slightly raised, which lets you sit straighter and deeper and shifts more work onto the quads. Great for taller people or anyone whose squat depth feels blocked at the ankles.",
-    avoidIf: ["knee"],
-    icon: "🏋️",
-  },
-  {
-    id: "tempo-lunge",
-    name: "Slow Tempo Reverse Lunge",
-    muscleGroup: "Quads",
-    secondaryMuscles: ["Glutes", "Hamstrings"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Three seconds down into the lunge, pause, then drive up.",
-    description: "A reverse lunge slowed to a three-second descent with a pause at the bottom, which builds control and single-leg strength without any load. The slow tempo also lightens the impact on the knee compared to fast reps.",
-    avoidIf: ["knee", "balance"],
-    icon: "🦵",
-  },
-
-  // ───────────────────────── HAMSTRINGS ─────────────────────────
-  {
-    id: "db-rdl",
-    name: "Dumbbell Romanian Deadlift",
-    muscleGroup: "Hamstrings",
-    secondaryMuscles: ["Glutes", "Back"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Push your hips straight back, soft knees, until the hamstrings pull the brakes.",
-    description: "Holding dumbbells in front of your thighs, hinge by pushing your hips back with a proud chest and slight knee bend, lowering until the hamstrings hit their stretch, then drive the hips forward. A rounding back is the signal to stop shallower.",
-    avoidIf: ["lower-back"],
-    icon: "🏋️",
-  },
-  {
-    id: "single-leg-rdl",
-    name: "Single-Leg Romanian Deadlift",
-    muscleGroup: "Hamstrings",
-    secondaryMuscles: ["Glutes", "Core/Abs"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Hinge on one leg, the other extending behind you as a counterweight.",
-    description: "Balance on one leg and hinge forward, letting the free leg extend straight behind you until your body forms a T, then return. Hamstrings plus a serious balance challenge — keep fingertips on a wall while learning.",
-    avoidIf: ["lower-back", "balance"],
-    icon: "🦩",
-  },
-  {
-    id: "nordic-curl",
-    name: "Nordic Hamstring Curl",
-    muscleGroup: "Hamstrings",
-    secondaryMuscles: ["Glutes", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Ankles anchored, kneel tall, and lower your body forward as slowly as possible.",
-    description: "Kneel with your ankles anchored under the bench and lower your straight body toward the floor using only your hamstrings as brakes, catching yourself with your hands. Even a few clean negatives are elite-level.",
-    avoidIf: ["knee"],
-    icon: "🧎",
-  },
-  {
-    id: "db-stiff-leg-deadlift",
-    name: "Dumbbell Stiff-Leg Deadlift",
-    muscleGroup: "Hamstrings",
-    secondaryMuscles: ["Glutes", "Back"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Nearly straight knees; hinge and lower the dumbbells down your shins.",
-    description: "Like a Romanian deadlift but with the knees kept nearly straight, which puts an even bigger stretch on the hamstrings. Keep a flat back and only go as low as your hamstring flexibility allows without rounding.",
-    avoidIf: ["lower-back"],
-    icon: "🏋️",
-  },
-  {
-    id: "db-b-stance-rdl",
-    name: "Dumbbell B-Stance RDL",
-    muscleGroup: "Hamstrings",
-    secondaryMuscles: ["Glutes"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "One foot back on its toes as a kickstand; hinge over the front leg.",
-    description: "A Romanian deadlift with one foot set back on its toes as a light kickstand, biasing most of the load onto the front hamstring without the full balance test of a single-leg version. A great bridge toward true single-leg work.",
-    avoidIf: ["lower-back"],
-    icon: "🦵",
-  },
-  {
-    id: "slider-leg-curl",
-    name: "Sliding Leg Curl",
-    muscleGroup: "Hamstrings",
-    secondaryMuscles: ["Glutes"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Heels on sliders in a bridge; slide your feet out, then curl them back.",
-    description: "In a glute bridge with your heels on towels or sliders, slide your feet out until your legs are almost straight, then curl them back in while keeping your hips up. A tough bodyweight hamstring curl — bend one leg to assist if needed.",
-    avoidIf: ["pregnancy"],
-    icon: "🛝",
-  },
-  {
-    id: "bench-hamstring-walkout",
-    name: "Glute Bridge Walkout",
-    muscleGroup: "Hamstrings",
-    secondaryMuscles: ["Glutes", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Hold a bridge; walk your heels out step by step, then back in.",
-    description: "Hold a glute bridge and slowly step your heels away from your hips one at a time until your legs are long, then walk them back in, keeping the hips lifted throughout. The further out your feet, the harder the hamstrings work.",
-    avoidIf: ["pregnancy"],
-    icon: "🌉",
-  },
-  {
-    id: "db-single-leg-rdl-supported",
-    name: "Kickstand RDL (Hamstring)",
-    muscleGroup: "Hamstrings",
-    secondaryMuscles: ["Glutes", "Back"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Toes of the back foot down for balance; hinge over the front leg.",
-    description: "Hold dumbbells with one foot slightly back on its toes and hinge over the front leg, feeling the hamstring load, then stand. The kickstand foot removes the balance struggle so you can focus on the hinge and the stretch.",
-    avoidIf: ["lower-back"],
-    icon: "🦵",
-  },
-  {
-    id: "prone-hamstring-curl-db",
-    name: "Prone Dumbbell Leg Curl",
-    muscleGroup: "Hamstrings",
-    secondaryMuscles: ["Calves"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Lie face-down, squeeze a light dumbbell between your feet, curl your heels up.",
-    description: "Lying face-down on the bench, pinch a light dumbbell between your feet and curl your heels toward your glutes, then lower slowly. A homemade lying leg curl — start with the lightest dumbbell you can grip securely.",
-    avoidIf: [],
-    icon: "🦵",
-  },
-  {
-    id: "good-morning-bw",
-    name: "Bodyweight Good Morning",
-    muscleGroup: "Hamstrings",
-    secondaryMuscles: ["Glutes", "Back"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Hands behind your head; bow forward from the hips with a flat back.",
-    description: "With hands behind your head and knees soft, bow your torso forward from the hips until you feel the hamstrings load, then stand tall by squeezing them. A gentle, unloaded way to groove the hinge and warm up the posterior chain.",
-    avoidIf: ["lower-back"],
-    icon: "🌅",
-  },
-  {
-    id: "db-good-morning",
-    name: "Dumbbell Good Morning",
-    muscleGroup: "Hamstrings",
-    secondaryMuscles: ["Glutes", "Back"],
-    equipment: "Dumbbell",
-    difficulty: "Advanced",
-    cue: "Hold one dumbbell at your chest; bow forward with a locked-flat spine.",
-    description: "Hold a dumbbell against your upper chest and hinge forward until your torso approaches parallel, then stand by driving the hips forward. The load sits far from your hips, so keep it light and your back granite-flat.",
-    avoidIf: ["lower-back", "hip"],
-    icon: "🌅",
-  },
-  {
-    id: "single-leg-hip-hinge-reach",
-    name: "Single-Leg Hinge Reach",
-    muscleGroup: "Hamstrings",
-    secondaryMuscles: ["Glutes", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Balance on one leg; hinge and reach your hands toward the floor.",
-    description: "Stand on one leg and hinge forward, reaching your hands toward the floor while the free leg floats back, then return to standing tall. An unloaded single-leg RDL that builds hamstring control and balance at the same time.",
-    avoidIf: ["balance"],
-    icon: "🦩",
-  },
-  {
-    id: "seated-db-leg-curl",
-    name: "Seated Dumbbell Hamstring Curl",
-    muscleGroup: "Hamstrings",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Sit on the bench edge, dumbbell between your feet, curl your lower legs back.",
-    description: "Perch on the edge of the bench with a light dumbbell held between your feet and curl your lower legs back underneath you, then extend. A simple seated curl variation for the hamstrings when you have no machine.",
-    avoidIf: [],
-    icon: "🦵",
-  },
-  {
-    id: "hamstring-bridge-hold",
-    name: "Long-Lever Bridge Hold",
-    muscleGroup: "Hamstrings",
-    secondaryMuscles: ["Glutes"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Heels far from your hips, only the heels down; hold the bridge high.",
-    description: "Set up a glute bridge with your heels placed far from your hips and only your heels on the floor, then hold the top position, which loads the hamstrings much more than a normal bridge. Add a light single-leg version once it feels easy.",
-    avoidIf: ["pregnancy"],
-    icon: "🌉",
-  },
-
-  // ─────────────────────────── CALVES ───────────────────────────
-  {
-    id: "standing-calf-raise",
-    name: "Standing Calf Raise",
-    muscleGroup: "Calves",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Rise to your tiptoes, pause at the top, lower until you feel a heel stretch.",
-    description: "Stand tall with fingertips on a wall for balance, rise onto the balls of your feet, pause, and lower until your heels feel a gentle stretch. A step edge gives extra range — calves respond to full range and patience, not bouncing.",
-    avoidIf: [],
-    icon: "🦶",
-  },
-  {
-    id: "single-leg-calf-raise",
-    name: "Single-Leg Calf Raise",
-    muscleGroup: "Calves",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "All your weight on one foot — full rise, full stretch, no bouncing.",
-    description: "A calf raise on one leg, doubling the load and exposing how much stronger one side is. Hold a wall with one hand; the single-leg stance is itself a small balance drill.",
-    avoidIf: ["balance"],
-    icon: "🦶",
-  },
-  {
-    id: "db-calf-raise",
-    name: "Dumbbell Calf Raise",
-    muscleGroup: "Calves",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Dumbbell in one hand, other hand on the wall — raise, pause, stretch.",
-    description: "A standing calf raise holding a dumbbell in one hand while the other hand steadies you against a wall. The simplest way to add load to calves at home — do all reps one side, then swap the weight over.",
-    avoidIf: [],
-    icon: "🦶",
-  },
-  {
-    id: "db-seated-calf-raise",
-    name: "Seated Dumbbell Calf Raise",
-    muscleGroup: "Calves",
-    secondaryMuscles: [],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Sit on the bench, dumbbells on your knees; press up through the balls of your feet.",
-    description: "Sit on the bench with dumbbells resting on your knees and raise your heels through a full range, then lower into a stretch. The bent knee shifts the work to the soleus, the deep calf muscle a standing raise mostly misses.",
-    avoidIf: [],
-    icon: "🦶",
-  },
-  {
-    id: "toe-walk",
-    name: "Toe Walks",
-    muscleGroup: "Calves",
-    secondaryMuscles: ["Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Walk on your tiptoes, tall as possible, heels never touching down.",
-    description: "Rise onto the balls of your feet and walk, staying as tall as you can for a slow lap of the room. Ankle strength, calf endurance, and a little balance practice disguised as a silly walk.",
-    avoidIf: ["balance"],
-    icon: "🩰",
-  },
-  {
-    id: "step-calf-raise",
-    name: "Deficit Calf Raise",
-    muscleGroup: "Calves",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Balls of your feet on a step edge; drop the heels low, then press high.",
-    description: "Stand with the balls of your feet on the edge of a step and let your heels drop below the step for a deep stretch before pressing all the way up. The added range at the bottom is what makes calves grow.",
-    avoidIf: [],
-    icon: "🦶",
-  },
-  {
-    id: "db-jump-rope-calf",
-    name: "Calf Raise Pulse",
-    muscleGroup: "Calves",
-    secondaryMuscles: [],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Small fast pulses at the top of a calf raise, staying on your toes.",
-    description: "Rise onto your toes and perform small, fast pulses near the top of the range without dropping your heels all the way down, keeping constant tension on the calves. A burnout finisher — no jumping, just quick controlled pulses.",
-    avoidIf: [],
-    icon: "🦶",
-  },
-  {
-    id: "db-farmer-calf",
-    name: "Loaded Calf Raise Hold",
-    muscleGroup: "Calves",
-    secondaryMuscles: ["Core/Abs"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "Heavy dumbbells at your sides; rise onto your toes and hold at the top.",
-    description: "Hold a heavy dumbbell in each hand, rise onto your toes, and hold the top position for time, which trains the calves isometrically along with your grip and posture. Stay tall and controlled; use a wall if balance wavers.",
-    avoidIf: ["balance"],
-    icon: "🦶",
-  },
-
-  // ───────────────────── FULL BODY/CARDIO ─────────────────────
-  {
-    id: "burpee",
-    name: "Burpee",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Chest", "Quads", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Squat, kick back to a plank, push-up, jump feet in, leap — repeat.",
-    description: "Drop your hands down, kick back to a plank with an optional push-up, hop your feet in, and jump up. The whole gym in one movement — but a lot of impact through wrists and knees; step the feet in and skip the jump for a gentler version.",
-    avoidIf: ["knee", "high-impact", "wrist", "pregnancy"],
-    icon: "🔥",
-  },
-  {
-    id: "jump-squat",
-    name: "Jump Squat",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Quads", "Glutes", "Calves"],
-    equipment: "Bodyweight",
-    difficulty: "Advanced",
-    cue: "Squat down, explode up, and land soft like landing on eggshells.",
-    description: "A bodyweight squat that finishes with a jump, landing softly into the next rep. Builds explosive power and spikes the heart rate — the landing is the skill; if joints complain, regular squats deliver most of the benefit.",
-    avoidIf: ["knee", "high-impact", "pregnancy"],
-    icon: "🦘",
-  },
-  {
-    id: "jumping-jack",
-    name: "Jumping Jacks",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Shoulders", "Calves"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Jump feet wide as arms swing overhead, then snap back together.",
-    description: "Jump your feet out wide while your arms swing overhead, then jump back to standing. A friendly whole-body warm-up — for a no-impact version, step one foot out at a time while the arms do the same swing.",
-    avoidIf: ["knee", "high-impact"],
-    icon: "⭐",
-  },
-  {
-    id: "high-knees",
-    name: "High Knees",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Quads", "Calves", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Run in place, driving knees to hip height, quick light feet.",
-    description: "Sprint in place, driving each knee toward hip height with fast, light ground contacts and pumping arms. Twenty seconds of honest effort is a real interval — marching is the calm, no-impact alternative.",
-    avoidIf: ["knee", "high-impact", "hip"],
-    icon: "🏃",
-  },
-  {
-    id: "shadow-boxing",
-    name: "Shadow Boxing",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Shoulders", "Core/Abs"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Light on your feet, snappy punches at an imaginary target — never full lockout.",
-    description: "Bounce lightly and throw combinations at the air, rotating through the hips with each punch. Cardio, coordination, and stress relief with no equipment — keep a slight bend at the end of every punch to spare the elbows.",
-    avoidIf: ["shoulder"],
-    icon: "🥊",
-  },
-  {
-    id: "mountain-climber",
-    name: "Mountain Climbers",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Core/Abs", "Shoulders", "Quads"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "From a plank, drive knees toward your chest in a fast alternating rhythm.",
-    description: "In a high plank, run your knees toward your chest one at a time while your shoulders stay stacked over your wrists. Slow it to a march to drop the impact and keep the core work; the fast version earns the tags.",
-    avoidIf: ["wrist", "knee", "high-impact"],
-    icon: "⛰️",
-  },
-  {
-    id: "db-swing",
-    name: "Dumbbell Swing",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Glutes", "Hamstrings", "Back", "Core/Abs"],
-    equipment: "Dumbbell",
-    difficulty: "Intermediate",
-    cue: "It's a hip snap, not an arm lift — the dumbbell floats to chest height.",
-    description: "Hold one dumbbell by the head with both hands, hinge and hike it back between your legs, then snap your hips forward so it floats up to chest height. Every swing is a hip hinge — a rounded back turns it into a lower-back grievance.",
-    avoidIf: ["lower-back"],
-    icon: "🏋️",
-  },
-  {
-    id: "bear-crawl",
-    name: "Bear Crawl",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Core/Abs", "Shoulders", "Quads"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "Hands and feet down, knees hovering an inch off the floor — crawl slow and level.",
-    description: "On hands and feet with knees hovering just off the ground, crawl forward moving opposite hand and foot together while keeping your back flat. Surprisingly humbling core and shoulder work — speed isn't the goal, a still torso is.",
-    avoidIf: ["wrist"],
-    icon: "🐻",
-  },
-  {
-    id: "march-in-place",
-    name: "March in Place",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Quads", "Calves"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Lift knees to a comfortable height with a steady rhythm and swinging arms.",
-    description: "March on the spot, lifting the knees to a comfortable height and swinging the arms naturally. The gentlest conditioning option — a warm-up, a between-sets breather, or the low-impact stand-in for anything with jumping.",
-    avoidIf: [],
-    icon: "🚶",
-  },
-  {
-    id: "db-thruster",
-    name: "Dumbbell Thruster",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Quads", "Glutes", "Shoulders", "Triceps"],
-    equipment: "Dumbbell",
-    difficulty: "Advanced",
-    cue: "Front squat straight into an overhead press — one fluid motion.",
-    description: "Hold dumbbells at your shoulders, squat, and use the drive out of the squat to press them overhead in one motion, then lower into the next rep. A squat, a press, and a cardio interval in one — three sets of joints all need to sign off.",
-    avoidIf: ["shoulder", "knee", "lower-back"],
-    icon: "🚀",
-  },
-  {
-    id: "farmers-carry",
-    name: "Farmer's Carry",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Core/Abs", "Back", "Shoulders"],
-    equipment: "Dumbbell",
-    difficulty: "Beginner",
-    cue: "Heavy dumbbell in each hand, stand tall, and just walk.",
-    description: "Pick up a heavy dumbbell in each hand and walk with tall posture, level shoulders, and unhurried steps for distance or time. Grip, core, posture, and conditioning from the most functional movement there is — carrying heavy things.",
-    avoidIf: [],
-    icon: "🧳",
-  },
-  {
-    id: "db-clean-press",
-    name: "Dumbbell Clean & Press",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Shoulders", "Quads", "Back"],
-    equipment: "Dumbbell",
-    difficulty: "Advanced",
-    cue: "Pull the dumbbells to your shoulders, then press overhead, then reverse.",
-    description: "From a hinge, pull two dumbbells up to your shoulders in one quick move, then press them overhead, then reverse the whole thing under control. A full-body power builder — keep the hinge flat-backed and the press honest.",
-    avoidIf: ["shoulder", "lower-back"],
-    icon: "🚀",
-  },
-  {
-    id: "db-snatch",
-    name: "Single-Arm Dumbbell Snatch",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Shoulders", "Glutes", "Back"],
-    equipment: "Dumbbell",
-    difficulty: "Advanced",
-    cue: "One dumbbell from between your feet to overhead in one snap.",
-    description: "Explosively pull a single dumbbell from a hinge between your feet straight up to a locked-out overhead position, then lower and repeat. Powerful and cardio-heavy — it demands a solid hinge and a stable overhead, so build up light.",
-    avoidIf: ["shoulder", "lower-back", "wrist"],
-    icon: "⚡",
-  },
-  {
-    id: "squat-thrust",
-    name: "Squat Thrust",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Core/Abs", "Quads", "Shoulders"],
-    equipment: "Bodyweight",
-    difficulty: "Intermediate",
-    cue: "A burpee without the jump — squat, kick to plank, hop back, stand.",
-    description: "Squat down, kick your feet back to a plank, hop them back in, and stand — a burpee minus the jump and push-up. Most of the conditioning of a burpee with far less impact through the knees.",
-    avoidIf: ["wrist", "hip"],
-    icon: "🔥",
-  },
-  {
-    id: "lateral-shuffle",
-    name: "Lateral Shuffle",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Quads", "Glutes", "Calves"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Stay low in a quarter squat and shuffle side to side, quick feet.",
-    description: "Sink into a quarter squat and shuffle sideways several steps one way, then back, staying low with quick light feet. A knee-friendly cardio option with no jumping that also lights up the outer hips.",
-    avoidIf: ["knee"],
-    icon: "↔️",
-  },
-  {
-    id: "inchworm",
-    name: "Inchworm",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Core/Abs", "Shoulders", "Hamstrings"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Hinge, walk your hands out to a plank, walk your feet in, stand.",
-    description: "Hinge and walk your hands out along the floor into a plank, then walk your feet up toward your hands and stand tall. A gentle full-body warm-up that mobilizes the hamstrings and shoulders in one flowing move.",
-    avoidIf: ["wrist"],
-    icon: "🐛",
-  },
-  {
-    id: "step-up-cardio",
-    name: "Fast Step-Ups",
-    muscleGroup: "Full Body/Cardio",
-    secondaryMuscles: ["Quads", "Glutes", "Calves"],
-    equipment: "Bodyweight",
-    difficulty: "Beginner",
-    cue: "Quick alternating step-ups onto the bench, driving your arms.",
-    description: "Step up and down onto the bench at a brisk pace, alternating your lead foot and pumping your arms for rhythm. A simple, low-impact cardio driver — the bench height sets the intensity.",
-    avoidIf: ["knee", "balance"],
-    icon: "🪜",
-  },
+  {
+    "id": "barbell-flat-bench-press",
+    "name": "Barbell Bench Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Plant your feet, keep your shoulder blades pinned, and press in a slight arc over your shoulders.",
+    "description": "Lower the bar under control to the mid-chest before pressing to full extension. Avoid bouncing the bar off your chest or flaring your elbows excessively.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Flat Bench",
+      "BB Bench Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-paused-bench-press",
+    "name": "Paused Barbell Bench Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Pause for one full second on your chest before driving the bar upward.",
+    "description": "Control the descent, pause without relaxing, then press explosively. Avoid sinking the bar into your chest during the pause.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "⏸️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Competition Bench",
+      "Paused Bench"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-close-grip-bench-press",
+    "name": "Close-Grip Barbell Bench Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Triceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Grip just inside shoulder width and keep your elbows close throughout the press.",
+    "description": "Lower the bar with control before pressing straight back up. Avoid gripping so narrowly that your wrists collapse inward.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Close Grip Bench",
+      "CG Bench"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-incline-bench-press",
+    "name": "Incline Barbell Bench Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Use a low incline and press toward your upper chest while keeping your shoulders packed.",
+    "description": "Lower the bar to your upper chest before pressing smoothly. Avoid using an excessively steep bench angle that shifts the work to your shoulders.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "📈",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Incline BB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-decline-bench-press",
+    "name": "Decline Barbell Bench Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Triceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Secure your legs and lower the bar to the lower chest before pressing upward.",
+    "description": "Maintain control through the full range of motion. Avoid lifting your hips off the bench during the press.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "📉",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Decline BB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-flat-bench-press",
+    "name": "Flat Dumbbell Bench Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Keep your wrists stacked over your elbows and press the dumbbells together at the top.",
+    "description": "Lower each dumbbell evenly before pressing back to full extension. Avoid letting your elbows drop too far below the bench.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Bench Press",
+      "Flat DB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-incline-bench-press",
+    "name": "Incline Dumbbell Bench Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Set the bench around 30° and press slightly back toward your shoulders.",
+    "description": "Lower the dumbbells until your upper arms are just below parallel before pressing up. Avoid shrugging your shoulders during the lift.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "📈",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Incline DB Press",
+      "Incline Dumbbell Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-decline-bench-press",
+    "name": "Decline Dumbbell Bench Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Keep the dumbbells balanced directly over your lower chest throughout the press.",
+    "description": "Press both dumbbells evenly while maintaining shoulder stability. Avoid letting the weights drift too far apart.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "📉",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Decline DB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-neutral-grip-bench-press",
+    "name": "Neutral-Grip Dumbbell Bench Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Triceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Keep your palms facing each other and press while keeping your elbows tucked.",
+    "description": "Move the dumbbells under control from chest level to full extension. Avoid rotating your wrists during the lift.",
+    "avoidIf": [],
+    "icon": "🤲",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Hammer Grip DB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-squeeze-press",
+    "name": "Dumbbell Squeeze Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Triceps"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Keep the dumbbells pressed together throughout every repetition.",
+    "description": "Maintain inward pressure as you press and lower the weights. Avoid allowing the dumbbells to separate at the top.",
+    "avoidIf": [],
+    "icon": "💪",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Crush Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-flat-fly",
+    "name": "Flat Dumbbell Fly",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Keep a slight bend in your elbows and hug a wide barrel as you raise the weights.",
+    "description": "Lower until you feel a comfortable chest stretch before returning to the top. Avoid turning the movement into a press.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🪽",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Fly",
+      "Dumbbell Flye"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-incline-fly",
+    "name": "Incline Dumbbell Fly",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Use a shallow incline and maintain soft elbows throughout the movement.",
+    "description": "Stretch under control before squeezing your chest to bring the weights together. Avoid lowering beyond your shoulder mobility.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🪽",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Incline DB Fly"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "push-up",
+    "name": "Push-Up",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Maintain a straight line from head to heels and press the floor away.",
+    "description": "Lower your chest under control before pushing back to full extension. Avoid letting your hips sag or flare your elbows excessively.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "🤸",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "endurance",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Press-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "incline-push-up",
+    "name": "Incline Push-Up",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Keep your body rigid while pressing away from the bench.",
+    "description": "Lower your chest to the bench before pressing back up. Avoid allowing your lower back to arch.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "📐",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bench Push-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "decline-push-up",
+    "name": "Decline Push-Up",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Elevate your feet and keep your hips level throughout each repetition.",
+    "description": "Lower your chest until just above the floor before pressing upward. Avoid shrugging your shoulders toward your ears.",
+    "avoidIf": [
+      "wrist",
+      "shoulder"
+    ],
+    "icon": "⬇️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Feet Elevated Push-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "knee-push-up",
+    "name": "Knee Push-Up",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Keep a straight line from your knees through your shoulders as you press.",
+    "description": "Lower your chest under control before pressing back up. Avoid bending at the hips instead of moving as one unit.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "🧎",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "endurance",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Modified Push-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "wide-push-up",
+    "name": "Wide Push-Up",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Place your hands wider than shoulder width and lower under control.",
+    "description": "Press through your palms while keeping your body rigid. Avoid letting your elbows flare aggressively.",
+    "avoidIf": [
+      "wrist",
+      "shoulder"
+    ],
+    "icon": "↔️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Wide Grip Push-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "diamond-push-up",
+    "name": "Diamond Push-Up",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Triceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Keep your hands close together beneath your chest and elbows tucked.",
+    "description": "Lower until your chest nearly touches your hands before pressing up. Avoid collapsing your wrists inward.",
+    "avoidIf": [
+      "wrist",
+      "shoulder"
+    ],
+    "icon": "💎",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Close Push-Up",
+      "Close-Grip Push-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "archer-push-up",
+    "name": "Archer Push-Up",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Shift your weight over one arm while keeping the opposite arm nearly straight.",
+    "description": "Alternate sides while maintaining full-body tension. Avoid twisting your hips during the movement.",
+    "avoidIf": [
+      "wrist",
+      "shoulder",
+      "balance"
+    ],
+    "icon": "🏹",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Side-to-Side Push-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "pseudo-planche-push-up",
+    "name": "Pseudo Planche Push-Up",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Lean your shoulders past your hands before lowering under control.",
+    "description": "Maintain the forward lean throughout the repetition. Avoid allowing your hips to sag.",
+    "avoidIf": [
+      "wrist",
+      "shoulder"
+    ],
+    "icon": "⚖️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Planche Lean Push-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "tempo-push-up",
+    "name": "Tempo Push-Up",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Take three to five seconds to lower before pressing up smoothly.",
+    "description": "Maintain full-body tension through the slow eccentric. Avoid rushing the lowering phase.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "⏱️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Slow Push-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "deficit-push-up",
+    "name": "Deficit Push-Up",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lower deeper between the supports while maintaining shoulder control.",
+    "description": "Increase range of motion without losing stability. Avoid dropping into painful shoulder positions.",
+    "avoidIf": [
+      "wrist",
+      "shoulder"
+    ],
+    "icon": "⬇️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Deep Push-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "wall-push-up",
+    "name": "Wall Push-Up",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Stand tall and lower yourself toward the wall in one straight line.",
+    "description": "Push away from the wall without shrugging your shoulders. Avoid bending only at the hips.",
+    "avoidIf": [],
+    "icon": "🧱",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Standing Wall Push-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "chest-dip",
+    "name": "Chest Dip",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Triceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lean slightly forward as you lower and press back to the top.",
+    "description": "Keep your elbows tracking naturally through the movement. Avoid dropping deeper than your shoulder mobility allows.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "📉",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Dip"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-chest-press",
+    "name": "Resistance Band Chest Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press straight forward while keeping tension in the band throughout.",
+    "description": "Control both the press and the return phase. Avoid allowing the band to snap you backward.",
+    "avoidIf": [],
+    "icon": "🟢",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-chest-fly",
+    "name": "Resistance Band Chest Fly",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Sweep your arms together in a hugging motion while keeping soft elbows.",
+    "description": "Maintain constant band tension throughout each repetition. Avoid turning the movement into a press.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Fly"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-high-to-low-crossover",
+    "name": "High-to-Low Band Crossover",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Pull downward and inward while squeezing your lower chest.",
+    "description": "Control the return without losing posture. Avoid shrugging during the crossover.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band High Crossover"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-low-to-high-crossover",
+    "name": "Low-to-High Band Crossover",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive your hands upward in a smooth arc toward eye level.",
+    "description": "Squeeze your upper chest at the top of each repetition. Avoid arching your lower back.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Low Crossover"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-incline-chest-press",
+    "name": "Incline Resistance Band Chest Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Press upward at roughly a 30-degree angle while maintaining tension.",
+    "description": "Control both directions of the movement. Avoid shrugging your shoulders as you press.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🟢",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Incline Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-chest-fly",
+    "name": "Cable Chest Fly",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Bring the handles together in a wide hugging motion.",
+    "description": "Maintain a slight bend in your elbows throughout. Avoid allowing the weights to slam together.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Fly"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "high-cable-crossover",
+    "name": "High Cable Crossover",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Pull the handles downward toward your waist in a controlled arc.",
+    "description": "Squeeze your chest at the bottom before returning slowly. Avoid using momentum.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "High Cable Fly"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "low-cable-crossover",
+    "name": "Low Cable Crossover",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Sweep the handles upward until they meet in front of your upper chest.",
+    "description": "Move smoothly through the entire range of motion. Avoid leaning backward excessively.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Low Cable Fly"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-chest-press",
+    "name": "Cable Chest Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Press forward while maintaining even cable tension on both sides.",
+    "description": "Keep your torso stable throughout the movement. Avoid stepping too far forward.",
+    "avoidIf": [],
+    "icon": "🔗",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Standing Cable Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "incline-cable-chest-press",
+    "name": "Incline Cable Chest Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Press upward from a low cable position while keeping your core braced.",
+    "description": "Drive the handles toward your upper chest line. Avoid shrugging your shoulders during the press.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🔗",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Low Cable Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "machine-chest-press",
+    "name": "Machine Chest Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Adjust the seat so the handles start at mid-chest height.",
+    "description": "Press smoothly without locking your elbows forcefully. Avoid lifting your shoulders toward your ears.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Chest Press Machine"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "pec-deck-fly",
+    "name": "Pec Deck Fly",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Bring the pads together while keeping a gentle bend in your elbows.",
+    "description": "Pause briefly at peak contraction before returning slowly. Avoid bouncing the weight stack.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🦋",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Machine Fly"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "incline-machine-chest-press",
+    "name": "Incline Machine Chest Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press upward naturally while keeping your shoulder blades against the pad.",
+    "description": "Maintain full control throughout each repetition. Avoid forcing your shoulders forward.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "📈",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Incline Chest Press Machine"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "hammer-strength-chest-press",
+    "name": "Hammer Strength Chest Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive each handle evenly while keeping your chest lifted.",
+    "description": "Control the eccentric until the handles return naturally. Avoid locking out aggressively.",
+    "avoidIf": [],
+    "icon": "🔨",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Plate Loaded Chest Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-chest-press",
+    "name": "TRX Chest Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lean farther forward to increase the challenge while maintaining a rigid body.",
+    "description": "Press the handles away while keeping your core engaged. Avoid letting your hips sag.",
+    "avoidIf": [
+      "shoulder",
+      "balance"
+    ],
+    "icon": "🟡",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Suspension Chest Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-chest-fly",
+    "name": "TRX Chest Fly",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Keep your elbows softly bent as you open and close your arms.",
+    "description": "Maintain tension throughout the movement. Avoid dropping too deep into the stretch.",
+    "avoidIf": [
+      "shoulder",
+      "balance"
+    ],
+    "icon": "🟡",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Suspension Fly"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-floor-press",
+    "name": "Kettlebell Floor Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Triceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lower until your upper arm touches the floor before pressing smoothly upward.",
+    "description": "Maintain a neutral wrist throughout the movement. Avoid letting the kettlebell drift behind your shoulder.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Floor Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-arm-kettlebell-bench-press",
+    "name": "Single-Arm Kettlebell Bench Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "kettlebell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Brace your core to prevent rotation as you press with one arm.",
+    "description": "Complete all repetitions on one side before switching. Avoid twisting your torso during the lift.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Arm KB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-floor-press",
+    "name": "Dumbbell Floor Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Triceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pause briefly with your upper arms on the floor before pressing.",
+    "description": "Use the floor to limit shoulder range safely. Avoid bouncing your elbows off the ground.",
+    "avoidIf": [],
+    "icon": "🏠",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Floor Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-pullover",
+    "name": "Dumbbell Pullover",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Back",
+      "Triceps"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lower the dumbbell only as far as your shoulder mobility comfortably allows.",
+    "description": "Pull the weight back over your chest using a controlled arc. Avoid overextending your shoulders.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🌙",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Pullover"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-arm-dumbbell-bench-press",
+    "name": "Single-Arm Dumbbell Bench Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Keep your torso stable while pressing with one arm at a time.",
+    "description": "Brace your core to resist rotation through every repetition. Avoid letting the working shoulder roll forward.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "💪",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Arm DB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "alternating-dumbbell-bench-press",
+    "name": "Alternating Dumbbell Bench Press",
+    "muscleGroup": "Chest",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Keep one dumbbell extended while pressing with the opposite arm.",
+    "description": "Alternate sides while maintaining a stable torso. Avoid dropping the stationary arm prematurely.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🔄",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Alternating DB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "db-single-row",
+    "name": "One-Arm Dumbbell Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Brace a hand on the bench; pull the dumbbell to your hip, not your armpit.",
+    "description": "With one hand and knee on the bench, row a dumbbell from a dead hang up to your hip pocket, leading with the elbow. The bench support spares the lower back, but keep your spine long and don't twist to heave the weight.",
+    "avoidIf": [],
+    "icon": "🚣"
+  },
+  {
+    "id": "db-bent-row",
+    "name": "Bent-Over Dumbbell Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Hamstrings",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hinge to ~45°, flat back, row both dumbbells to your lower ribs.",
+    "description": "Hinge at the hips with a dumbbell in each hand and row them to your lower ribcage while holding the hinge dead still. Effective but it asks your lower back to hold position — round or jerk and you should lighten the load.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🚣"
+  },
+  {
+    "id": "db-chest-supported-row",
+    "name": "Chest-Supported Dumbbell Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Chest on an incline bench; row the dumbbells up without lifting your torso.",
+    "description": "Lie face-down on an incline bench and row two dumbbells up toward your hips, letting the bench take all the strain off your lower back. The most back-friendly heavy row there is — keep your chest glued to the pad.",
+    "avoidIf": [],
+    "icon": "🚣"
+  },
+  {
+    "id": "pullup",
+    "name": "Pull-Up",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Core/Abs",
+      "Shoulders"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Start from a dead hang; pull until your chin clears the bar.",
+    "description": "Hang from a bar with an overhand grip just wider than your shoulders and pull until your chin passes the bar, then lower to straight arms. If a full rep isn't there yet, use slow negatives; avoid swinging unless you've trained it.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🧗"
+  },
+  {
+    "id": "chinup",
+    "name": "Chin-Up",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Underhand grip, shoulder-width — pull your chest toward the bar.",
+    "description": "A pull-up with palms facing you, which brings the biceps in strongly and most people find slightly easier. Dead hang to chin-over-bar with no half reps and no dropping like a stone at the bottom.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🧗"
+  },
+  {
+    "id": "inverted-row",
+    "name": "Inverted Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hang under a sturdy bar or table edge; pull your chest to it, body rigid.",
+    "description": "Set a bar around waist height, hang underneath with heels on the floor, and row your chest to the bar while your body stays plank-straight. Walk your feet closer to make it easier, further to make it harder.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🚣"
+  },
+  {
+    "id": "superman",
+    "name": "Superman Hold",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Glutes",
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lift arms and legs a few inches off the floor and hold.",
+    "description": "Lie face-down with arms overhead and lift your arms, chest, and legs slightly by squeezing your back and glutes, then lower. Lift to a comfortable height rather than as high as possible — this is gentle endurance work, not a max arch.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🦸"
+  },
+  {
+    "id": "renegade-row",
+    "name": "Renegade Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Row from a plank on two dumbbells without letting your hips twist.",
+    "description": "In a push-up position with each hand on a dumbbell, row one weight to your hip while the rest of you stays square to the floor. It's as much an anti-rotation core drill as a row — if your hips swing, go lighter.",
+    "avoidIf": [
+      "wrist",
+      "lower-back",
+      "balance"
+    ],
+    "icon": "🚣"
+  },
+  {
+    "id": "db-pendlay-row",
+    "name": "Dumbbell Dead-Stop Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Hinge over, row explosively, and reset the dumbbells on the floor each rep.",
+    "description": "Hinge to near-parallel and row two dumbbells from a dead stop on the floor to your ribs, resetting between every rep. Each rep restarts from zero momentum, which builds power — but the flat-back hinge is strict, so respect your lower back.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🚣"
+  },
+  {
+    "id": "db-gorilla-row",
+    "name": "Gorilla Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Dumbbells between your feet; row one while the other rests, alternate.",
+    "description": "Stand in a wide hinge over two dumbbells on the floor and row one at a time while the other rests, alternating sides. The offset load and the rest-between-reps make it a bit friendlier than a strict bent row, but the hinge still applies.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🦍"
+  },
+  {
+    "id": "db-high-pull",
+    "name": "Dumbbell High Pull",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Biceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "From a hinge, pull the dumbbells up to chest height, elbows leading high.",
+    "description": "Hinge slightly and pull two dumbbells up toward your chest with your elbows leading high and wide, working the upper back and rear shoulders. Keep it controlled and stop at chest height rather than yanking to the chin.",
+    "avoidIf": [
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "🚣"
+  },
+  {
+    "id": "db-shrug-back",
+    "name": "Dumbbell Shrug",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lift your shoulders straight up toward your ears, pause, lower.",
+    "description": "Stand holding dumbbells at your sides and lift your shoulders straight up toward your ears, pause, and lower — no rolling. Works the upper traps, which take a lot of daily desk-posture abuse.",
+    "avoidIf": [
+      "neck"
+    ],
+    "icon": "🤷"
+  },
+  {
+    "id": "db-prone-row-fly",
+    "name": "Prone Incline Reverse Fly",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Chest on an incline bench; open light dumbbells out like wings.",
+    "description": "Lying chest-down on an incline bench, raise light dumbbells out to your sides like wings, squeezing your shoulder blades together. Targets the upper back and rear shoulders with zero lower-back strain.",
+    "avoidIf": [],
+    "icon": "🦅"
+  },
+  {
+    "id": "bird-dog-row",
+    "name": "Bird-Dog Dumbbell Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "One knee and hand on the bench; row a light dumbbell, hips square.",
+    "description": "Braced on the bench on one knee and hand, row a light dumbbell with the other hand while keeping your hips level and spine neutral. The support makes it kind to the back while adding a quiet anti-rotation challenge.",
+    "avoidIf": [],
+    "icon": "🐕"
+  },
+  {
+    "id": "scapular-pullup",
+    "name": "Scapular Pull-Up",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hang, then pull your shoulders down without bending your elbows.",
+    "description": "Hang from the bar with straight arms and pull your shoulder blades down and together to lift your body an inch — no elbow bend. Builds the shoulder-blade control that healthy pull-ups depend on.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🧗"
+  },
+  {
+    "id": "towel-row",
+    "name": "Towel Bodyweight Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Loop a towel around a sturdy post; lean back and row yourself in.",
+    "description": "Loop a strong towel around a fixed vertical post, lean back with straight arms, and pull yourself upright. An anywhere version of the inverted row — adjust difficulty by how far back you lean.",
+    "avoidIf": [],
+    "icon": "🚣"
+  },
+  {
+    "id": "db-svend-back",
+    "name": "Wide Dumbbell Pull",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Biceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Chest-supported; pull dumbbells low and wide toward your hips.",
+    "description": "Face-down on an incline bench, sweep two dumbbells from hanging in front down and back toward your hips in a wide arc, hitting the lats low. Light weight and a deliberate squeeze beat heavy swinging.",
+    "avoidIf": [],
+    "icon": "🦅"
+  },
+  {
+    "id": "negative-pullup",
+    "name": "Pull-Up Negative",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Jump to the top, then lower yourself as slowly as you can.",
+    "description": "Start at the top of a pull-up (jump or step up to it) and lower yourself to a dead hang as slowly as possible. Negatives build the exact strength you need before full pull-ups arrive.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🧗"
+  },
+  {
+    "id": "db-shoulder-press",
+    "name": "Seated Dumbbell Shoulder Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press from ear level to straight arms overhead — don't shrug into your neck.",
+    "description": "Seated with back support, hold a dumbbell at each side of your head and press overhead until your arms straighten, then lower to ear level. Keep your ribs down instead of arching your lower back to finish.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "db-standing-press",
+    "name": "Standing Dumbbell Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Brace your abs and glutes; press overhead without leaning back.",
+    "description": "Standing with dumbbells at your shoulders, brace your midsection and press them overhead to lockout. Standing recruits the core, but any layback turns it into a lower-back exercise — keep your ribs stacked over your hips.",
+    "avoidIf": [
+      "shoulder",
+      "neck",
+      "lower-back"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "db-lateral-raise",
+    "name": "Dumbbell Lateral Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Raise the weights out to shoulder height, pinky slightly up, lower slowly.",
+    "description": "Standing with light dumbbells at your sides, raise your arms out until they're parallel to the floor with a slight elbow bend, then lower with control. These stay light — form collapses fast when people chase weight.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "💪"
+  },
+  {
+    "id": "db-front-raise",
+    "name": "Dumbbell Front Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lift straight in front to eye level, one controlled rep at a time.",
+    "description": "Raise a dumbbell straight out in front to about eye level, then lower slowly, keeping a soft elbow. Avoid rocking your torso back to heave the weight up — if you need momentum, it's too heavy.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "💪"
+  },
+  {
+    "id": "rear-delt-fly",
+    "name": "Bent-Over Rear Delt Fly",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hinge forward, then open your arms out like wings — light weight, high control.",
+    "description": "Hinge until your torso is near-parallel to the floor and raise light dumbbells out to your sides, leading with the elbows to hit the rear shoulders. Rest your chest on an incline bench if the hinge bothers your lower back.",
+    "avoidIf": [
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "💪"
+  },
+  {
+    "id": "arnold-press",
+    "name": "Arnold Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Start palms facing you, rotate out as you press overhead.",
+    "description": "Begin with dumbbells at shoulder height, palms facing you, and rotate your palms outward as you press overhead. The added rotation sweeps through more of the shoulder but demands more from it — keep the weight moderate.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "db-shrug",
+    "name": "Dumbbell Shrug (Shoulders)",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Straight up toward your ears, pause, straight down — no rolling.",
+    "description": "Stand holding dumbbells at your sides and lift your shoulders straight up toward your ears, pause, and lower. Rolling the shoulders under load adds nothing and irritates necks — keep it a clean vertical shrug.",
+    "avoidIf": [
+      "neck"
+    ],
+    "icon": "🤷"
+  },
+  {
+    "id": "db-upright-row",
+    "name": "Dumbbell Upright Row",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back",
+      "Biceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Pull the dumbbells up your body to chest height, elbows leading — no higher.",
+    "description": "Hold dumbbells in front of your thighs and pull them up along your body to about chest height with your elbows leading. Stop at chest height and keep the dumbbells a touch apart — pulling narrow to the chin is the classic impingement recipe.",
+    "avoidIf": [
+      "shoulder",
+      "wrist",
+      "neck"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "db-lateral-lean",
+    "name": "Leaning Lateral Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold a post with one hand, lean away, raise the far dumbbell out.",
+    "description": "Hold a sturdy post and lean away from it, then raise a dumbbell out to the side with the free arm — the lean keeps tension on the shoulder from the very bottom. One arm at a time, light and controlled.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "💪"
+  },
+  {
+    "id": "db-scaption",
+    "name": "Dumbbell Scaption",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Raise the dumbbells up in a Y, thumbs up, to shoulder height.",
+    "description": "Raise light dumbbells up and out at about a 30-degree angle from straight ahead (in the plane of the shoulder blade) with thumbs up, forming a Y. This is the most shoulder-friendly raise and a staple for shoulder health.",
+    "avoidIf": [],
+    "icon": "💪"
+  },
+  {
+    "id": "db-w-raise",
+    "name": "Prone Y-T-W Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Chest on the bench; trace Y, then T, then W with light dumbbells.",
+    "description": "Face-down on an incline bench, raise very light dumbbells into a Y, then a T, then a W shape, squeezing the shoulder blades each time. A posture and shoulder-health circuit that most people can do often.",
+    "avoidIf": [],
+    "icon": "🔤"
+  },
+  {
+    "id": "pike-pushup",
+    "name": "Pike Push-Up",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hips high in an inverted V; lower the crown of your head toward the floor.",
+    "description": "From a downward-dog position with hips high, bend your elbows to lower the top of your head toward the floor, then press back up. A bodyweight overhead press that scales toward the handstand push-up.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "🔺"
+  },
+  {
+    "id": "elevated-pike-pushup",
+    "name": "Feet-Elevated Pike Push-Up",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Feet up on the bench, hips stacked high over your hands.",
+    "description": "A pike push-up with your feet on the bench so your torso is nearly vertical, putting most of your bodyweight over the shoulders. The closest bodyweight move to a strict overhead press before handstand work.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "🔺"
+  },
+  {
+    "id": "db-cuban-press",
+    "name": "Cuban Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Upright row, rotate the dumbbells up, then press — one flowing move.",
+    "description": "With light dumbbells, pull into a low upright row, externally rotate your forearms up so the weights point at the ceiling, then press overhead. A rotator-cuff-focused drill — keep it light and smooth, never grindy.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "db-6way-raise",
+    "name": "Six-Way Shoulder Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Front raise, out to a T, back to front, then lower — light weight only.",
+    "description": "A finisher that raises light dumbbells to the front, sweeps them out to the sides, brings them back to the front, and lowers — hitting every angle of the shoulder in one rep. Humbling with even the lightest dumbbells.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "💪"
+  },
+  {
+    "id": "db-around-world",
+    "name": "Dumbbell Around-the-World",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Chest"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Sweep light dumbbells from your hips up and around to overhead.",
+    "description": "Lying or standing, sweep light dumbbells in a wide circle from your thighs out and up to meet overhead, then reverse. Keep it light and the arms nearly straight — the wide arc is only comfortable with control.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🌍"
+  },
+  {
+    "id": "wall-handstand-hold",
+    "name": "Wall Handstand Hold",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Kick up to the wall, stack shoulders over hands, hold and breathe.",
+    "description": "Kick up into a handstand with your heels resting on a wall and hold, stacking your shoulders directly over your hands. A big overhead-strength and balance builder — only attempt it once your shoulders and wrists are ready.",
+    "avoidIf": [
+      "shoulder",
+      "wrist",
+      "balance"
+    ],
+    "icon": "🤸"
+  },
+  {
+    "id": "db-curl",
+    "name": "Dumbbell Biceps Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Elbows pinned to your sides; curl up, lower for a slow three-count.",
+    "description": "Curl a dumbbell in each hand to your shoulders without letting your elbows drift forward or your torso swing. The lowering half is where the growth is, so take it slow.",
+    "avoidIf": [],
+    "icon": "💪"
+  },
+  {
+    "id": "hammer-curl",
+    "name": "Hammer Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Palms facing each other the whole rep, like swinging a hammer.",
+    "description": "A curl with a neutral grip — palms facing your body throughout — that hits the brachialis and forearms and is the most wrist-friendly curl for most people. Same rules: elbows glued to your ribs, no swinging.",
+    "avoidIf": [],
+    "icon": "🔨"
+  },
+  {
+    "id": "concentration-curl",
+    "name": "Concentration Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Elbow braced against your inner thigh — nothing moves but the forearm.",
+    "description": "Seated, lean forward and brace your elbow against your inner thigh, then curl a single dumbbell with total strictness. The bracing removes every cheat, so the weight will be humbling.",
+    "avoidIf": [],
+    "icon": "💪"
+  },
+  {
+    "id": "incline-db-curl",
+    "name": "Incline Dumbbell Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lie back on an incline bench and let your arms hang behind your body line.",
+    "description": "Curling while lying back on a 45–60° incline bench puts the biceps under stretch at the bottom, letting the arms hang fully. Skip it if the stretched shoulder position feels tweaky at the front.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "💪"
+  },
+  {
+    "id": "db-preacher-bench-curl",
+    "name": "Bench Preacher Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drape your arm over the incline bench back; curl with no swing.",
+    "description": "Set the bench upright and drape your upper arm over the top of the backrest, then curl a dumbbell with the arm fully supported. The pad kills momentum and stretches the biceps hard — lower under control and stop short of a locked elbow.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "💪"
+  },
+  {
+    "id": "db-spider-curl",
+    "name": "Spider Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Chest on an incline bench, arms hanging straight down; curl up.",
+    "description": "Lie chest-down on an incline bench with your arms hanging straight toward the floor and curl the dumbbells up. Hanging vertically keeps tension on the biceps through the whole rep with zero body english.",
+    "avoidIf": [],
+    "icon": "🕷️"
+  },
+  {
+    "id": "db-zottman-curl",
+    "name": "Zottman Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Curl up palms-up, rotate to palms-down, lower slowly.",
+    "description": "Curl the dumbbells up with palms facing up, rotate at the top so your palms face down, then lower slowly in that grip. You get a biceps curl on the way up and a forearm-building reverse curl on the way down.",
+    "avoidIf": [],
+    "icon": "🔄"
+  },
+  {
+    "id": "db-cross-curl",
+    "name": "Cross-Body Hammer Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl each dumbbell across your body toward the opposite shoulder.",
+    "description": "With a neutral grip, curl each dumbbell diagonally across your body toward the opposite shoulder, alternating arms. The cross-body path emphasises the brachialis and the thickness of the upper arm.",
+    "avoidIf": [],
+    "icon": "💪"
+  },
+  {
+    "id": "db-drag-curl",
+    "name": "Dumbbell Drag Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drag the dumbbells straight up your torso, elbows drifting back.",
+    "description": "Curl the dumbbells while dragging them up close to your body, letting your elbows travel backward instead of staying pinned. The path keeps the biceps working without the shoulders taking over — expect to use less weight.",
+    "avoidIf": [],
+    "icon": "💪"
+  },
+  {
+    "id": "db-reverse-curl",
+    "name": "Reverse Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Palms facing down; curl up keeping the knuckles high.",
+    "description": "Curl the dumbbells with an overhand (palms-down) grip, which shifts work onto the forearms and the outer biceps. Go lighter than a normal curl — the grip is much weaker this way.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "💪"
+  },
+  {
+    "id": "db-waiter-curl",
+    "name": "Waiter Curl",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Cup one dumbbell in both hands like a tray; curl to your chin.",
+    "description": "Hold a single dumbbell vertically in both cupped hands like a tray and curl it to your chin, elbows tight to your body. The centred load makes it a simple, joint-friendly way to hit both biceps together.",
+    "avoidIf": [],
+    "icon": "🤵"
+  },
+  {
+    "id": "chinup-hold",
+    "name": "Chin-Up Hold",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [
+      "Back",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Pull to the top of a chin-up and hold, chin over the bar.",
+    "description": "Hold the top position of a chin-up with your chin over the bar for time, palms facing you. A brutal bodyweight biceps and grip builder that also feeds your chin-up strength.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🧗"
+  },
+  {
+    "id": "db-21s",
+    "name": "Dumbbell 21s",
+    "muscleGroup": "Biceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Seven bottom-half reps, seven top-half, seven full — no rest.",
+    "description": "One set of 21s is seven curls through the bottom half of the range, seven through the top half, then seven full curls, back to back. The partial ranges torch the biceps with surprisingly light weight.",
+    "avoidIf": [],
+    "icon": "💪"
+  },
+  {
+    "id": "bench-dip",
+    "name": "Bench Dip",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Chest",
+      "Shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hands on the bench behind you; lower until elbows hit 90°, no deeper.",
+    "description": "With your hands on the bench edge behind you and legs out front, bend your elbows to lower your hips, then press up. Going too deep stresses the shoulder — 90° at the elbow is plenty; bend your knees to make it easier.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "🪑"
+  },
+  {
+    "id": "overhead-db-extension",
+    "name": "Overhead Dumbbell Extension",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Both hands under one dumbbell overhead; lower it behind your head, elbows in.",
+    "description": "Hold one dumbbell overhead with both hands and bend only at the elbows to lower it behind your head, then press up. Keep your elbows pointing forward and your ribs stacked rather than arching your back.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "diamond-pushup",
+    "name": "Diamond Push-Up",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Chest",
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Thumbs and index fingers form a diamond under your chest.",
+    "description": "A push-up with hands close together under your chest, thumbs and index fingers touching, shifting the work heavily onto the triceps. The narrow hand position cranks the wrists — elevate or widen slightly if they protest.",
+    "avoidIf": [
+      "wrist",
+      "shoulder"
+    ],
+    "icon": "💎"
+  },
+  {
+    "id": "db-kickback",
+    "name": "Dumbbell Triceps Kickback",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hinge forward, upper arm parallel to the floor, straighten the elbow fully.",
+    "description": "Brace a hand on the bench, raise your upper arm parallel to the floor, and extend the dumbbell back until your arm is completely straight. All the value is in the full extension and the squeeze at lockout — light weight, no swinging.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "💪"
+  },
+  {
+    "id": "db-skull-crusher",
+    "name": "Dumbbell Skull Crusher",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lying down, lower the dumbbells beside your head, elbows pointing up.",
+    "description": "Lie on the bench with dumbbells held over your chest and bend at the elbows to lower them beside your ears, then extend up. Dumbbells let your wrists sit neutrally, which most elbows prefer over a straight bar.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "💀"
+  },
+  {
+    "id": "db-tate-press",
+    "name": "Tate Press",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lower the dumbbells toward your chest, elbows flaring out.",
+    "description": "Lying on the bench, press two dumbbells up, then lower them toward your chest by flaring the elbows so the weights meet over your sternum, and press back. An old powerlifting move that targets the inner triceps.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "db-jm-press",
+    "name": "Dumbbell JM Press",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Chest"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Half press, half skull crusher — lower toward your upper chest.",
+    "description": "A hybrid of a close press and a skull crusher: lower the dumbbells toward your upper chest with elbows tucked, then press. It blends pressing strength with triceps isolation and is easier on the elbows than a strict skull crusher.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "close-pushup",
+    "name": "Close-Grip Push-Up",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Chest",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hands under your shoulders, elbows brushing your ribs as you lower.",
+    "description": "A push-up with hands about shoulder-width and elbows tracking tight to your sides, emphasising the triceps over the chest. Keep the elbows in rather than flaring to keep the load where you want it.",
+    "avoidIf": [
+      "wrist",
+      "shoulder"
+    ],
+    "icon": "💪"
+  },
+  {
+    "id": "bench-dip-feet-up",
+    "name": "Feet-Elevated Bench Dip",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Chest",
+      "Shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Hands on one bench, heels on another; dip to 90° elbows.",
+    "description": "A bench dip with your heels raised on a second surface, adding bodyweight to the triceps. Keep the depth to a 90° elbow — the elevated, loaded version is even less forgiving to the shoulders than the standard dip.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "🪑"
+  },
+  {
+    "id": "db-floor-extension",
+    "name": "Floor Triceps Extension",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "On the floor, lower dumbbells beside your head; the floor caps the range.",
+    "description": "A lying triceps extension done on the floor so your upper arms rest down and the range is naturally limited. The floor makes it the gentlest way to load the triceps overhead-style if the bench version bothers your shoulders.",
+    "avoidIf": [],
+    "icon": "💪"
+  },
+  {
+    "id": "db-close-press",
+    "name": "Close Neutral-Grip Press",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Chest",
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Dumbbells touching, elbows tucked; press straight up.",
+    "description": "Press two dumbbells held together with a neutral grip while keeping your elbows tucked close to your body, shifting the press onto the triceps. The touching dumbbells and tucked elbows keep it easy on the shoulders.",
+    "avoidIf": [],
+    "icon": "🏋️"
+  },
+  {
+    "id": "db-overhead-single",
+    "name": "Single-Arm Overhead Extension",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "One dumbbell overhead in one hand; lower behind your head, elbow high.",
+    "description": "Press one dumbbell overhead and lower it behind your head one arm at a time, keeping the elbow pointing at the ceiling. Working one side at a time exposes and fixes left-right differences; brace your core so you don't lean.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "💪"
+  },
+  {
+    "id": "bodyweight-skullcrusher",
+    "name": "Bodyweight Triceps Extension",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Hands on the bench, body straight; bend only at the elbows to lower your head.",
+    "description": "In a plank against the bench, bend only at the elbows to lower your forehead toward the bench edge, then extend back — a bodyweight skull crusher. Move your feet back to make it harder; keep the body rigid throughout.",
+    "avoidIf": [
+      "wrist",
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "💀"
+  },
+  {
+    "id": "plank",
+    "name": "Plank",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Forearms down, glutes squeezed, one straight line from head to heels.",
+    "description": "Hold a straight-body position on your forearms and toes, squeezing your glutes and bracing your abs like you're about to take a light punch. When the line breaks and your hips sag, the set is over.",
+    "avoidIf": [],
+    "icon": "🧘"
+  },
+  {
+    "id": "side-plank",
+    "name": "Side Plank",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Stacked feet, hips lifted high — don't let them sag toward the floor.",
+    "description": "Prop up on one forearm with your elbow under your shoulder and lift your hips into a straight line, targeting the obliques and deep side stabilizers. Drop the bottom knee to the floor for an easier version.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🧘"
+  },
+  {
+    "id": "dead-bug",
+    "name": "Dead Bug",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lower back pressed flat while opposite arm and leg reach away.",
+    "description": "On your back with arms up and knees bent to 90°, slowly extend one arm overhead and the opposite leg long, keeping your lower back glued to the floor, then switch. Quietly one of the best back-friendly core drills there is.",
+    "avoidIf": [
+      "pregnancy"
+    ],
+    "icon": "🪲"
+  },
+  {
+    "id": "bird-dog",
+    "name": "Bird Dog",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Glutes",
+      "Back"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "From all fours, reach opposite arm and leg long without tipping your hips.",
+    "description": "On hands and knees, extend one arm and the opposite leg until both are level with your torso, pause, and return without letting your hips tip. A rehab-world classic for keeping the spine still while the limbs move.",
+    "avoidIf": [
+      "wrist",
+      "knee"
+    ],
+    "icon": "🐕"
+  },
+  {
+    "id": "crunch",
+    "name": "Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl your ribs toward your hips — shoulder blades off the floor is far enough.",
+    "description": "Lying with knees bent, curl your upper spine forward until your shoulder blades leave the floor, then lower. It's a short movement, not a sit-up — don't yank your head; fingertips behind the ears, elbows wide.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🤸"
+  },
+  {
+    "id": "situp",
+    "name": "Sit-Up",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Roll up one vertebra at a time; exhale on the way up.",
+    "description": "From lying with knees bent, curl all the way up to sitting, then roll back down with control. The full range works the abs and hip flexors, but repeated full spinal flexion is what cranky lower backs dislike.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🤸"
+  },
+  {
+    "id": "russian-twist",
+    "name": "Russian Twist",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lean back to 45°, rotate your chest side to side from the ribs.",
+    "description": "Seated, lean back until your abs switch on, then rotate side to side, touching the floor beside each hip. Rotate through the mid-back rather than whipping the arms — skip it if twisting under load bothers your spine.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🌀"
+  },
+  {
+    "id": "lying-leg-raise",
+    "name": "Lying Leg Raise",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Quads"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Legs up to vertical, then lower only as far as your lower back stays down.",
+    "description": "Lying flat, raise your legs to vertical and lower them toward the floor without letting your lower back peel up — the lowering is the exercise. Bend the knees to make it easier; stop higher the moment your back arches.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "hollow-hold",
+    "name": "Hollow Body Hold",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Press your lower back into the floor and hover shoulders and legs — banana shape.",
+    "description": "Press your lower back into the floor and lift your shoulders and straight legs a few inches, arms overhead, into a shallow banana shape. Tuck the knees or raise the legs higher to scale it down.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🍌"
+  },
+  {
+    "id": "hanging-knee-raise",
+    "name": "Hanging Knee Raise",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Quads"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hang from a bar; curl your knees up toward your chest, no swinging.",
+    "description": "Hang from a pull-up bar and curl your knees up toward your chest by rolling your pelvis, then lower without swinging. Controlling the swing is the whole skill — a slight backward tuck of the pelvis is what works the abs.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "db-weighted-crunch",
+    "name": "Weighted Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold a dumbbell on your chest; curl your ribs toward your hips.",
+    "description": "A crunch with a light dumbbell held against your chest to add resistance to the abs. Keep it a short curl rather than a full sit-up, and don't let the added weight pull your head forward.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "db-side-bend",
+    "name": "Dumbbell Side Bend",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Dumbbell in one hand; bend sideways toward it, then pull straight up.",
+    "description": "Hold a dumbbell in one hand and bend sideways toward it, then contract the opposite oblique to pull straight back up. Only load one side at a time and keep the motion strictly side-to-side, not twisting.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "db-suitcase-hold",
+    "name": "Suitcase Carry Hold",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Back",
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hold one dumbbell at your side and stand tall — don't let it tip you.",
+    "description": "Hold a single heavy dumbbell at one side and either stand tall or walk, resisting the pull that wants to bend you sideways. An anti-lateral-flexion drill that quietly builds a strong, stable core and grip.",
+    "avoidIf": [],
+    "icon": "🧳"
+  },
+  {
+    "id": "reverse-crunch",
+    "name": "Reverse Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Knees bent, curl your hips off the floor toward your ribs.",
+    "description": "Lying on your back with knees bent, curl your hips up off the floor toward your ribcage using your lower abs, then lower slowly. It's a small, controlled roll of the pelvis — no throwing the legs for momentum.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🤸"
+  },
+  {
+    "id": "bicycle-crunch",
+    "name": "Bicycle Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Opposite elbow toward opposite knee, slow and deliberate.",
+    "description": "Lying down, bring one elbow toward the opposite knee while extending the other leg, then switch in a slow pedaling motion. The rotation hits the obliques — go slow rather than fast and don't tug on your neck.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🚲"
+  },
+  {
+    "id": "plank-shoulder-tap",
+    "name": "Plank Shoulder Tap",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "From a high plank, tap each hand to the opposite shoulder, hips still.",
+    "description": "In a high plank with feet wide, tap one hand to the opposite shoulder while keeping your hips from rocking, then alternate. The anti-rotation demand is the point — the slower and stiller your hips, the harder it works.",
+    "avoidIf": [
+      "wrist",
+      "shoulder"
+    ],
+    "icon": "🧘"
+  },
+  {
+    "id": "v-up",
+    "name": "V-Up",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Quads"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Reach hands to toes, folding into a V, then lower with control.",
+    "description": "Lying flat, simultaneously lift your straight legs and torso to reach your hands toward your toes, folding into a V, then lower. A demanding full-length ab move — bend the knees or do tuck-ups to scale it down.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "✅"
+  },
+  {
+    "id": "hollow-rock",
+    "name": "Hollow Rock",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Hold the banana shape and rock gently from shoulders to hips.",
+    "description": "Get into a hollow hold, then rock your whole rigid body back and forth like a rocking chair without losing the banana shape. The rocking adds a dynamic challenge on top of the hollow hold's tension.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🍌"
+  },
+  {
+    "id": "toe-touch-crunch",
+    "name": "Toe-Touch Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Legs up to vertical; reach your hands toward your toes.",
+    "description": "Lying with your legs pointed straight up, crunch up and reach your hands toward your toes, then lower your shoulders back down. Keeping the legs vertical takes the hip flexors out and puts the focus on the upper abs.",
+    "avoidIf": [
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🦶"
+  },
+  {
+    "id": "plank-reach",
+    "name": "Plank Reach-Out",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Back"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "From a forearm plank, reach one arm forward without shifting your hips.",
+    "description": "In a forearm plank, extend one arm straight out in front of you and hold briefly before switching, keeping your hips square and level. Removing a support point makes the core fight hard to stop any rotation.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🧘"
+  },
+  {
+    "id": "glute-bridge",
+    "name": "Glute Bridge",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Drive through your heels and squeeze your glutes to lift your hips.",
+    "description": "Lying with knees bent and feet flat, drive your hips up until your body is straight from knees to shoulders, squeeze hard, and lower. The lift should come from the glutes — think 'tuck and lift', not 'arch and push'.",
+    "avoidIf": [
+      "pregnancy"
+    ],
+    "icon": "🌉"
+  },
+  {
+    "id": "db-hip-thrust",
+    "name": "Dumbbell Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings",
+      "Quads"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Upper back on the bench, dumbbell over your hips — drive up to a flat tabletop.",
+    "description": "With your upper back on the bench and a dumbbell held across your hips (pad it), drive your hips up until your torso is level, chin tucked, then lower. The heaviest direct glute loading you can do with dumbbells.",
+    "avoidIf": [
+      "hip",
+      "pregnancy"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "single-leg-glute-bridge",
+    "name": "Single-Leg Glute Bridge",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "One foot down, one leg extended — hips rise level, no tilting.",
+    "description": "A glute bridge on one leg with the other held straight or hugged in, which doubles the load on the working glute. Keep the hips level as you rise — a tilting pelvis means the lower back is out-voting the glute.",
+    "avoidIf": [
+      "pregnancy"
+    ],
+    "icon": "🌉"
+  },
+  {
+    "id": "donkey-kick",
+    "name": "Donkey Kick",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "From all fours, press one flexed foot toward the ceiling, knee bent at 90°.",
+    "description": "On hands and knees, keep one knee bent at 90° and press that foot toward the ceiling by squeezing the glute, then lower without touching down. Stop where your back would start to arch — the range is smaller than momentum wants.",
+    "avoidIf": [
+      "wrist",
+      "knee"
+    ],
+    "icon": "🐴"
+  },
+  {
+    "id": "fire-hydrant",
+    "name": "Fire Hydrant",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "From all fours, lift one bent knee out to the side without tilting your hips.",
+    "description": "On hands and knees, lift one bent leg out to the side while keeping both hips square to the floor, then lower. Works the side glutes that stabilize every step — height doesn't matter, keeping the torso still does.",
+    "avoidIf": [
+      "wrist",
+      "knee",
+      "hip"
+    ],
+    "icon": "🚒"
+  },
+  {
+    "id": "clamshell",
+    "name": "Clamshell",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lie on your side, knees bent, and open the top knee — feet stay together.",
+    "description": "Lying on your side with knees bent and stacked, keep your feet touching and lift the top knee open without rolling your pelvis back, then close slowly. A physical-therapy staple for the deep side glutes.",
+    "avoidIf": [],
+    "icon": "🐚"
+  },
+  {
+    "id": "db-frog-pump",
+    "name": "Dumbbell Frog Pump",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Soles of the feet together, knees wide; pump the hips up, dumbbell on the hips.",
+    "description": "Lying on your back with the soles of your feet together and knees splayed out, hold a light dumbbell on your hips and pump them up, squeezing the glutes at the top. The frog position biases the work toward the glutes over the hamstrings.",
+    "avoidIf": [
+      "pregnancy"
+    ],
+    "icon": "🐸"
+  },
+  {
+    "id": "db-bulgarian-glute",
+    "name": "Dumbbell B-Stance Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Back on the bench; one foot flat, the other just as a kickstand.",
+    "description": "A hip thrust with most of the weight on one foot while the other rests lightly forward as a kickstand, so one glute does the lion's share. A dumbbell on the hips loads it; keep both hips rising level.",
+    "avoidIf": [
+      "hip",
+      "pregnancy"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "step-through-lunge",
+    "name": "Curtsy Lunge",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Quads",
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Step one leg diagonally behind the other and lower into a curtsy.",
+    "description": "From standing, step one foot diagonally behind and across the other, then bend both knees into a curtsy before returning. The crossed angle targets the side glutes strongly — keep your front knee tracking over your foot.",
+    "avoidIf": [
+      "knee",
+      "balance",
+      "hip"
+    ],
+    "icon": "💃"
+  },
+  {
+    "id": "db-single-rdl-glute",
+    "name": "Dumbbell Kickstand RDL",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings",
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "One foot back on its toes as a kickstand; hinge and drive the front glute.",
+    "description": "Hold dumbbells and place one foot slightly back on its toes for balance, then hinge over the front leg and stand by squeezing that glute. The kickstand gives you the single-leg glute focus without the full balance demand.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "hip-abduction-side",
+    "name": "Side-Lying Leg Raise",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "On your side, raise the top leg straight up, toes pointing forward.",
+    "description": "Lying on your side, raise the top leg straight up with the toes pointing forward (not up), then lower slowly to work the side glute. Keeping the toe forward rather than rotated up keeps the focus on the glute, not the hip flexor.",
+    "avoidIf": [],
+    "icon": "🦵"
+  },
+  {
+    "id": "db-sumo-squat-glute",
+    "name": "Dumbbell Sumo Squat",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Quads",
+      "Hamstrings"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Wide stance, toes out; hold one dumbbell low and squat between your heels.",
+    "description": "Take a wide stance with toes turned out, hold a dumbbell hanging between your legs, and squat straight down, driving your knees out. The wide stance shifts emphasis onto the glutes and inner thighs.",
+    "avoidIf": [
+      "knee",
+      "hip"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "glute-bridge-march",
+    "name": "Glute Bridge March",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold a bridge and slowly lift one foot, then the other — hips stay level.",
+    "description": "Hold the top of a glute bridge and slowly march one foot up at a time while keeping your hips from dropping or tilting. The support glute has to work overtime to keep everything level.",
+    "avoidIf": [
+      "pregnancy"
+    ],
+    "icon": "🌉"
+  },
+  {
+    "id": "reverse-hyper-bench",
+    "name": "Bench Reverse Hyper",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings",
+      "Back"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hips on the bench edge, torso down; raise straight legs to level, no higher.",
+    "description": "Lie face-down with your hips at the edge of the bench and legs hanging, then raise your straight legs up to body level by squeezing the glutes. Stop at level rather than swinging higher, which just arches the lower back.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🍑"
+  },
+  {
+    "id": "db-good-glute-morning",
+    "name": "Dumbbell Hip Hinge",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings",
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Dumbbells at your sides; push your hips straight back, then stand tall.",
+    "description": "Hold light dumbbells at your sides and push your hips straight back with a flat back until you feel the glutes and hamstrings load, then drive your hips forward to stand. The foundational hinge pattern — master it light before loading heavy.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🍑"
+  },
+  {
+    "id": "bodyweight-squat",
+    "name": "Bodyweight Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Hamstrings",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Sit back and down between your hips, chest up, heels planted.",
+    "description": "Feet about shoulder width, sit down between your hips as deep as comfortable and stand back up, knees tracking in line with the toes. The most useful pattern in the library — the depth that feels strong is your depth.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "goblet-squat",
+    "name": "Goblet Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hug one dumbbell at your chest — it counterbalances you into a deeper squat.",
+    "description": "Hold a dumbbell vertically against your chest and squat; the front-loaded weight acts as a counterbalance so most people squat deeper and more upright. The thinking person's first loaded squat.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "forward-lunge",
+    "name": "Forward Lunge",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Step forward, lower the back knee toward the floor, push back to standing.",
+    "description": "Step forward into a split stance and lower until both knees near 90°, then push off the front foot to return. The braking of the forward step is what makes it harder on the knees than its reverse cousin.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "reverse-lunge",
+    "name": "Reverse Lunge",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Step backward into the lunge — easier on the knees than stepping forward.",
+    "description": "Step one foot backward and lower the back knee toward the floor, then drive through the front heel to stand. Removing the forward braking step makes this the knee-friendlier lunge and easier to balance.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "bulgarian-split-squat",
+    "name": "Bulgarian Split Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Hamstrings",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Rear foot on the bench, drop straight down — the front leg does the work.",
+    "description": "A split squat with your rear foot on the bench behind you and dumbbells at your sides, loading one leg hard with none of the spinal load of a barbell. Find the foot spacing before adding weight; the balance is half the battle.",
+    "avoidIf": [
+      "knee",
+      "balance",
+      "hip"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "wall-sit",
+    "name": "Wall Sit",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Back flat on the wall, thighs parallel to the floor, and hold.",
+    "description": "Slide down a wall until your thighs are parallel and knees are over your ankles, then hold the invisible chair with your hands off your legs. Raise the seat height (shallower angle) to make it kinder to the knees.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🪑"
+  },
+  {
+    "id": "step-up",
+    "name": "Step-Up",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Whole foot on the bench; drive through that heel without pushing off the floor leg.",
+    "description": "Step onto the bench, driving up through the leading leg until you stand tall on it, then step down with control. The honest version barely pushes off the bottom foot — lower the step if you can't help cheating.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "db-step-up",
+    "name": "Dumbbell Step-Up",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Calves"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Dumbbells at your sides; step up under control, no bouncing off the floor.",
+    "description": "A step-up onto the bench holding a dumbbell in each hand, adding real load to a very functional pattern. Keep the movement slow and honest — push through the top foot, don't spring off the bottom one.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "db-squat",
+    "name": "Dumbbell Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Hamstrings",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "A dumbbell in each hand at your sides; squat down and stand tall.",
+    "description": "Hold a dumbbell in each hand at your sides and squat to a comfortable depth, then stand. Loading at your sides keeps your torso upright and is an easy way to add weight once bodyweight squats feel light.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "db-front-squat",
+    "name": "Dumbbell Front Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rest dumbbells on your shoulders; squat with an upright chest.",
+    "description": "Hold two dumbbells on the front of your shoulders and squat, keeping your torso tall and elbows up. The front-loaded position hammers the quads and demands an upright, braced trunk.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "split-squat",
+    "name": "Static Split Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Feet split front and back; drop straight down, no stepping.",
+    "description": "Set your feet in a split stance and lower straight down until the back knee nears the floor, then press up — all reps on one side before switching. Staying in place makes it easier to balance than a lunge while still loading each leg.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "cossack-squat",
+    "name": "Cossack Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Wide stance; shift onto one bent leg while the other stays straight.",
+    "description": "From a very wide stance, shift your weight down onto one bent leg while the other stays straight with the toe up, then push back to center and switch. A deep, mobility-heavy squat — ease into the depth over time.",
+    "avoidIf": [
+      "knee",
+      "hip",
+      "balance"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "pause-squat",
+    "name": "Paused Bodyweight Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Sit to the bottom, hold three seconds, then stand.",
+    "description": "A bodyweight squat with a three-second pause at the bottom, which removes any bounce and makes the legs work from a dead stop. The pause builds control and makes bodyweight surprisingly challenging.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "wall-sit-march",
+    "name": "Wall Sit March",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold a wall sit and slowly lift one foot, then the other.",
+    "description": "Hold a wall sit and slowly march one foot up at a time while keeping your hips level against the wall. Lifting a foot doubles the load on the standing leg and adds a balance element to the burn.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🪑"
+  },
+  {
+    "id": "sissy-squat",
+    "name": "Sissy Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Hold support, rise on your toes, and lean back bending only your knees.",
+    "description": "Holding a support for balance, rise onto your toes and lean your torso back as you bend your knees forward, keeping hips and shoulders in line. It isolates the quads intensely and stretches them hard — build up slowly, and skip it if your knees object.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "heel-elevated-squat",
+    "name": "Heel-Elevated Goblet Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Heels on a small plate or wedge; hug a dumbbell and squat deep.",
+    "description": "A goblet squat with your heels slightly raised, which lets you sit straighter and deeper and shifts more work onto the quads. Great for taller people or anyone whose squat depth feels blocked at the ankles.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "tempo-lunge",
+    "name": "Slow Tempo Reverse Lunge",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Three seconds down into the lunge, pause, then drive up.",
+    "description": "A reverse lunge slowed to a three-second descent with a pause at the bottom, which builds control and single-leg strength without any load. The slow tempo also lightens the impact on the knee compared to fast reps.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "db-rdl",
+    "name": "Dumbbell Romanian Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Push your hips straight back, soft knees, until the hamstrings pull the brakes.",
+    "description": "Holding dumbbells in front of your thighs, hinge by pushing your hips back with a proud chest and slight knee bend, lowering until the hamstrings hit their stretch, then drive the hips forward. A rounding back is the signal to stop shallower.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "single-leg-rdl",
+    "name": "Single-Leg Romanian Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hinge on one leg, the other extending behind you as a counterweight.",
+    "description": "Balance on one leg and hinge forward, letting the free leg extend straight behind you until your body forms a T, then return. Hamstrings plus a serious balance challenge — keep fingertips on a wall while learning.",
+    "avoidIf": [
+      "lower-back",
+      "balance"
+    ],
+    "icon": "🦩"
+  },
+  {
+    "id": "nordic-curl",
+    "name": "Nordic Hamstring Curl",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Ankles anchored, kneel tall, and lower your body forward as slowly as possible.",
+    "description": "Kneel with your ankles anchored under the bench and lower your straight body toward the floor using only your hamstrings as brakes, catching yourself with your hands. Even a few clean negatives are elite-level.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🧎"
+  },
+  {
+    "id": "db-stiff-leg-deadlift",
+    "name": "Dumbbell Stiff-Leg Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Nearly straight knees; hinge and lower the dumbbells down your shins.",
+    "description": "Like a Romanian deadlift but with the knees kept nearly straight, which puts an even bigger stretch on the hamstrings. Keep a flat back and only go as low as your hamstring flexibility allows without rounding.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "db-b-stance-rdl",
+    "name": "Dumbbell B-Stance RDL",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "One foot back on its toes as a kickstand; hinge over the front leg.",
+    "description": "A Romanian deadlift with one foot set back on its toes as a light kickstand, biasing most of the load onto the front hamstring without the full balance test of a single-leg version. A great bridge toward true single-leg work.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "slider-leg-curl",
+    "name": "Sliding Leg Curl",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Heels on sliders in a bridge; slide your feet out, then curl them back.",
+    "description": "In a glute bridge with your heels on towels or sliders, slide your feet out until your legs are almost straight, then curl them back in while keeping your hips up. A tough bodyweight hamstring curl — bend one leg to assist if needed.",
+    "avoidIf": [
+      "pregnancy"
+    ],
+    "icon": "🛝"
+  },
+  {
+    "id": "bench-hamstring-walkout",
+    "name": "Glute Bridge Walkout",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold a bridge; walk your heels out step by step, then back in.",
+    "description": "Hold a glute bridge and slowly step your heels away from your hips one at a time until your legs are long, then walk them back in, keeping the hips lifted throughout. The further out your feet, the harder the hamstrings work.",
+    "avoidIf": [
+      "pregnancy"
+    ],
+    "icon": "🌉"
+  },
+  {
+    "id": "db-single-leg-rdl-supported",
+    "name": "Kickstand RDL (Hamstring)",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Toes of the back foot down for balance; hinge over the front leg.",
+    "description": "Hold dumbbells with one foot slightly back on its toes and hinge over the front leg, feeling the hamstring load, then stand. The kickstand foot removes the balance struggle so you can focus on the hinge and the stretch.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🦵"
+  },
+  {
+    "id": "prone-hamstring-curl-db",
+    "name": "Prone Dumbbell Leg Curl",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Calves"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lie face-down, squeeze a light dumbbell between your feet, curl your heels up.",
+    "description": "Lying face-down on the bench, pinch a light dumbbell between your feet and curl your heels toward your glutes, then lower slowly. A homemade lying leg curl — start with the lightest dumbbell you can grip securely.",
+    "avoidIf": [],
+    "icon": "🦵"
+  },
+  {
+    "id": "good-morning-bw",
+    "name": "Bodyweight Good Morning",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Back"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hands behind your head; bow forward from the hips with a flat back.",
+    "description": "With hands behind your head and knees soft, bow your torso forward from the hips until you feel the hamstrings load, then stand tall by squeezing them. A gentle, unloaded way to groove the hinge and warm up the posterior chain.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🌅"
+  },
+  {
+    "id": "db-good-morning",
+    "name": "Dumbbell Good Morning",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Hold one dumbbell at your chest; bow forward with a locked-flat spine.",
+    "description": "Hold a dumbbell against your upper chest and hinge forward until your torso approaches parallel, then stand by driving the hips forward. The load sits far from your hips, so keep it light and your back granite-flat.",
+    "avoidIf": [
+      "lower-back",
+      "hip"
+    ],
+    "icon": "🌅"
+  },
+  {
+    "id": "single-leg-hip-hinge-reach",
+    "name": "Single-Leg Hinge Reach",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Balance on one leg; hinge and reach your hands toward the floor.",
+    "description": "Stand on one leg and hinge forward, reaching your hands toward the floor while the free leg floats back, then return to standing tall. An unloaded single-leg RDL that builds hamstring control and balance at the same time.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🦩"
+  },
+  {
+    "id": "seated-db-leg-curl",
+    "name": "Seated Dumbbell Hamstring Curl",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Sit on the bench edge, dumbbell between your feet, curl your lower legs back.",
+    "description": "Perch on the edge of the bench with a light dumbbell held between your feet and curl your lower legs back underneath you, then extend. A simple seated curl variation for the hamstrings when you have no machine.",
+    "avoidIf": [],
+    "icon": "🦵"
+  },
+  {
+    "id": "hamstring-bridge-hold",
+    "name": "Long-Lever Bridge Hold",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Heels far from your hips, only the heels down; hold the bridge high.",
+    "description": "Set up a glute bridge with your heels placed far from your hips and only your heels on the floor, then hold the top position, which loads the hamstrings much more than a normal bridge. Add a light single-leg version once it feels easy.",
+    "avoidIf": [
+      "pregnancy"
+    ],
+    "icon": "🌉"
+  },
+  {
+    "id": "standing-calf-raise",
+    "name": "Standing Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Rise to your tiptoes, pause at the top, lower until you feel a heel stretch.",
+    "description": "Stand tall with fingertips on a wall for balance, rise onto the balls of your feet, pause, and lower until your heels feel a gentle stretch. A step edge gives extra range — calves respond to full range and patience, not bouncing.",
+    "avoidIf": [],
+    "icon": "🦶"
+  },
+  {
+    "id": "single-leg-calf-raise",
+    "name": "Single-Leg Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "All your weight on one foot — full rise, full stretch, no bouncing.",
+    "description": "A calf raise on one leg, doubling the load and exposing how much stronger one side is. Hold a wall with one hand; the single-leg stance is itself a small balance drill.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🦶"
+  },
+  {
+    "id": "db-calf-raise",
+    "name": "Dumbbell Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Dumbbell in one hand, other hand on the wall — raise, pause, stretch.",
+    "description": "A standing calf raise holding a dumbbell in one hand while the other hand steadies you against a wall. The simplest way to add load to calves at home — do all reps one side, then swap the weight over.",
+    "avoidIf": [],
+    "icon": "🦶"
+  },
+  {
+    "id": "db-seated-calf-raise",
+    "name": "Seated Dumbbell Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Sit on the bench, dumbbells on your knees; press up through the balls of your feet.",
+    "description": "Sit on the bench with dumbbells resting on your knees and raise your heels through a full range, then lower into a stretch. The bent knee shifts the work to the soleus, the deep calf muscle a standing raise mostly misses.",
+    "avoidIf": [],
+    "icon": "🦶"
+  },
+  {
+    "id": "toe-walk",
+    "name": "Toe Walks",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Walk on your tiptoes, tall as possible, heels never touching down.",
+    "description": "Rise onto the balls of your feet and walk, staying as tall as you can for a slow lap of the room. Ankle strength, calf endurance, and a little balance practice disguised as a silly walk.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🩰"
+  },
+  {
+    "id": "step-calf-raise",
+    "name": "Deficit Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Balls of your feet on a step edge; drop the heels low, then press high.",
+    "description": "Stand with the balls of your feet on the edge of a step and let your heels drop below the step for a deep stretch before pressing all the way up. The added range at the bottom is what makes calves grow.",
+    "avoidIf": [],
+    "icon": "🦶"
+  },
+  {
+    "id": "db-jump-rope-calf",
+    "name": "Calf Raise Pulse",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Small fast pulses at the top of a calf raise, staying on your toes.",
+    "description": "Rise onto your toes and perform small, fast pulses near the top of the range without dropping your heels all the way down, keeping constant tension on the calves. A burnout finisher — no jumping, just quick controlled pulses.",
+    "avoidIf": [],
+    "icon": "🦶"
+  },
+  {
+    "id": "db-farmer-calf",
+    "name": "Loaded Calf Raise Hold",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Heavy dumbbells at your sides; rise onto your toes and hold at the top.",
+    "description": "Hold a heavy dumbbell in each hand, rise onto your toes, and hold the top position for time, which trains the calves isometrically along with your grip and posture. Stay tall and controlled; use a wall if balance wavers.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🦶"
+  },
+  {
+    "id": "burpee",
+    "name": "Burpee",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Chest",
+      "Quads",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Squat, kick back to a plank, push-up, jump feet in, leap — repeat.",
+    "description": "Drop your hands down, kick back to a plank with an optional push-up, hop your feet in, and jump up. The whole gym in one movement — but a lot of impact through wrists and knees; step the feet in and skip the jump for a gentler version.",
+    "avoidIf": [
+      "knee",
+      "high-impact",
+      "wrist",
+      "pregnancy"
+    ],
+    "icon": "🔥"
+  },
+  {
+    "id": "jump-squat",
+    "name": "Jump Squat",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Quads",
+      "Glutes",
+      "Calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Squat down, explode up, and land soft like landing on eggshells.",
+    "description": "A bodyweight squat that finishes with a jump, landing softly into the next rep. Builds explosive power and spikes the heart rate — the landing is the skill; if joints complain, regular squats deliver most of the benefit.",
+    "avoidIf": [
+      "knee",
+      "high-impact",
+      "pregnancy"
+    ],
+    "icon": "🦘"
+  },
+  {
+    "id": "jumping-jack",
+    "name": "Jumping Jacks",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Jump feet wide as arms swing overhead, then snap back together.",
+    "description": "Jump your feet out wide while your arms swing overhead, then jump back to standing. A friendly whole-body warm-up — for a no-impact version, step one foot out at a time while the arms do the same swing.",
+    "avoidIf": [
+      "knee",
+      "high-impact"
+    ],
+    "icon": "⭐"
+  },
+  {
+    "id": "high-knees",
+    "name": "High Knees",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Quads",
+      "Calves",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Run in place, driving knees to hip height, quick light feet.",
+    "description": "Sprint in place, driving each knee toward hip height with fast, light ground contacts and pumping arms. Twenty seconds of honest effort is a real interval — marching is the calm, no-impact alternative.",
+    "avoidIf": [
+      "knee",
+      "high-impact",
+      "hip"
+    ],
+    "icon": "🏃"
+  },
+  {
+    "id": "shadow-boxing",
+    "name": "Shadow Boxing",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Light on your feet, snappy punches at an imaginary target — never full lockout.",
+    "description": "Bounce lightly and throw combinations at the air, rotating through the hips with each punch. Cardio, coordination, and stress relief with no equipment — keep a slight bend at the end of every punch to spare the elbows.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🥊"
+  },
+  {
+    "id": "mountain-climber",
+    "name": "Mountain Climbers",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Shoulders",
+      "Quads"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "From a plank, drive knees toward your chest in a fast alternating rhythm.",
+    "description": "In a high plank, run your knees toward your chest one at a time while your shoulders stay stacked over your wrists. Slow it to a march to drop the impact and keep the core work; the fast version earns the tags.",
+    "avoidIf": [
+      "wrist",
+      "knee",
+      "high-impact"
+    ],
+    "icon": "⛰️"
+  },
+  {
+    "id": "db-swing",
+    "name": "Dumbbell Swing",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Glutes",
+      "Hamstrings",
+      "Back",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "It's a hip snap, not an arm lift — the dumbbell floats to chest height.",
+    "description": "Hold one dumbbell by the head with both hands, hinge and hike it back between your legs, then snap your hips forward so it floats up to chest height. Every swing is a hip hinge — a rounded back turns it into a lower-back grievance.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️"
+  },
+  {
+    "id": "bear-crawl",
+    "name": "Bear Crawl",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Shoulders",
+      "Quads"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hands and feet down, knees hovering an inch off the floor — crawl slow and level.",
+    "description": "On hands and feet with knees hovering just off the ground, crawl forward moving opposite hand and foot together while keeping your back flat. Surprisingly humbling core and shoulder work — speed isn't the goal, a still torso is.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "🐻"
+  },
+  {
+    "id": "march-in-place",
+    "name": "March in Place",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Quads",
+      "Calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lift knees to a comfortable height with a steady rhythm and swinging arms.",
+    "description": "March on the spot, lifting the knees to a comfortable height and swinging the arms naturally. The gentlest conditioning option — a warm-up, a between-sets breather, or the low-impact stand-in for anything with jumping.",
+    "avoidIf": [],
+    "icon": "🚶"
+  },
+  {
+    "id": "db-thruster",
+    "name": "Dumbbell Thruster",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Quads",
+      "Glutes",
+      "Shoulders",
+      "Triceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Front squat straight into an overhead press — one fluid motion.",
+    "description": "Hold dumbbells at your shoulders, squat, and use the drive out of the squat to press them overhead in one motion, then lower into the next rep. A squat, a press, and a cardio interval in one — three sets of joints all need to sign off.",
+    "avoidIf": [
+      "shoulder",
+      "knee",
+      "lower-back"
+    ],
+    "icon": "🚀"
+  },
+  {
+    "id": "farmers-carry",
+    "name": "Farmer's Carry",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Back",
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Heavy dumbbell in each hand, stand tall, and just walk.",
+    "description": "Pick up a heavy dumbbell in each hand and walk with tall posture, level shoulders, and unhurried steps for distance or time. Grip, core, posture, and conditioning from the most functional movement there is — carrying heavy things.",
+    "avoidIf": [],
+    "icon": "🧳"
+  },
+  {
+    "id": "db-clean-press",
+    "name": "Dumbbell Clean & Press",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Quads",
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Pull the dumbbells to your shoulders, then press overhead, then reverse.",
+    "description": "From a hinge, pull two dumbbells up to your shoulders in one quick move, then press them overhead, then reverse the whole thing under control. A full-body power builder — keep the hinge flat-backed and the press honest.",
+    "avoidIf": [
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "🚀"
+  },
+  {
+    "id": "db-snatch",
+    "name": "Single-Arm Dumbbell Snatch",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Glutes",
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "One dumbbell from between your feet to overhead in one snap.",
+    "description": "Explosively pull a single dumbbell from a hinge between your feet straight up to a locked-out overhead position, then lower and repeat. Powerful and cardio-heavy — it demands a solid hinge and a stable overhead, so build up light.",
+    "avoidIf": [
+      "shoulder",
+      "lower-back",
+      "wrist"
+    ],
+    "icon": "⚡"
+  },
+  {
+    "id": "squat-thrust",
+    "name": "Squat Thrust",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Quads",
+      "Shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "A burpee without the jump — squat, kick to plank, hop back, stand.",
+    "description": "Squat down, kick your feet back to a plank, hop them back in, and stand — a burpee minus the jump and push-up. Most of the conditioning of a burpee with far less impact through the knees.",
+    "avoidIf": [
+      "wrist",
+      "hip"
+    ],
+    "icon": "🔥"
+  },
+  {
+    "id": "lateral-shuffle",
+    "name": "Lateral Shuffle",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Quads",
+      "Glutes",
+      "Calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Stay low in a quarter squat and shuffle side to side, quick feet.",
+    "description": "Sink into a quarter squat and shuffle sideways several steps one way, then back, staying low with quick light feet. A knee-friendly cardio option with no jumping that also lights up the outer hips.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "↔️"
+  },
+  {
+    "id": "inchworm",
+    "name": "Inchworm",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Shoulders",
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hinge, walk your hands out to a plank, walk your feet in, stand.",
+    "description": "Hinge and walk your hands out along the floor into a plank, then walk your feet up toward your hands and stand tall. A gentle full-body warm-up that mobilizes the hamstrings and shoulders in one flowing move.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "🐛"
+  },
+  {
+    "id": "step-up-cardio",
+    "name": "Fast Step-Ups",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Quads",
+      "Glutes",
+      "Calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Quick alternating step-ups onto the bench, driving your arms.",
+    "description": "Step up and down onto the bench at a brisk pace, alternating your lead foot and pumping your arms for rhythm. A simple, low-impact cardio driver — the bench height sets the intensity.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🪜"
+  }
 ];
 
-// Node export for validate.js; browsers just use the top-level consts.
 if (typeof module !== "undefined" && module.exports) {
   module.exports = { MUSCLE_GROUPS, EQUIPMENT, CONDITIONS, EXERCISES };
 }
