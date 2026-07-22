@@ -313,11 +313,12 @@ Progress (2026-07-17):
 - ✅ **Schema shipped & deployed** (schemaVersion 3): `equipment` is an array of ids;
   15-type `EQUIPMENT` taxonomy; superset gear filter + one-tap presets (Bodyweight / Home /
   Home+ / Full gym); `validate.js` updated (hard core / soft metadata). Live.
-- ✅ **Chest done** — 46 exercises across all equipment types (17% bodyweight-only),
-  full metadata. Verified: Home 23 / Bodyweight 8 / Full gym 46; pull-up-bar gating works.
-- ⏳ **Remaining 10 groups are placeholders** — carried over from the old 170, equipment
+- ✅ **Chest done** — 46 exercises, all equipment types (17% bodyweight-only), full metadata.
+- ✅ **Back done** — 57 exercises across 3 equipment-family sub-batches (Parts 1–3). Verified:
+  Bodyweight 7 / Home 18 / Full gym 57. Library now 237 total.
+- ⏳ **Remaining 9 groups are placeholders** — carried over from the old 170, equipment
   normalized to arrays, but still dumbbell/bodyweight-only and without the new metadata.
-  Each gets **replaced** as ChatGPT produces its batch (Back next). Order: Back, Shoulders,
+  Each gets **replaced** as ChatGPT produces its batch. Order: **Shoulders next**, then
   Biceps, Triceps, Core/Abs, Glutes, Quads, Hamstrings, Calves, Full Body/Cardio.
 - Note: a few carried-over pull/hang moves are tagged `pull-up-bar`; the rest of the
   placeholder groups' equipment is coarse and gets fixed on regeneration.
