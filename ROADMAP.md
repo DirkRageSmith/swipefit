@@ -165,18 +165,24 @@ Build it like a data project:
 1. **Constitution** — the taxonomy is fixed in §5 (11 groups, 15 equipment ids, 12
    patterns, 5 focuses, 9 injury tags, difficulty + naming + de-dup rules). Nothing gets
    generated until those enums are the shared reference.
-2. **Pilot batch — Chest (48) FIRST.** ChatGPT generates just Chest; Matt pastes it here;
-   Claude format-proofs it against the real schema (a scratch `validate` run) and fixes
-   the spec if anything's off. This catches a spec bug at 48 objects instead of 500. Do
-   **not** deploy the pilot — it only proves the pipeline.
-3. **Remaining batches** — one muscle group per response (table below), each self-QA'd by
-   ChatGPT before it's handed over.
-4. **Cross-batch QA** (ChatGPT, before Claude sees the full set): duplicate ids, duplicate
-   moves under different names, inconsistent injury tags, wrong patterns, impossible
-   equipment/`homeFriendly` combos, missing metadata, difficulty + muscle-balance skew.
-5. **Integration** (Claude) — §6.3.
+2. **Pilot — Chest FIRST (done 2026-07-17).** Proved the schema; do not re-run.
+3. **A group at a time, split into validator-sized sub-batches by equipment family.** A
+   full group (~36–58) exceeds one ChatGPT response, so split it — e.g. Back = Part 1
+   bodyweight/pull-up-bar, Part 2 dumbbell/barbell/kettlebell, Part 3 cable/machine/band/TRX.
+   Each part is a **standalone, concatenatable JS array**. Benefits: fits the response
+   limit, and a validator flag only means regenerating one section, not the whole group.
+   **Critical with sub-batching: ids must be globally unique across every part AND every
+   already-integrated group** — the biggest risk when parts are generated in separate
+   responses. Prefix-by-equipment naming (e.g. `cable-seated-row` vs `dumbbell-bent-row`)
+   makes collisions unlikely; ChatGPT should still self-check each part's ids against the
+   prior parts.
+4. **Per-part + cross-part QA** (ChatGPT before handoff, Claude's `validate.js` after):
+   duplicate ids, same move under two names, injury tags, patterns, equipment/`homeFriendly`
+   combos, metadata, difficulty + equipment spread (§6.2 rule).
+5. **Integration** (Claude) — §6.3. Claude validates each part on arrival, accumulates a
+   group's parts, then swaps the whole group in and deploys once it's complete.
 
-Copy the brief in §6.2 into ChatGPT. Run it once per muscle group.
+Copy the brief in §6.2 into ChatGPT. Run it per equipment-family sub-batch.
 
 > **Brief for ChatGPT.** Generate one muscle-group batch of the SwipeFit exercise library
 > as a JavaScript array of objects, ready to paste into `exercises.js`. **Do Chest first
