@@ -1,7 +1,6 @@
 /*
- * SwipeFit dataset: muscle groups, equipment taxonomy, avoid-conditions, and the library.
- * Chest + Back are fully produced (ChatGPT, all equipment types). The remaining groups are
- * placeholders carried over from the original 170 (equipment normalized to arrays) and get
+ * SwipeFit dataset. Chest, Back, Shoulders fully produced (all equipment types). Remaining
+ * groups are placeholders carried from the original 170 (equipment normalized to arrays),
  * replaced batch by batch. equipment = array of EQUIPMENT ids. Run `node validate.js`.
  */
 
@@ -3425,47 +3424,140 @@ const EXERCISES = [
     "category": "strength"
   },
   {
-    "id": "db-shoulder-press",
-    "name": "Seated Dumbbell Shoulder Press",
+    "id": "pike-push-up",
+    "name": "Pike Push-Up",
     "muscleGroup": "Shoulders",
     "secondaryMuscles": [
-      "Triceps"
+      "Triceps",
+      "Chest"
     ],
     "equipment": [
-      "dumbbell"
+      "bodyweight"
     ],
     "difficulty": "Beginner",
-    "cue": "Press from ear level to straight arms overhead — don't shrug into your neck.",
-    "description": "Seated with back support, hold a dumbbell at each side of your head and press overhead until your arms straighten, then lower to ear level. Keep your ribs down instead of arching your lower back to finish.",
+    "cue": "Drive your head toward the floor while keeping your hips high.",
+    "description": "Press your body upward with your shoulders doing most of the work. Avoid collapsing your neck or losing your pike position.",
     "avoidIf": [
       "shoulder",
       "neck"
     ],
-    "icon": "🏋️"
+    "icon": "🔺",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Downward Dog Push-Up"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-standing-press",
-    "name": "Standing Dumbbell Press",
+    "id": "feet-elevated-pike-push-up",
+    "name": "Feet-Elevated Pike Push-Up",
     "muscleGroup": "Shoulders",
     "secondaryMuscles": [
       "Triceps",
-      "Core/Abs"
+      "Chest"
     ],
     "equipment": [
-      "dumbbell"
+      "bench"
     ],
     "difficulty": "Intermediate",
-    "cue": "Brace your abs and glutes; press overhead without leaning back.",
-    "description": "Standing with dumbbells at your shoulders, brace your midsection and press them overhead to lockout. Standing recruits the core, but any layback turns it into a lower-back exercise — keep your ribs stacked over your hips.",
+    "cue": "Elevate your feet and lower your head between your hands.",
+    "description": "Increase the shoulder loading angle while maintaining control. Avoid letting your lower back collapse.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🔺",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Elevated Pike Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "wall-handstand-hold",
+    "name": "Wall Handstand Hold",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Triceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Press tall through your hands while maintaining a straight body line.",
+    "description": "Hold a stable inverted position against the wall. Avoid dumping weight into your neck or shoulders.",
     "avoidIf": [
       "shoulder",
       "neck",
-      "lower-back"
+      "wrist"
     ],
-    "icon": "🏋️"
+    "icon": "🤸",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Wall Handstand"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-lateral-raise",
+    "id": "wall-walk",
+    "name": "Wall Walk",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Triceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Walk your hands forward while climbing your feet up the wall.",
+    "description": "Move slowly into an inverted position and return with control. Avoid collapsing through the shoulders.",
+    "avoidIf": [
+      "shoulder",
+      "wrist",
+      "neck"
+    ],
+    "icon": "🧗",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "power"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Wall Climb"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-lateral-raise",
     "name": "Dumbbell Lateral Raise",
     "muscleGroup": "Shoulders",
     "secondaryMuscles": [],
@@ -3473,70 +3565,58 @@ const EXERCISES = [
       "dumbbell"
     ],
     "difficulty": "Beginner",
-    "cue": "Raise the weights out to shoulder height, pinky slightly up, lower slowly.",
-    "description": "Standing with light dumbbells at your sides, raise your arms out until they're parallel to the floor with a slight elbow bend, then lower with control. These stay light — form collapses fast when people chase weight.",
+    "cue": "Raise the dumbbells out to your sides with controlled motion.",
+    "description": "Lift until your arms are near shoulder height before lowering slowly. Avoid swinging the weights upward.",
     "avoidIf": [
       "shoulder"
     ],
-    "icon": "💪"
+    "icon": "🪽",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Side Raise"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-front-raise",
+    "id": "dumbbell-front-raise",
     "name": "Dumbbell Front Raise",
     "muscleGroup": "Shoulders",
-    "secondaryMuscles": [],
+    "secondaryMuscles": [
+      "Chest"
+    ],
     "equipment": [
       "dumbbell"
     ],
     "difficulty": "Beginner",
-    "cue": "Lift straight in front to eye level, one controlled rep at a time.",
-    "description": "Raise a dumbbell straight out in front to about eye level, then lower slowly, keeping a soft elbow. Avoid rocking your torso back to heave the weight up — if you need momentum, it's too heavy.",
+    "cue": "Raise the dumbbells straight in front of you with control.",
+    "description": "Keep your torso still while lifting and lowering the weights. Avoid leaning backward for momentum.",
     "avoidIf": [
       "shoulder"
     ],
-    "icon": "💪"
+    "icon": "⬆️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Front Raise"
+    ],
+    "category": "strength"
   },
   {
-    "id": "rear-delt-fly",
-    "name": "Bent-Over Rear Delt Fly",
-    "muscleGroup": "Shoulders",
-    "secondaryMuscles": [
-      "Back"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Hinge forward, then open your arms out like wings — light weight, high control.",
-    "description": "Hinge until your torso is near-parallel to the floor and raise light dumbbells out to your sides, leading with the elbows to hit the rear shoulders. Rest your chest on an incline bench if the hinge bothers your lower back.",
-    "avoidIf": [
-      "shoulder",
-      "lower-back"
-    ],
-    "icon": "💪"
-  },
-  {
-    "id": "arnold-press",
-    "name": "Arnold Press",
-    "muscleGroup": "Shoulders",
-    "secondaryMuscles": [
-      "Triceps"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Start palms facing you, rotate out as you press overhead.",
-    "description": "Begin with dumbbells at shoulder height, palms facing you, and rotate your palms outward as you press overhead. The added rotation sweeps through more of the shoulder but demands more from it — keep the weight moderate.",
-    "avoidIf": [
-      "shoulder",
-      "neck"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "db-shrug",
-    "name": "Dumbbell Shrug (Shoulders)",
+    "id": "dumbbell-rear-delt-fly",
+    "name": "Dumbbell Rear-Delt Fly",
     "muscleGroup": "Shoulders",
     "secondaryMuscles": [
       "Back"
@@ -3545,154 +3625,118 @@ const EXERCISES = [
       "dumbbell"
     ],
     "difficulty": "Beginner",
-    "cue": "Straight up toward your ears, pause, straight down — no rolling.",
-    "description": "Stand holding dumbbells at your sides and lift your shoulders straight up toward your ears, pause, and lower. Rolling the shoulders under load adds nothing and irritates necks — keep it a clean vertical shrug.",
-    "avoidIf": [
-      "neck"
+    "cue": "Sweep the dumbbells outward while squeezing your rear shoulders.",
+    "description": "Maintain a stable bent-over position throughout the movement. Avoid shrugging the weights upward.",
+    "avoidIf": [],
+    "icon": "🪽",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
     ],
-    "icon": "🤷"
+    "homeFriendly": true,
+    "aliases": [
+      "DB Rear Fly"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-upright-row",
-    "name": "Dumbbell Upright Row",
-    "muscleGroup": "Shoulders",
-    "secondaryMuscles": [
-      "Back",
-      "Biceps"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Pull the dumbbells up your body to chest height, elbows leading — no higher.",
-    "description": "Hold dumbbells in front of your thighs and pull them up along your body to about chest height with your elbows leading. Stop at chest height and keep the dumbbells a touch apart — pulling narrow to the chin is the classic impingement recipe.",
-    "avoidIf": [
-      "shoulder",
-      "wrist",
-      "neck"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "db-lateral-lean",
-    "name": "Leaning Lateral Raise",
-    "muscleGroup": "Shoulders",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Hold a post with one hand, lean away, raise the far dumbbell out.",
-    "description": "Hold a sturdy post and lean away from it, then raise a dumbbell out to the side with the free arm — the lean keeps tension on the shoulder from the very bottom. One arm at a time, light and controlled.",
-    "avoidIf": [
-      "shoulder"
-    ],
-    "icon": "💪"
-  },
-  {
-    "id": "db-scaption",
+    "id": "dumbbell-scaption",
     "name": "Dumbbell Scaption",
     "muscleGroup": "Shoulders",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Raise the dumbbells up in a Y, thumbs up, to shoulder height.",
-    "description": "Raise light dumbbells up and out at about a 30-degree angle from straight ahead (in the plane of the shoulder blade) with thumbs up, forming a Y. This is the most shoulder-friendly raise and a staple for shoulder health.",
-    "avoidIf": [],
-    "icon": "💪"
-  },
-  {
-    "id": "db-w-raise",
-    "name": "Prone Y-T-W Raise",
-    "muscleGroup": "Shoulders",
     "secondaryMuscles": [
-      "Back"
+      "Chest"
     ],
     "equipment": [
       "dumbbell"
     ],
     "difficulty": "Beginner",
-    "cue": "Chest on the bench; trace Y, then T, then W with light dumbbells.",
-    "description": "Face-down on an incline bench, raise very light dumbbells into a Y, then a T, then a W shape, squeezing the shoulder blades each time. A posture and shoulder-health circuit that most people can do often.",
-    "avoidIf": [],
-    "icon": "🔤"
+    "cue": "Raise the dumbbells in the scapular plane with thumbs slightly upward.",
+    "description": "Move smoothly through the shoulder-friendly angle. Avoid forcing painful ranges of motion.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "↗️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Scaption Raise"
+    ],
+    "category": "strength"
   },
   {
-    "id": "pike-pushup",
-    "name": "Pike Push-Up",
+    "id": "dumbbell-cuban-press",
+    "name": "Dumbbell Cuban Press",
     "muscleGroup": "Shoulders",
     "secondaryMuscles": [
       "Triceps"
     ],
     "equipment": [
-      "bodyweight"
+      "dumbbell"
     ],
     "difficulty": "Intermediate",
-    "cue": "Hips high in an inverted V; lower the crown of your head toward the floor.",
-    "description": "From a downward-dog position with hips high, bend your elbows to lower the top of your head toward the floor, then press back up. A bodyweight overhead press that scales toward the handstand push-up.",
+    "cue": "Rotate the dumbbells upward before pressing overhead.",
+    "description": "Use light weight and controlled rotation through the shoulders. Avoid forcing the range of motion.",
     "avoidIf": [
-      "shoulder",
-      "wrist"
+      "shoulder"
     ],
-    "icon": "🔺"
+    "icon": "🔄",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Cuban Rotation Press"
+    ],
+    "category": "strength"
   },
   {
-    "id": "elevated-pike-pushup",
-    "name": "Feet-Elevated Pike Push-Up",
+    "id": "dumbbell-six-way-raise",
+    "name": "Dumbbell 6-Way Raise",
     "muscleGroup": "Shoulders",
     "secondaryMuscles": [
-      "Triceps"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Feet up on the bench, hips stacked high over your hands.",
-    "description": "A pike push-up with your feet on the bench so your torso is nearly vertical, putting most of your bodyweight over the shoulders. The closest bodyweight move to a strict overhead press before handstand work.",
-    "avoidIf": [
-      "shoulder",
-      "wrist"
-    ],
-    "icon": "🔺"
-  },
-  {
-    "id": "db-cuban-press",
-    "name": "Cuban Press",
-    "muscleGroup": "Shoulders",
-    "secondaryMuscles": [
-      "Back"
+      "Chest"
     ],
     "equipment": [
       "dumbbell"
     ],
     "difficulty": "Intermediate",
-    "cue": "Upright row, rotate the dumbbells up, then press — one flowing move.",
-    "description": "With light dumbbells, pull into a low upright row, externally rotate your forearms up so the weights point at the ceiling, then press overhead. A rotator-cuff-focused drill — keep it light and smooth, never grindy.",
+    "cue": "Move through six controlled raise positions without swinging.",
+    "description": "Keep the weights light and maintain shoulder control. Avoid rushing through the sequence.",
     "avoidIf": [
       "shoulder"
     ],
-    "icon": "🏋️"
+    "icon": "🔢",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "endurance",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Six Way Shoulder Raise"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-6way-raise",
-    "name": "Six-Way Shoulder Raise",
-    "muscleGroup": "Shoulders",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Front raise, out to a T, back to front, then lower — light weight only.",
-    "description": "A finisher that raises light dumbbells to the front, sweeps them out to the sides, brings them back to the front, and lowers — hitting every angle of the shoulder in one rep. Humbling with even the lightest dumbbells.",
-    "avoidIf": [
-      "shoulder"
-    ],
-    "icon": "💪"
-  },
-  {
-    "id": "db-around-world",
+    "id": "dumbbell-around-the-world",
     "name": "Dumbbell Around-the-World",
     "muscleGroup": "Shoulders",
     "secondaryMuscles": [
@@ -3702,33 +3746,1277 @@ const EXERCISES = [
       "dumbbell"
     ],
     "difficulty": "Intermediate",
-    "cue": "Sweep light dumbbells from your hips up and around to overhead.",
-    "description": "Lying or standing, sweep light dumbbells in a wide circle from your thighs out and up to meet overhead, then reverse. Keep it light and the arms nearly straight — the wide arc is only comfortable with control.",
+    "cue": "Circle the dumbbells around your body with smooth control.",
+    "description": "Maintain tension through the entire arc of motion. Avoid using momentum to complete the circle.",
     "avoidIf": [
       "shoulder"
     ],
-    "icon": "🌍"
+    "icon": "🌎",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Around World"
+    ],
+    "category": "strength"
   },
   {
-    "id": "wall-handstand-hold",
-    "name": "Wall Handstand Hold",
+    "id": "dumbbell-lean-away-lateral-raise",
+    "name": "Dumbbell Lean-Away Lateral Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lean away from support and raise the dumbbell through your side.",
+    "description": "Use controlled tension through the lateral deltoid. Avoid shrugging at the top.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "↔️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Lean Away DB Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-incline-y-raise",
+    "name": "Dumbbell Incline Y-Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Raise your arms into a Y position while lying on an incline bench.",
+    "description": "Focus on controlled shoulder blade movement. Avoid shrugging toward your ears.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🙆",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Incline DB Y Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-l-raise",
+    "name": "Dumbbell L-Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Biceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Raise your arms into an L shape using slow controlled motion.",
+    "description": "Rotate and lift with shoulder control throughout the movement. Avoid using heavy weights.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "📐",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB L Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-powell-raise",
+    "name": "Dumbbell Powell Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Perform a rear-delt raise while lying chest-supported on an incline bench.",
+    "description": "Keep the movement isolated to the rear shoulders. Avoid rotating your torso.",
+    "avoidIf": [],
+    "icon": "🪽",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Powell Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "seated-dumbbell-rear-delt-fly",
+    "name": "Seated Dumbbell Rear-Delt Fly",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lean forward and open your arms wide using your rear shoulders.",
+    "description": "Squeeze the rear delts at the top before lowering slowly. Avoid turning it into a row.",
+    "avoidIf": [],
+    "icon": "🪽",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Seated DB Rear Fly"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-seated-shoulder-press",
+    "name": "Dumbbell Seated Shoulder Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press the dumbbells overhead while keeping your ribs stacked over your hips.",
+    "description": "Lower the weights under control to shoulder height before pressing again. Avoid arching your lower back to create momentum.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Seated DB Press",
+      "Dumbbell Overhead Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-standing-shoulder-press",
+    "name": "Dumbbell Standing Shoulder Press",
     "muscleGroup": "Shoulders",
     "secondaryMuscles": [
       "Triceps",
       "Core/Abs"
     ],
     "equipment": [
-      "bodyweight"
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Press overhead while maintaining a stable standing position.",
+    "description": "Brace your core and move the dumbbells through a controlled path. Avoid leaning backward during the press.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Standing DB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-arnold-press",
+    "name": "Dumbbell Arnold Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps",
+      "Chest"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rotate your palms outward as you press the dumbbells overhead.",
+    "description": "Use a controlled rotation through the shoulder joint. Avoid forcing the bottom position if mobility is limited.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🔄",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Arnold Dumbbell Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-push-press",
+    "name": "Dumbbell Push Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps",
+      "Full Body/Cardio"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Use a small leg drive before pressing overhead.",
+    "description": "Generate power from the lower body while keeping the press controlled. Avoid turning the movement into a jump.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "⚡",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Push Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-arm-dumbbell-overhead-press",
+    "name": "Single-Arm Dumbbell Overhead Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Press one dumbbell overhead while resisting sideways movement.",
+    "description": "Maintain a strong brace throughout the press. Avoid leaning away from the working side.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "💪",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Arm DB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "half-kneeling-dumbbell-press",
+    "name": "Half-Kneeling Dumbbell Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Triceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Press overhead from a half-kneeling position while keeping your torso tall.",
+    "description": "Use your core to prevent arching or rotating. Avoid leaning into the pressing side.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🧎",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Half Kneeling DB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-overhead-press",
+    "name": "Barbell Overhead Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Press the bar overhead while keeping your body rigid.",
+    "description": "Move your head slightly back then forward as the bar passes. Avoid excessive lower-back arching.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Military Press",
+      "Strict Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-push-press",
+    "name": "Barbell Push Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps",
+      "Full Body/Cardio"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Dip slightly with your legs and drive the bar overhead.",
+    "description": "Transfer force from your legs into the press. Avoid excessive back extension at lockout.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "⚡",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "BB Push Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-z-press",
+    "name": "Barbell Z Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Triceps"
+    ],
+    "equipment": [
+      "barbell"
     ],
     "difficulty": "Advanced",
-    "cue": "Kick up to the wall, stack shoulders over hands, hold and breathe.",
-    "description": "Kick up into a handstand with your heels resting on a wall and hold, stacking your shoulders directly over your hands. A big overhead-strength and balance builder — only attempt it once your shoulders and wrists are ready.",
+    "cue": "Press overhead while seated on the floor with legs extended.",
+    "description": "Maintain a tall seated posture throughout the movement. Avoid leaning backward to complete repetitions.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🪑",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Z Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-landmine-press",
+    "name": "Barbell Landmine Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Chest",
+      "Triceps"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press the angled bar path upward and forward.",
+    "description": "Keep your shoulder packed as you press. Avoid letting the shoulder roll forward at the top.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🚀",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Landmine Shoulder Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-upright-row",
+    "name": "Barbell Upright Row",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Biceps"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Pull the bar upward while keeping your elbows slightly above your hands.",
+    "description": "Use a comfortable range of motion and controlled tempo. Avoid forcing a narrow grip or excessive height.",
     "avoidIf": [
       "shoulder",
       "wrist",
-      "balance"
+      "neck"
     ],
-    "icon": "🤸"
+    "icon": "⬆️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "BB Upright Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-overhead-press",
+    "name": "Kettlebell Overhead Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Press the kettlebell overhead while keeping your wrist stacked.",
+    "description": "Maintain a strong shoulder position throughout the press. Avoid leaning away from the weight.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-push-press",
+    "name": "Kettlebell Push Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps",
+      "Full Body/Cardio"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Use leg drive to help launch the kettlebell overhead.",
+    "description": "Keep the movement powerful and controlled. Avoid losing wrist alignment.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "⚡",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "power",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Push Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-arm-kettlebell-press",
+    "name": "Single-Arm Kettlebell Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Press one kettlebell overhead while maintaining a stacked posture.",
+    "description": "Brace your core and control the descent. Avoid side bending during the press.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "One Arm KB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-bottoms-up-press",
+    "name": "Kettlebell Bottoms-Up Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Balance the inverted kettlebell while pressing slowly overhead.",
+    "description": "Use light weight and maintain wrist control. Avoid attempting heavy loads before mastering stability.",
+    "avoidIf": [
+      "shoulder",
+      "wrist",
+      "neck"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bottoms Up KB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-halo",
+    "name": "Kettlebell Halo",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Circle the kettlebell around your head with controlled movement.",
+    "description": "Move smoothly while keeping your ribs down. Avoid forcing uncomfortable shoulder positions.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "⭕",
+    "mechanic": "Isolation",
+    "pattern": "Rotation",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Halo"
+    ],
+    "category": "mobility"
+  },
+  {
+    "id": "kettlebell-high-pull",
+    "name": "Kettlebell High Pull",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive the kettlebell upward while leading with your elbow.",
+    "description": "Generate power from the hips before pulling. Avoid yanking through the shoulder joint.",
+    "avoidIf": [
+      "shoulder",
+      "wrist",
+      "neck"
+    ],
+    "icon": "⚡",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB High Pull"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-z-press",
+    "name": "Kettlebell Z Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Triceps"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Press kettlebells overhead while seated with legs extended.",
+    "description": "Maintain a tall posture and strict pressing mechanics. Avoid leaning backward.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🪑",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Seated Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-lateral-raise",
+    "name": "Cable Lateral Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Raise the cable handle out to your side with controlled tension.",
+    "description": "Keep constant tension on the lateral deltoid throughout the movement. Avoid swinging the handle upward.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "↔️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Single Arm Cable Lateral Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-front-raise",
+    "name": "Cable Front Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Chest"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Raise the cable handle forward until your arm reaches shoulder height.",
+    "description": "Maintain a stable torso throughout each repetition. Avoid leaning back to move heavier weight.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "⬆️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Front Delt Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-rear-delt-fly",
+    "name": "Cable Rear-Delt Fly",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Open your arms outward using your rear shoulders.",
+    "description": "Control the cable path and squeeze your rear delts. Avoid rotating your torso to move the weight.",
+    "avoidIf": [],
+    "icon": "🪽",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Reverse Fly"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-upright-row",
+    "name": "Cable Upright Row",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Biceps"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Pull the cable upward while keeping your elbows higher than your hands.",
+    "description": "Use a comfortable range and controlled tempo. Avoid forcing the shoulders into painful positions.",
+    "avoidIf": [
+      "shoulder",
+      "wrist",
+      "neck"
+    ],
+    "icon": "⬆️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable High Pull"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-y-raise",
+    "name": "Cable Y-Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Raise your arms into a Y pattern while maintaining shoulder control.",
+    "description": "Move smoothly through the shoulder blades and upper back. Avoid shrugging toward your ears.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🙆",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Y Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "machine-shoulder-press",
+    "name": "Machine Shoulder Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press the machine handles overhead with controlled movement.",
+    "description": "Keep your back supported and press through the shoulders. Avoid locking out aggressively.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Shoulder Press Machine"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "machine-lateral-raise",
+    "name": "Machine Lateral Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Raise the machine pads outward using your side delts.",
+    "description": "Maintain slow controlled repetitions. Avoid bouncing the weight stack.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "↔️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Lateral Raise Machine"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "reverse-pec-deck",
+    "name": "Reverse Pec Deck",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull the machine arms backward using your rear delts.",
+    "description": "Keep your chest against the pad and control the return. Avoid shrugging through the movement.",
+    "avoidIf": [],
+    "icon": "🪽",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Rear Delt Machine Fly"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-overhead-press",
+    "name": "Resistance Band Overhead Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press the band overhead while keeping your core braced.",
+    "description": "Maintain steady tension through the press. Avoid leaning backward to compensate for resistance.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🟢",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Shoulder Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-lateral-raise",
+    "name": "Resistance Band Lateral Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Raise the band handles outward using your side delts.",
+    "description": "Keep constant tension throughout the movement. Avoid using momentum from your torso.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Side Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-front-raise",
+    "name": "Resistance Band Front Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Chest"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Raise the band handles forward under control.",
+    "description": "Keep your body still while lifting. Avoid swinging the band upward.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Front Delt Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-rear-delt-fly",
+    "name": "Resistance Band Rear-Delt Fly",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull the band apart while squeezing your rear shoulders.",
+    "description": "Control the return and maintain posture. Avoid shrugging the shoulders upward.",
+    "avoidIf": [],
+    "icon": "🪽",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Reverse Fly"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-upright-row",
+    "name": "Resistance Band Upright Row",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Biceps"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Pull the band upward while keeping your elbows elevated.",
+    "description": "Use controlled resistance and avoid excessive shoulder rotation. Avoid pulling into painful ranges.",
+    "avoidIf": [
+      "shoulder",
+      "wrist",
+      "neck"
+    ],
+    "icon": "🟢",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band High Pull"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-y-raise",
+    "name": "TRX Y-Raise",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Raise your arms into a Y shape while leaning into the straps.",
+    "description": "Control your body angle and shoulder position. Avoid shrugging as you raise.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "〰️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Suspension Y Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-rear-delt-fly",
+    "name": "TRX Rear-Delt Fly",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Back"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Open your arms outward while controlling your body angle.",
+    "description": "Use slow repetitions to isolate the rear delts. Avoid letting your hips drop.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "〰️",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Suspension Rear Fly"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "medicine-ball-overhead-press",
+    "name": "Medicine Ball Overhead Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "medicine-ball"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press the medicine ball overhead while maintaining posture.",
+    "description": "Keep your core engaged and control the descent. Avoid arching your lower back.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "⚽",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Med Ball Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "medicine-ball-push-press",
+    "name": "Medicine Ball Push Press",
+    "muscleGroup": "Shoulders",
+    "secondaryMuscles": [
+      "Triceps",
+      "Full Body/Cardio"
+    ],
+    "equipment": [
+      "medicine-ball"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Use leg drive to launch the medicine ball overhead.",
+    "description": "Generate power while maintaining control. Avoid losing alignment during the press.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "⚡",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Med Ball Push Press"
+    ],
+    "category": "conditioning"
   },
   {
     "id": "db-curl",

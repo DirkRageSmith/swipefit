@@ -5,7 +5,7 @@
  * (index.html, styles.css, app.js, exercises.js, manifest.json, icons, or
  * this file). Installed users only receive updates when the version changes.
  */
-const CACHE_VERSION = "swipefit-v4";
+const CACHE_VERSION = "swipefit-v5";
 
 const ASSETS = [
   "./",
