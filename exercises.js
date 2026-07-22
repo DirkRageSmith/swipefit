@@ -1,11 +1,8 @@
 /*
  * SwipeFit dataset: muscle groups, equipment taxonomy, avoid-conditions, and the library.
- *
- * SCHEMA (see ROADMAP.md): equipment is an ARRAY of EQUIPMENT ids (gating items needed
- * beyond your body; bodyweight-only = ["bodyweight"]). Chest is the first fully-produced
- * group (ChatGPT, 46 exercises, all equipment types). The other groups are carried over
- * from the original 170 with equipment normalized to arrays — they get replaced batch by
- * batch as each muscle group is generated. Run `node validate.js` after any edit.
+ * Chest + Back are fully produced (ChatGPT, all equipment types). The remaining groups are
+ * placeholders carried over from the original 170 (equipment normalized to arrays) and get
+ * replaced batch by batch. equipment = array of EQUIPMENT ids. Run `node validate.js`.
  */
 
 const MUSCLE_GROUPS = [
@@ -1632,82 +1629,135 @@ const EXERCISES = [
     "category": "strength"
   },
   {
-    "id": "db-single-row",
-    "name": "One-Arm Dumbbell Row",
-    "muscleGroup": "Back",
-    "secondaryMuscles": [
-      "Biceps",
-      "Shoulders"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Brace a hand on the bench; pull the dumbbell to your hip, not your armpit.",
-    "description": "With one hand and knee on the bench, row a dumbbell from a dead hang up to your hip pocket, leading with the elbow. The bench support spares the lower back, but keep your spine long and don't twist to heave the weight.",
-    "avoidIf": [],
-    "icon": "🚣"
-  },
-  {
-    "id": "db-bent-row",
-    "name": "Bent-Over Dumbbell Row",
-    "muscleGroup": "Back",
-    "secondaryMuscles": [
-      "Biceps",
-      "Hamstrings",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Hinge to ~45°, flat back, row both dumbbells to your lower ribs.",
-    "description": "Hinge at the hips with a dumbbell in each hand and row them to your lower ribcage while holding the hinge dead still. Effective but it asks your lower back to hold position — round or jerk and you should lighten the load.",
-    "avoidIf": [
-      "lower-back"
-    ],
-    "icon": "🚣"
-  },
-  {
-    "id": "db-chest-supported-row",
-    "name": "Chest-Supported Dumbbell Row",
-    "muscleGroup": "Back",
-    "secondaryMuscles": [
-      "Biceps",
-      "Shoulders"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Chest on an incline bench; row the dumbbells up without lifting your torso.",
-    "description": "Lie face-down on an incline bench and row two dumbbells up toward your hips, letting the bench take all the strain off your lower back. The most back-friendly heavy row there is — keep your chest glued to the pad.",
-    "avoidIf": [],
-    "icon": "🚣"
-  },
-  {
-    "id": "pullup",
+    "id": "pull-up",
     "name": "Pull-Up",
     "muscleGroup": "Back",
     "secondaryMuscles": [
       "Biceps",
-      "Core/Abs",
+      "Shoulders"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Pull your elbows toward your ribs while keeping your chest lifted.",
+    "description": "Start from a dead hang and pull until your chin clears the bar before lowering under control. Avoid kicking or swinging for momentum.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "⬆️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Pronated Pull-Up",
+      "Overhand Pull-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "chin-up",
+    "name": "Chin-Up",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Keep your elbows close and drive your chest toward the bar.",
+    "description": "Pull until your chin passes the bar before lowering with control. Avoid craning your neck to finish the repetition.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "💪",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Underhand Pull-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "neutral-grip-pull-up",
+    "name": "Neutral-Grip Pull-Up",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Keep your palms facing each other and pull your elbows straight down.",
+    "description": "Lift until your chin clears the handles before lowering smoothly. Avoid excessive swinging.",
+    "avoidIf": [],
+    "icon": "🤲",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Hammer Grip Pull-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "wide-grip-pull-up",
+    "name": "Wide-Grip Pull-Up",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
       "Shoulders"
     ],
     "equipment": [
       "pull-up-bar"
     ],
     "difficulty": "Advanced",
-    "cue": "Start from a dead hang; pull until your chin clears the bar.",
-    "description": "Hang from a bar with an overhand grip just wider than your shoulders and pull until your chin passes the bar, then lower to straight arms. If a full rep isn't there yet, use slow negatives; avoid swinging unless you've trained it.",
+    "cue": "Use a wide grip and pull your elbows toward your sides.",
+    "description": "Raise your chest toward the bar with full-body control. Avoid shortening the range of motion.",
     "avoidIf": [
       "shoulder"
     ],
-    "icon": "🧗"
+    "icon": "↔️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Wide Pull-Up"
+    ],
+    "category": "strength"
   },
   {
-    "id": "chinup",
-    "name": "Chin-Up",
+    "id": "commando-pull-up",
+    "name": "Commando Pull-Up",
     "muscleGroup": "Back",
     "secondaryMuscles": [
       "Biceps",
@@ -1717,12 +1767,117 @@ const EXERCISES = [
       "pull-up-bar"
     ],
     "difficulty": "Advanced",
-    "cue": "Underhand grip, shoulder-width — pull your chest toward the bar.",
-    "description": "A pull-up with palms facing you, which brings the biceps in strongly and most people find slightly easier. Dead hang to chin-over-bar with no half reps and no dropping like a stone at the bottom.",
+    "cue": "Pull your head beside the bar while alternating sides each set.",
+    "description": "Maintain control and keep your torso stable throughout. Avoid twisting aggressively.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🪖",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Side Pull-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "archer-pull-up",
+    "name": "Archer Pull-Up",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Pull toward one arm while keeping the opposite arm extended.",
+    "description": "Alternate sides while maintaining strict control. Avoid rotating your torso excessively.",
+    "avoidIf": [
+      "shoulder",
+      "balance"
+    ],
+    "icon": "🏹",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Single-Side Pull-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "scapular-pull-up",
+    "name": "Scapular Pull-Up",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Keep your elbows straight and pull only with your shoulder blades.",
+    "description": "Lift your body slightly by depressing and retracting the scapulae. Avoid bending your elbows.",
+    "avoidIf": [],
+    "icon": "🎯",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Scap Pull-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "negative-pull-up",
+    "name": "Negative Pull-Up",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lower yourself as slowly as possible from the top position.",
+    "description": "Step or jump to the top before controlling the descent. Avoid dropping quickly at the bottom.",
     "avoidIf": [
       "shoulder"
     ],
-    "icon": "🧗"
+    "icon": "⬇️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Eccentric Pull-Up"
+    ],
+    "category": "strength"
   },
   {
     "id": "inverted-row",
@@ -1730,22 +1885,96 @@ const EXERCISES = [
     "muscleGroup": "Back",
     "secondaryMuscles": [
       "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Keep your body rigid and pull your chest toward the bar.",
+    "description": "Lower yourself under control after each repetition. Avoid letting your hips sag.",
+    "avoidIf": [],
+    "icon": "↕️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Australian Pull-Up",
+      "Body Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "feet-elevated-inverted-row",
+    "name": "Feet-Elevated Inverted Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders",
       "Core/Abs"
     ],
     "equipment": [
-      "pull-up-bar"
+      "bench"
     ],
     "difficulty": "Intermediate",
-    "cue": "Hang under a sturdy bar or table edge; pull your chest to it, body rigid.",
-    "description": "Set a bar around waist height, hang underneath with heels on the floor, and row your chest to the bar while your body stays plank-straight. Walk your feet closer to make it easier, further to make it harder.",
-    "avoidIf": [
-      "shoulder"
+    "cue": "Elevate your feet and keep your body perfectly straight.",
+    "description": "Pull your chest to the bar before lowering slowly. Avoid losing body tension.",
+    "avoidIf": [],
+    "icon": "📈",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
     ],
-    "icon": "🚣"
+    "homeFriendly": true,
+    "aliases": [
+      "Elevated Body Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "towel-row",
+    "name": "Towel Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lean back and pull evenly through both arms.",
+    "description": "Use a securely anchored towel and row your body toward it. Avoid using an unstable anchor point.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🧺",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "endurance",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Door Towel Row"
+    ],
+    "category": "strength"
   },
   {
     "id": "superman",
-    "name": "Superman Hold",
+    "name": "Superman",
     "muscleGroup": "Back",
     "secondaryMuscles": [
       "Glutes",
@@ -1755,58 +1984,289 @@ const EXERCISES = [
       "bodyweight"
     ],
     "difficulty": "Beginner",
-    "cue": "Lift arms and legs a few inches off the floor and hold.",
-    "description": "Lie face-down with arms overhead and lift your arms, chest, and legs slightly by squeezing your back and glutes, then lower. Lift to a comfortable height rather than as high as possible — this is gentle endurance work, not a max arch.",
+    "cue": "Lift your arms and legs together while keeping your neck neutral.",
+    "description": "Pause briefly at the top before lowering with control. Avoid looking upward excessively.",
     "avoidIf": [
       "lower-back",
       "pregnancy"
     ],
-    "icon": "🦸"
+    "icon": "🦸",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "endurance",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Superman Hold"
+    ],
+    "category": "strength"
   },
   {
-    "id": "renegade-row",
-    "name": "Renegade Row",
+    "id": "prone-y-t-w-raise",
+    "name": "Prone Y-T-W Raise",
     "muscleGroup": "Back",
     "secondaryMuscles": [
-      "Core/Abs",
-      "Shoulders",
-      "Triceps"
+      "Shoulders"
     ],
     "equipment": [
-      "dumbbell"
+      "bodyweight"
     ],
-    "difficulty": "Advanced",
-    "cue": "Row from a plank on two dumbbells without letting your hips twist.",
-    "description": "In a push-up position with each hand on a dumbbell, row one weight to your hip while the rest of you stays square to the floor. It's as much an anti-rotation core drill as a row — if your hips swing, go lighter.",
+    "difficulty": "Beginner",
+    "cue": "Move slowly through the Y, T, and W positions without shrugging.",
+    "description": "Raise your arms deliberately while keeping your forehead supported. Avoid rushing between positions.",
     "avoidIf": [
-      "wrist",
-      "lower-back",
-      "balance"
+      "shoulder"
     ],
-    "icon": "🚣"
+    "icon": "🔤",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "YTW Raise"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-pendlay-row",
-    "name": "Dumbbell Dead-Stop Row",
+    "id": "bodyweight-back-extension",
+    "name": "Bodyweight Back Extension",
     "muscleGroup": "Back",
     "secondaryMuscles": [
-      "Biceps",
+      "Glutes",
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lift your chest only until your spine reaches neutral alignment.",
+    "description": "Raise and lower under complete control. Avoid hyperextending your lower back.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🌄",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Floor Back Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "reverse-snow-angel",
+    "name": "Reverse Snow Angel",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Sweep your arms from overhead to your hips while keeping them off the floor.",
+    "description": "Move slowly through the full arc without lifting your head. Avoid shrugging your shoulders.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "❄️",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Prone Snow Angel"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "reverse-plank",
+    "name": "Reverse Plank",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Glutes",
+      "Shoulders",
       "Core/Abs"
     ],
     "equipment": [
-      "dumbbell"
+      "bodyweight"
     ],
-    "difficulty": "Advanced",
-    "cue": "Hinge over, row explosively, and reset the dumbbells on the floor each rep.",
-    "description": "Hinge to near-parallel and row two dumbbells from a dead stop on the floor to your ribs, resetting between every rep. Each rep restarts from zero momentum, which builds power — but the flat-back hinge is strict, so respect your lower back.",
+    "difficulty": "Beginner",
+    "cue": "Drive your hips upward while squeezing your shoulder blades together.",
+    "description": "Hold a straight line from shoulders to heels. Avoid letting your hips sag.",
+    "avoidIf": [
+      "wrist",
+      "shoulder"
+    ],
+    "icon": "🪵",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "endurance",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Back Plank"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "bird-dog-row-hold",
+    "name": "Bird Dog Row Hold",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Reach long through your arm and opposite leg while keeping your spine neutral.",
+    "description": "Pause briefly before switching sides. Avoid rotating your hips during the hold.",
+    "avoidIf": [
+      "balance",
+      "pregnancy"
+    ],
+    "icon": "🐦",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "mobility",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bird Dog Hold"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-arm-dumbbell-row",
+    "name": "Single-Arm Dumbbell Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull your elbow toward your hip while keeping your torso stable.",
+    "description": "Support yourself on a bench and row the dumbbell through a full range of motion. Avoid twisting your torso to lift heavier weight.",
     "avoidIf": [
       "lower-back"
     ],
-    "icon": "🚣"
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "One-Arm DB Row",
+      "Single Arm DB Row"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-gorilla-row",
-    "name": "Gorilla Row",
+    "id": "chest-supported-incline-dumbbell-row",
+    "name": "Chest-Supported Incline Dumbbell Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Keep your chest glued to the bench and drive your elbows back.",
+    "description": "Row both dumbbells until your elbows pass your torso before lowering under control. Avoid lifting your chest off the bench.",
+    "avoidIf": [],
+    "icon": "📈",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Incline DB Row",
+      "Chest Supported DB Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "bent-over-dumbbell-row",
+    "name": "Bent-Over Dumbbell Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Maintain a flat back while pulling both elbows toward your hips.",
+    "description": "Hinge at the hips and row both dumbbells with control. Avoid rounding your lower back.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "💪",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Bent Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "gorilla-dumbbell-row",
+    "name": "Gorilla Dumbbell Row",
     "muscleGroup": "Back",
     "secondaryMuscles": [
       "Biceps",
@@ -1816,15 +2276,58 @@ const EXERCISES = [
       "dumbbell"
     ],
     "difficulty": "Intermediate",
-    "cue": "Dumbbells between your feet; row one while the other rests, alternate.",
-    "description": "Stand in a wide hinge over two dumbbells on the floor and row one at a time while the other rests, alternating sides. The offset load and the rest-between-reps make it a bit friendlier than a strict bent row, but the hinge still applies.",
+    "cue": "Alternate rows while holding a strong hip hinge.",
+    "description": "Keep one dumbbell planted while rowing the other. Avoid rotating your torso as you switch sides.",
     "avoidIf": [
       "lower-back"
     ],
-    "icon": "🦍"
+    "icon": "🦍",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Alternating Gorilla Row"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-high-pull",
+    "id": "dead-stop-dumbbell-row",
+    "name": "Dead-Stop Dumbbell Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Pause each dumbbell on the floor before every repetition.",
+    "description": "Reset your position after every rep for maximum power. Avoid bouncing the weights off the floor.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "⏸️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Dead Stop Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-high-pull",
     "name": "Dumbbell High Pull",
     "muscleGroup": "Back",
     "secondaryMuscles": [
@@ -1835,16 +2338,28 @@ const EXERCISES = [
       "dumbbell"
     ],
     "difficulty": "Intermediate",
-    "cue": "From a hinge, pull the dumbbells up to chest height, elbows leading high.",
-    "description": "Hinge slightly and pull two dumbbells up toward your chest with your elbows leading high and wide, working the upper back and rear shoulders. Keep it controlled and stop at chest height rather than yanking to the chin.",
+    "cue": "Drive through your hips before pulling your elbows high.",
+    "description": "Generate power from your lower body before finishing with your upper back. Avoid curling the dumbbells upward.",
     "avoidIf": [
       "shoulder",
       "lower-back"
     ],
-    "icon": "🚣"
+    "icon": "⚡",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB High Pull"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-shrug-back",
+    "id": "dumbbell-shrug",
     "name": "Dumbbell Shrug",
     "muscleGroup": "Back",
     "secondaryMuscles": [
@@ -1854,116 +2369,1060 @@ const EXERCISES = [
       "dumbbell"
     ],
     "difficulty": "Beginner",
-    "cue": "Lift your shoulders straight up toward your ears, pause, lower.",
-    "description": "Stand holding dumbbells at your sides and lift your shoulders straight up toward your ears, pause, and lower — no rolling. Works the upper traps, which take a lot of daily desk-posture abuse.",
+    "cue": "Lift your shoulders straight upward without rolling them.",
+    "description": "Pause briefly at the top before lowering slowly. Avoid rotating your shoulders in circles.",
     "avoidIf": [
       "neck"
     ],
-    "icon": "🤷"
+    "icon": "⬆️",
+    "mechanic": "Isolation",
+    "pattern": "Carry",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Shrug"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-prone-row-fly",
-    "name": "Prone Incline Reverse Fly",
-    "muscleGroup": "Back",
-    "secondaryMuscles": [
-      "Shoulders"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Chest on an incline bench; open light dumbbells out like wings.",
-    "description": "Lying chest-down on an incline bench, raise light dumbbells out to your sides like wings, squeezing your shoulder blades together. Targets the upper back and rear shoulders with zero lower-back strain.",
-    "avoidIf": [],
-    "icon": "🦅"
-  },
-  {
-    "id": "bird-dog-row",
-    "name": "Bird-Dog Dumbbell Row",
+    "id": "kroc-row",
+    "name": "Kroc Row",
     "muscleGroup": "Back",
     "secondaryMuscles": [
       "Biceps",
       "Core/Abs"
     ],
     "equipment": [
-      "dumbbell"
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Use controlled body English only after strict pulling breaks down.",
+    "description": "Perform high-rep heavy rows while maintaining spinal stability. Avoid jerking the weight from the floor.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🦾",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Heavy One-Arm Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "incline-prone-dumbbell-row",
+    "name": "Incline Prone Dumbbell Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull your elbows slightly outward while keeping your chest on the bench.",
+    "description": "Focus on squeezing your shoulder blades together. Avoid lifting your chest during the row.",
+    "avoidIf": [],
+    "icon": "🛏️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Prone Incline Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-bent-over-row",
+    "name": "Barbell Bent-Over Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "barbell"
     ],
     "difficulty": "Intermediate",
-    "cue": "One knee and hand on the bench; row a light dumbbell, hips square.",
-    "description": "Braced on the bench on one knee and hand, row a light dumbbell with the other hand while keeping your hips level and spine neutral. The support makes it kind to the back while adding a quiet anti-rotation challenge.",
-    "avoidIf": [],
-    "icon": "🐕"
-  },
-  {
-    "id": "scapular-pullup",
-    "name": "Scapular Pull-Up",
-    "muscleGroup": "Back",
-    "secondaryMuscles": [
-      "Shoulders"
-    ],
-    "equipment": [
-      "pull-up-bar"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Hang, then pull your shoulders down without bending your elbows.",
-    "description": "Hang from the bar with straight arms and pull your shoulder blades down and together to lift your body an inch — no elbow bend. Builds the shoulder-blade control that healthy pull-ups depend on.",
+    "cue": "Hold a solid hip hinge and pull the bar toward your lower ribs.",
+    "description": "Row under control while maintaining a neutral spine. Avoid using excessive torso momentum.",
     "avoidIf": [
-      "shoulder"
+      "lower-back"
     ],
-    "icon": "🧗"
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "BB Bent Row"
+    ],
+    "category": "strength"
   },
   {
-    "id": "towel-row",
-    "name": "Towel Bodyweight Row",
+    "id": "pendlay-row",
+    "name": "Pendlay Row",
     "muscleGroup": "Back",
     "secondaryMuscles": [
       "Biceps",
-      "Core/Abs"
+      "Shoulders"
     ],
     "equipment": [
-      "bodyweight"
+      "barbell"
     ],
-    "difficulty": "Beginner",
-    "cue": "Loop a towel around a sturdy post; lean back and row yourself in.",
-    "description": "Loop a strong towel around a fixed vertical post, lean back with straight arms, and pull yourself upright. An anywhere version of the inverted row — adjust difficulty by how far back you lean.",
-    "avoidIf": [],
-    "icon": "🚣"
+    "difficulty": "Advanced",
+    "cue": "Reset the bar on the floor before every explosive repetition.",
+    "description": "Pull from a dead stop with a rigid torso. Avoid bouncing the bar between repetitions.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🚀",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "power"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Dead Stop Barbell Row"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-svend-back",
-    "name": "Wide Dumbbell Pull",
+    "id": "t-bar-row",
+    "name": "T-Bar Row",
     "muscleGroup": "Back",
     "secondaryMuscles": [
-      "Shoulders",
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive your elbows back while keeping your chest proud.",
+    "description": "Pull through a full range of motion before lowering with control. Avoid rounding your spine.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🔩",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Landmine Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "yates-row",
+    "name": "Yates Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
       "Biceps"
     ],
     "equipment": [
-      "dumbbell"
+      "barbell"
     ],
-    "difficulty": "Beginner",
-    "cue": "Chest-supported; pull dumbbells low and wide toward your hips.",
-    "description": "Face-down on an incline bench, sweep two dumbbells from hanging in front down and back toward your hips in a wide arc, hitting the lats low. Light weight and a deliberate squeeze beat heavy swinging.",
-    "avoidIf": [],
-    "icon": "🦅"
+    "difficulty": "Intermediate",
+    "cue": "Use an underhand grip and a slightly more upright torso.",
+    "description": "Row toward your lower abdomen with control. Avoid excessive body swing.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "📏",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Underhand Barbell Row"
+    ],
+    "category": "strength"
   },
   {
-    "id": "negative-pullup",
-    "name": "Pull-Up Negative",
+    "id": "barbell-shrug",
+    "name": "Barbell Shrug",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lift your shoulders straight toward your ears and pause.",
+    "description": "Lower the bar slowly after each repetition. Avoid rolling your shoulders.",
+    "avoidIf": [
+      "neck"
+    ],
+    "icon": "⬆️",
+    "mechanic": "Isolation",
+    "pattern": "Carry",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "BB Shrug"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "rack-pull",
+    "name": "Rack Pull",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Glutes",
+      "Hamstrings"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Keep the bar close and lock out by driving your hips forward.",
+    "description": "Lift from knee height while maintaining a neutral spine. Avoid hyperextending at lockout.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🗄️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Partial Deadlift"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "conventional-deadlift",
+    "name": "Conventional Deadlift",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Glutes",
+      "Hamstrings"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Brace hard, keep the bar against your legs, and push the floor away.",
+    "description": "Stand tall by extending your hips and knees together before lowering under control. Avoid rounding your lower back throughout the lift.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "power"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Deadlift",
+      "Conventional Barbell Deadlift"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-arm-kettlebell-row",
+    "name": "Single-Arm Kettlebell Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "kettlebell",
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull the kettlebell toward your hip while keeping your torso square.",
+    "description": "Move through a controlled range of motion with each repetition. Avoid twisting your shoulders.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "One-Arm KB Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-gorilla-row",
+    "name": "Kettlebell Gorilla Row",
     "muscleGroup": "Back",
     "secondaryMuscles": [
       "Biceps",
       "Core/Abs"
     ],
     "equipment": [
-      "pull-up-bar"
+      "kettlebell"
     ],
     "difficulty": "Intermediate",
-    "cue": "Jump to the top, then lower yourself as slowly as you can.",
-    "description": "Start at the top of a pull-up (jump or step up to it) and lower yourself to a dead hang as slowly as possible. Negatives build the exact strength you need before full pull-ups arrive.",
+    "cue": "Alternate rows while maintaining a strong hip hinge.",
+    "description": "Keep one kettlebell grounded while rowing the other. Avoid rotating your torso between repetitions.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🦍",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Gorilla Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-lat-pulldown",
+    "name": "Cable Lat Pulldown",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull the bar toward your upper chest while driving your elbows down.",
+    "description": "Control the weight as it returns overhead before repeating. Avoid leaning back excessively to create momentum.",
     "avoidIf": [
       "shoulder"
     ],
-    "icon": "🧗"
+    "icon": "🔗",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Lat Pulldown",
+      "Wide Pulldown"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "close-grip-cable-lat-pulldown",
+    "name": "Close-Grip Cable Lat Pulldown",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Use a close handle and pull your elbows toward your sides.",
+    "description": "Focus on squeezing your lats at the bottom position. Avoid turning the movement into a row by leaning too far back.",
+    "avoidIf": [],
+    "icon": "🔗",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "V-Bar Pulldown"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "wide-grip-cable-lat-pulldown",
+    "name": "Wide-Grip Cable Lat Pulldown",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Use a wider grip and pull your elbows down toward your ribs.",
+    "description": "Maintain an upright torso while pulling through the back. Avoid pulling the bar behind your neck.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "↔️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Wide Lat Pulldown"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "straight-arm-cable-pulldown",
+    "name": "Straight-Arm Cable Pulldown",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Keep your arms straight and pull the bar toward your thighs.",
+    "description": "Move only through the shoulder joint while keeping your torso stable. Avoid bending your elbows to turn it into a pressdown.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Pullover",
+      "Straight Arm Pullover"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "seated-cable-row",
+    "name": "Seated Cable Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull the handle toward your torso while keeping your chest tall.",
+    "description": "Squeeze your shoulder blades together before returning forward. Avoid rounding your back at the stretch.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🔗",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-arm-cable-row",
+    "name": "Single-Arm Cable Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Pull one handle toward your hip while resisting rotation.",
+    "description": "Keep your torso stable throughout the movement. Avoid twisting toward the cable stack.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🔗",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "One Arm Cable Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-face-pull",
+    "name": "Cable Face Pull",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull the rope toward your face while rotating your hands outward.",
+    "description": "Control the movement and squeeze your upper back. Avoid shrugging your shoulders upward.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🎯",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Rope Face Pull"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-pullover",
+    "name": "Cable Pullover",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Pull the rope or bar down in an arc while keeping your arms mostly straight.",
+    "description": "Focus on lat contraction through the full movement. Avoid bending your elbows excessively.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Straight Arm Pullover"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "lat-pulldown-machine",
+    "name": "Lat Pulldown Machine",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull the handles down while keeping your chest lifted.",
+    "description": "Control the return until your arms are extended. Avoid using body momentum to pull the weight.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Pulldown Machine"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "seated-row-machine",
+    "name": "Seated Row Machine",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Drive your elbows backward while keeping your chest against the pad.",
+    "description": "Pause briefly when your shoulder blades squeeze together. Avoid rounding forward during the return.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Row Machine"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "chest-supported-row-machine",
+    "name": "Chest-Supported Row Machine",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Keep your chest against the pad and pull smoothly.",
+    "description": "Use the support to isolate your back muscles. Avoid lifting your chest away from the pad.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Supported Row Machine"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "hammer-strength-row",
+    "name": "Hammer Strength Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive the handles back while keeping your shoulders down.",
+    "description": "Control each repetition and squeeze your upper back. Avoid jerking the handles toward you.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🔨",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Hammer Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "assisted-pull-up-machine",
+    "name": "Assisted Pull-Up Machine",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull your chest toward the handles while controlling the assistance.",
+    "description": "Use the machine to practice a full pull-up pattern. Avoid relying entirely on the assistance platform.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "⬆️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Assisted Chin-Up Machine"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "back-extension-machine",
+    "name": "Back Extension Machine",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Glutes",
+      "Hamstrings"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Extend your torso until your spine reaches neutral alignment.",
+    "description": "Move through a controlled hip hinge pattern. Avoid hyperextending your lower back at the top.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Machine Hyperextension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "resistance-band-lat-pulldown",
+    "name": "Resistance Band Lat Pulldown",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull the band down while driving your elbows toward your ribs.",
+    "description": "Anchor the band overhead and control the return to the starting position. Avoid shrugging your shoulders during the pull.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🟢",
+    "mechanic": "Compound",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Pulldown"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "resistance-band-row",
+    "name": "Resistance Band Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull the band toward your torso while squeezing your shoulder blades.",
+    "description": "Maintain a tall posture and controlled tempo throughout the movement. Avoid leaning backward to create momentum.",
+    "avoidIf": [],
+    "icon": "🟢",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Seated Row",
+      "Band Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-pull-apart",
+    "name": "Band Pull-Apart",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull the band apart while keeping your arms straight.",
+    "description": "Squeeze your upper back as the band reaches your chest line. Avoid shrugging or arching your lower back.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "↔️",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Shoulder Pull Apart"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-straight-arm-pulldown",
+    "name": "Band Straight-Arm Pulldown",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull the band down with straight arms toward your thighs.",
+    "description": "Keep tension on the band throughout the movement. Avoid bending your elbows to compensate.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Pullover"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-face-pull",
+    "name": "Band Face Pull",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull the band toward your face while rotating your hands outward.",
+    "description": "Keep your elbows high and squeeze your upper back. Avoid pulling only with your arms.",
+    "avoidIf": [
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🎯",
+    "mechanic": "Isolation",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Resistance Band Face Pull"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-single-arm-row",
+    "name": "Single-Arm Resistance Band Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Row one arm at a time while resisting torso rotation.",
+    "description": "Keep your shoulders square throughout each repetition. Avoid turning your body toward the anchor point.",
+    "avoidIf": [],
+    "icon": "🟢",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Arm Band Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-row",
+    "name": "TRX Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Shoulders"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Keep your body straight and pull your chest toward the handles.",
+    "description": "Adjust your body angle to change difficulty. Avoid letting your hips drop during the row.",
+    "avoidIf": [],
+    "icon": "〰️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Suspension Row"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-single-arm-row",
+    "name": "TRX Single-Arm Row",
+    "muscleGroup": "Back",
+    "secondaryMuscles": [
+      "Biceps",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Row with one arm while resisting rotation through your torso.",
+    "description": "Maintain a rigid plank position as you pull. Avoid twisting your hips open.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "〰️",
+    "mechanic": "Compound",
+    "pattern": "Horizontal Pull",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Arm Suspension Row"
+    ],
+    "category": "strength"
   },
   {
     "id": "db-shoulder-press",
