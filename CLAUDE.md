@@ -29,6 +29,7 @@ exercises from the deck before the user ever sees them.
 | `sw.js` | Service worker — bump `CACHE_VERSION` on any change |
 | `manifest.json` | PWA manifest |
 | `validate.js` | Dataset integrity check — run `node validate.js` |
+| `ROADMAP.md` | Product roadmap + shared spec (Claude ↔ ChatGPT). Tier 1/2 plan, the schema contract, and the delegated 500-exercise deck brief. |
 | `icon-192.png` / `icon-512.png` | App icons (volt/ink dumbbell) |
 
 ## Dev commands
