@@ -219,6 +219,11 @@ Copy the brief in §6.2 into ChatGPT. Run it once per muscle group.
 > pull-up-bar, resistance-band, cable, machine, trx, box, medicine-ball, ab-wheel,
 > jump-rope. (Never use a location like "gym"/"hotel" as equipment.)
 >
+> **Equipment = the gating items needed *beyond your own body*.** Bodyweight-only moves =
+> `["bodyweight"]`. Moves needing gear list ONLY the gear (e.g. `["cable"]`,
+> `["dumbbell","bench"]`) — do **not** add `"bodyweight"` to those. The app treats
+> bodyweight as always-owned and shows an exercise only if the user owns every listed item.
+>
 > **The 9 condition ids (avoidIf may only use these):** lower-back, knee, shoulder,
 > wrist, neck, hip, high-impact, balance, pregnancy.
 >
@@ -240,10 +245,14 @@ Copy the brief in §6.2 into ChatGPT. Run it once per muscle group.
 > | Triceps | 36 | Full Body/Cardio | 48 |
 > | Core/Abs | 58 | | |
 >
-> Spread across ALL the equipment types (not just dumbbells) and all three difficulties.
-> Include real variations: grips, angles, tempos, unilateral versions, banded/cable/
-> machine/kettlebell/TRX variants. Keep `cue` to one line and `description` to ~two
-> sentences. **Do not invent calories, setup time, ROM degrees, or "strength curve" —
+> **Cover the full equipment range — do NOT skew to bench/barbell (the pilot's mistake:
+> 15 exercises that used only barbell/bench/dumbbell + 1 bodyweight).** Every group must
+> hand a *usable deck to each kind of user*: a solid **bodyweight-only** subset (so a no-gear
+> friend gets a full deck), a **resistance-band** subset, and — wherever the movement
+> genuinely exists — **cable, machine, TRX, kettlebell** variants alongside dumbbell/barbell.
+> Rough rule: **no single equipment type more than ~40% of a batch, and ≥15% bodyweight-only.**
+> All three difficulties. Include real variations: grips, angles, tempos, unilateral versions.
+> Keep `cue` to one line and `description` to ~two sentences. **Do not invent calories, setup time, ROM degrees, or "strength curve" —
 > those keys are intentionally absent.** Produce **one muscle group per response** (Chest
 > first as the pilot). Ids must be unique within the batch **and** globally across batches;
 > before finishing a batch, self-check for duplicate ids and for the same movement appearing
