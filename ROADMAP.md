@@ -314,12 +314,15 @@ Progress (2026-07-17):
   15-type `EQUIPMENT` taxonomy; superset gear filter + one-tap presets (Bodyweight / Home /
   Home+ / Full gym); `validate.js` updated (hard core / soft metadata). Live.
 - ✅ **Chest done** — 46 exercises, all equipment types (17% bodyweight-only), full metadata.
-- ✅ **Back done** — 57 exercises across 3 equipment-family sub-batches (Parts 1–3). Verified:
-  Bodyweight 7 / Home 18 / Full gym 57. Library now 237 total.
-- ⏳ **Remaining 9 groups are placeholders** — carried over from the old 170, equipment
+- ✅ **Back done** — 57 exercises (3 sub-batches). Bodyweight 7 / Home 18 / Full gym 57.
+- ✅ **Shoulders done** — 51 exercises (3 sub-batches). Bodyweight 3 / Home 22 / Full gym 51.
+  Library now **271 total**, 57% metadata coverage; medicine-ball now populated.
+- ⏳ **Remaining 8 groups are placeholders** — carried over from the old 170, equipment
   normalized to arrays, but still dumbbell/bodyweight-only and without the new metadata.
-  Each gets **replaced** as ChatGPT produces its batch. Order: **Shoulders next**, then
-  Biceps, Triceps, Core/Abs, Glutes, Quads, Hamstrings, Calves, Full Body/Cardio.
+  Each gets **replaced** as ChatGPT produces its batch. Order: **Biceps next**, then
+  Triceps, Core/Abs, Glutes, Quads, Hamstrings, Calves, Full Body/Cardio.
+- Still-empty equipment (fill via upcoming groups): ez-bar (Biceps/Triceps curls),
+  box (Quads/Glutes/Cardio step-ups & jumps), ab-wheel (Core), jump-rope (Cardio).
 - Note: a few carried-over pull/hang moves are tagged `pull-up-bar`; the rest of the
   placeholder groups' equipment is coarse and gets fixed on regeneration.
 
