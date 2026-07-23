@@ -1,7 +1,7 @@
 /*
- * SwipeFit dataset. All muscle groups except Full Body/Cardio fully produced (all equipment
- * types). Full Body/Cardio remains a placeholder from the original 170 (equipment normalized
- * to arrays) until its batch lands. equipment = array of EQUIPMENT ids. Run `node validate.js`.
+ * SwipeFit dataset — ALL 11 muscle groups fully produced (ChatGPT-generated, all equipment
+ * types). equipment = array of EQUIPMENT ids; see ROADMAP.md for the schema. Per-group edits
+ * should preserve permanent ids (user data references them). Run `node validate.js`.
  */
 
 const MUSCLE_GROUPS = [
@@ -13880,25 +13880,100 @@ const EXERCISES = [
     "muscleGroup": "Full Body/Cardio",
     "secondaryMuscles": [
       "Chest",
+      "Shoulders",
       "Quads",
       "Core/Abs"
     ],
     "equipment": [
       "bodyweight"
     ],
-    "difficulty": "Advanced",
-    "cue": "Squat, kick back to a plank, push-up, jump feet in, leap — repeat.",
-    "description": "Drop your hands down, kick back to a plank with an optional push-up, hop your feet in, and jump up. The whole gym in one movement — but a lot of impact through wrists and knees; step the feet in and skip the jump for a gentler version.",
+    "difficulty": "Intermediate",
+    "cue": "Move smoothly from squat to plank to jump without pausing.",
+    "description": "Keep your core tight throughout the movement. Avoid collapsing through the lower back during the plank.",
     "avoidIf": [
       "knee",
       "high-impact",
-      "wrist",
-      "pregnancy"
+      "wrist"
     ],
-    "icon": "🔥"
+    "icon": "💥",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "endurance",
+      "power"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Burpee Jump"
+    ],
+    "category": "conditioning"
   },
   {
-    "id": "jump-squat",
+    "id": "half-burpee",
+    "name": "Half Burpee",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Quads"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Kick your feet back and forward without the jump.",
+    "description": "Maintain a strong plank position. Avoid letting your hips sag.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "⚡",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "No Jump Burpee"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "squat-thrust",
+    "name": "Squat Thrust",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Quads",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Kick your feet back into a plank and return quickly.",
+    "description": "Move under control while maintaining trunk stability. Avoid bouncing through your shoulders.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "↕️",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Plank Thrust"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "jump-squat-conditioning",
     "name": "Jump Squat",
     "muscleGroup": "Full Body/Cardio",
     "secondaryMuscles": [
@@ -13909,19 +13984,130 @@ const EXERCISES = [
     "equipment": [
       "bodyweight"
     ],
-    "difficulty": "Advanced",
-    "cue": "Squat down, explode up, and land soft like landing on eggshells.",
-    "description": "A bodyweight squat that finishes with a jump, landing softly into the next rep. Builds explosive power and spikes the heart rate — the landing is the skill; if joints complain, regular squats deliver most of the benefit.",
+    "difficulty": "Intermediate",
+    "cue": "Jump explosively and land softly before repeating.",
+    "description": "Absorb the landing through your hips and knees. Avoid stiff-legged landings.",
     "avoidIf": [
       "knee",
-      "high-impact",
-      "pregnancy"
+      "high-impact"
     ],
-    "icon": "🦘"
+    "icon": "🦘",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bodyweight Jump Squat"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "tuck-jump",
+    "name": "Tuck Jump",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Quads",
+      "Core/Abs",
+      "Calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Jump high and pull your knees toward your chest.",
+    "description": "Land softly and reset each repetition. Avoid collapsing your knees inward.",
+    "avoidIf": [
+      "knee",
+      "high-impact"
+    ],
+    "icon": "🚀",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Knee Tuck Jump"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "broad-jump",
+    "name": "Broad Jump",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Glutes",
+      "Quads",
+      "Calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive forward explosively and stick the landing.",
+    "description": "Swing your arms to generate power. Avoid landing with locked knees.",
+    "avoidIf": [
+      "knee",
+      "high-impact"
+    ],
+    "icon": "➡️",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Standing Broad Jump"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "star-jump",
+    "name": "Star Jump",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Quads",
+      "Calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Explode upward while spreading your arms and legs wide.",
+    "description": "Land softly and reset between jumps. Avoid hard landings.",
+    "avoidIf": [
+      "knee",
+      "high-impact"
+    ],
+    "icon": "⭐",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "X Jump"
+    ],
+    "category": "conditioning"
   },
   {
     "id": "jumping-jack",
-    "name": "Jumping Jacks",
+    "name": "Jumping Jack",
     "muscleGroup": "Full Body/Cardio",
     "secondaryMuscles": [
       "Shoulders",
@@ -13931,100 +14117,155 @@ const EXERCISES = [
       "bodyweight"
     ],
     "difficulty": "Beginner",
-    "cue": "Jump feet wide as arms swing overhead, then snap back together.",
-    "description": "Jump your feet out wide while your arms swing overhead, then jump back to standing. A friendly whole-body warm-up — for a no-impact version, step one foot out at a time while the arms do the same swing.",
+    "cue": "Jump your feet apart while raising your arms overhead.",
+    "description": "Maintain a steady rhythm throughout. Avoid heavy landings.",
     "avoidIf": [
       "knee",
       "high-impact"
     ],
-    "icon": "⭐"
+    "icon": "🤸",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Jacks"
+    ],
+    "category": "conditioning"
   },
   {
-    "id": "high-knees",
+    "id": "high-knees-run",
     "name": "High Knees",
     "muscleGroup": "Full Body/Cardio",
     "secondaryMuscles": [
+      "Core/Abs",
       "Quads",
-      "Calves",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Run in place, driving knees to hip height, quick light feet.",
-    "description": "Sprint in place, driving each knee toward hip height with fast, light ground contacts and pumping arms. Twenty seconds of honest effort is a real interval — marching is the calm, no-impact alternative.",
-    "avoidIf": [
-      "knee",
-      "high-impact",
-      "hip"
-    ],
-    "icon": "🏃"
-  },
-  {
-    "id": "shadow-boxing",
-    "name": "Shadow Boxing",
-    "muscleGroup": "Full Body/Cardio",
-    "secondaryMuscles": [
-      "Shoulders",
-      "Core/Abs"
+      "Calves"
     ],
     "equipment": [
       "bodyweight"
     ],
     "difficulty": "Beginner",
-    "cue": "Light on your feet, snappy punches at an imaginary target — never full lockout.",
-    "description": "Bounce lightly and throw combinations at the air, rotating through the hips with each punch. Cardio, coordination, and stress relief with no equipment — keep a slight bend at the end of every punch to spare the elbows.",
+    "cue": "Drive your knees high while pumping your arms.",
+    "description": "Stay light on your feet. Avoid leaning too far backward.",
     "avoidIf": [
-      "shoulder"
+      "knee",
+      "high-impact"
     ],
-    "icon": "🥊"
+    "icon": "🏃",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Running High Knees"
+    ],
+    "category": "conditioning"
   },
   {
-    "id": "mountain-climber",
-    "name": "Mountain Climbers",
+    "id": "butt-kicks-run",
+    "name": "Butt Kicks",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Hamstrings",
+      "Calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Run in place while kicking your heels toward your glutes.",
+    "description": "Keep your chest tall and cadence quick. Avoid excessive forward lean.",
+    "avoidIf": [
+      "knee",
+      "high-impact"
+    ],
+    "icon": "🏃",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Heel Kicks"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "mountain-climber-conditioning",
+    "name": "Mountain Climber",
     "muscleGroup": "Full Body/Cardio",
     "secondaryMuscles": [
       "Core/Abs",
-      "Shoulders",
-      "Quads"
+      "Shoulders"
     ],
     "equipment": [
       "bodyweight"
     ],
     "difficulty": "Intermediate",
-    "cue": "From a plank, drive knees toward your chest in a fast alternating rhythm.",
-    "description": "In a high plank, run your knees toward your chest one at a time while your shoulders stay stacked over your wrists. Slow it to a march to drop the impact and keep the core work; the fast version earns the tags.",
+    "cue": "Drive alternating knees forward while maintaining a strong plank.",
+    "description": "Keep your hips level throughout. Avoid bouncing excessively.",
     "avoidIf": [
-      "wrist",
-      "knee",
-      "high-impact"
+      "wrist"
     ],
-    "icon": "⛰️"
+    "icon": "⛰️",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Mountain Climbers"
+    ],
+    "category": "conditioning"
   },
   {
-    "id": "db-swing",
-    "name": "Dumbbell Swing",
+    "id": "plank-jack",
+    "name": "Plank Jack",
     "muscleGroup": "Full Body/Cardio",
     "secondaryMuscles": [
-      "Glutes",
-      "Hamstrings",
-      "Back",
-      "Core/Abs"
+      "Core/Abs",
+      "Shoulders"
     ],
     "equipment": [
-      "dumbbell"
+      "bodyweight"
     ],
     "difficulty": "Intermediate",
-    "cue": "It's a hip snap, not an arm lift — the dumbbell floats to chest height.",
-    "description": "Hold one dumbbell by the head with both hands, hinge and hike it back between your legs, then snap your hips forward so it floats up to chest height. Every swing is a hip hinge — a rounded back turns it into a lower-back grievance.",
+    "cue": "Jump your feet apart and together while holding a plank.",
+    "description": "Brace your core to prevent hip sway. Avoid sagging through your shoulders.",
     "avoidIf": [
-      "lower-back"
+      "wrist"
     ],
-    "icon": "🏋️"
+    "icon": "🪵",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Plank Jump Jack"
+    ],
+    "category": "conditioning"
   },
   {
-    "id": "bear-crawl",
+    "id": "bear-crawl-conditioning",
     "name": "Bear Crawl",
     "muscleGroup": "Full Body/Cardio",
     "secondaryMuscles": [
@@ -14036,134 +14277,91 @@ const EXERCISES = [
       "bodyweight"
     ],
     "difficulty": "Intermediate",
-    "cue": "Hands and feet down, knees hovering an inch off the floor — crawl slow and level.",
-    "description": "On hands and feet with knees hovering just off the ground, crawl forward moving opposite hand and foot together while keeping your back flat. Surprisingly humbling core and shoulder work — speed isn't the goal, a still torso is.",
+    "cue": "Move opposite hand and foot while keeping your knees just off the floor.",
+    "description": "Stay controlled and maintain a flat back. Avoid letting your hips rise too high.",
     "avoidIf": [
       "wrist"
     ],
-    "icon": "🐻"
+    "icon": "🐻",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "endurance",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Crawl"
+    ],
+    "category": "conditioning"
   },
   {
-    "id": "march-in-place",
-    "name": "March in Place",
+    "id": "inchworm-walkout",
+    "name": "Inchworm",
     "muscleGroup": "Full Body/Cardio",
     "secondaryMuscles": [
-      "Quads",
-      "Calves"
+      "Hamstrings",
+      "Shoulders",
+      "Core/Abs"
     ],
     "equipment": [
       "bodyweight"
     ],
     "difficulty": "Beginner",
-    "cue": "Lift knees to a comfortable height with a steady rhythm and swinging arms.",
-    "description": "March on the spot, lifting the knees to a comfortable height and swinging the arms naturally. The gentlest conditioning option — a warm-up, a between-sets breather, or the low-impact stand-in for anything with jumping.",
-    "avoidIf": [],
-    "icon": "🚶"
-  },
-  {
-    "id": "db-thruster",
-    "name": "Dumbbell Thruster",
-    "muscleGroup": "Full Body/Cardio",
-    "secondaryMuscles": [
-      "Quads",
-      "Glutes",
-      "Shoulders",
-      "Triceps"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Front squat straight into an overhead press — one fluid motion.",
-    "description": "Hold dumbbells at your shoulders, squat, and use the drive out of the squat to press them overhead in one motion, then lower into the next rep. A squat, a press, and a cardio interval in one — three sets of joints all need to sign off.",
+    "cue": "Walk your hands forward into a plank and back again.",
+    "description": "Move slowly and keep your core engaged. Avoid rushing through the stretch.",
     "avoidIf": [
-      "shoulder",
-      "knee",
-      "lower-back"
-    ],
-    "icon": "🚀"
-  },
-  {
-    "id": "farmers-carry",
-    "name": "Farmer's Carry",
-    "muscleGroup": "Full Body/Cardio",
-    "secondaryMuscles": [
-      "Core/Abs",
-      "Back",
-      "Shoulders"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Heavy dumbbell in each hand, stand tall, and just walk.",
-    "description": "Pick up a heavy dumbbell in each hand and walk with tall posture, level shoulders, and unhurried steps for distance or time. Grip, core, posture, and conditioning from the most functional movement there is — carrying heavy things.",
-    "avoidIf": [],
-    "icon": "🧳"
-  },
-  {
-    "id": "db-clean-press",
-    "name": "Dumbbell Clean & Press",
-    "muscleGroup": "Full Body/Cardio",
-    "secondaryMuscles": [
-      "Shoulders",
-      "Quads",
-      "Back"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Pull the dumbbells to your shoulders, then press overhead, then reverse.",
-    "description": "From a hinge, pull two dumbbells up to your shoulders in one quick move, then press them overhead, then reverse the whole thing under control. A full-body power builder — keep the hinge flat-backed and the press honest.",
-    "avoidIf": [
-      "shoulder",
-      "lower-back"
-    ],
-    "icon": "🚀"
-  },
-  {
-    "id": "db-snatch",
-    "name": "Single-Arm Dumbbell Snatch",
-    "muscleGroup": "Full Body/Cardio",
-    "secondaryMuscles": [
-      "Shoulders",
-      "Glutes",
-      "Back"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Advanced",
-    "cue": "One dumbbell from between your feet to overhead in one snap.",
-    "description": "Explosively pull a single dumbbell from a hinge between your feet straight up to a locked-out overhead position, then lower and repeat. Powerful and cardio-heavy — it demands a solid hinge and a stable overhead, so build up light.",
-    "avoidIf": [
-      "shoulder",
-      "lower-back",
       "wrist"
     ],
-    "icon": "⚡"
+    "icon": "🐛",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Walkout"
+    ],
+    "category": "conditioning"
   },
   {
-    "id": "squat-thrust",
-    "name": "Squat Thrust",
+    "id": "sprawl-conditioning",
+    "name": "Sprawl",
     "muscleGroup": "Full Body/Cardio",
     "secondaryMuscles": [
       "Core/Abs",
-      "Quads",
-      "Shoulders"
+      "Quads"
     ],
     "equipment": [
       "bodyweight"
     ],
     "difficulty": "Intermediate",
-    "cue": "A burpee without the jump — squat, kick to plank, hop back, stand.",
-    "description": "Squat down, kick your feet back to a plank, hop them back in, and stand — a burpee minus the jump and push-up. Most of the conditioning of a burpee with far less impact through the knees.",
+    "cue": "Kick your legs back rapidly and return to standing.",
+    "description": "Stay athletic throughout the movement. Avoid crashing into the floor.",
     "avoidIf": [
       "wrist",
-      "hip"
+      "knee"
     ],
-    "icon": "🔥"
+    "icon": "⚔️",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Wrestling Sprawl"
+    ],
+    "category": "conditioning"
   },
   {
     "id": "lateral-shuffle",
@@ -14178,36 +14376,1033 @@ const EXERCISES = [
       "bodyweight"
     ],
     "difficulty": "Beginner",
-    "cue": "Stay low in a quarter squat and shuffle side to side, quick feet.",
-    "description": "Sink into a quarter squat and shuffle sideways several steps one way, then back, staying low with quick light feet. A knee-friendly cardio option with no jumping that also lights up the outer hips.",
+    "cue": "Stay low and move laterally with quick controlled steps.",
+    "description": "Keep your chest tall and hips back. Avoid crossing your feet.",
     "avoidIf": [
       "knee"
     ],
-    "icon": "↔️"
+    "icon": "↔️",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Defensive Shuffle"
+    ],
+    "category": "conditioning"
   },
   {
-    "id": "inchworm",
-    "name": "Inchworm",
+    "id": "jump-rope-basic",
+    "name": "Jump Rope",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Calves",
+      "Shoulders"
+    ],
+    "equipment": [
+      "jump-rope"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Bounce lightly on the balls of your feet, turning the rope from the wrists.",
+    "description": "Keep jumps low and rhythmic with soft knees. Avoid landing heavily on flat feet.",
+    "avoidIf": [
+      "knee",
+      "high-impact"
+    ],
+    "icon": "🪢",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Skipping"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "boxer-skip",
+    "name": "Boxer Skip",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Calves"
+    ],
+    "equipment": [
+      "jump-rope"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Shift your weight side to side in a light, rhythmic skip.",
+    "description": "Stay relaxed and springy on the balls of your feet. Avoid tensing your shoulders.",
+    "avoidIf": [
+      "knee",
+      "high-impact"
+    ],
+    "icon": "🥊",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Boxer Shuffle Skip"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "high-knee-jump-rope",
+    "name": "High-Knee Jump Rope",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Calves",
+      "Quads",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "jump-rope"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive your knees up to hip height with each rope turn.",
+    "description": "Keep a fast, controlled cadence. Avoid leaning back as the knees rise.",
+    "avoidIf": [
+      "knee",
+      "high-impact",
+      "hip"
+    ],
+    "icon": "🪢",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "endurance",
+      "power"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Running Rope"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "double-unders",
+    "name": "Double-Unders",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Calves",
+      "Shoulders"
+    ],
+    "equipment": [
+      "jump-rope"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Jump higher and pass the rope under your feet twice per jump.",
+    "description": "Use quick wrist turns rather than big arm swings. Avoid piking or tucking your legs.",
+    "avoidIf": [
+      "knee",
+      "high-impact"
+    ],
+    "icon": "🪢",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Double Under"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "dumbbell-thruster",
+    "name": "Dumbbell Thruster",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Quads",
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive from the squat directly into an overhead press.",
+    "description": "Use leg drive to power the press. Avoid pressing with a relaxed core.",
+    "avoidIf": [
+      "knee",
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Thruster"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "dumbbell-clean-and-press",
+    "name": "Dumbbell Clean and Press",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Explosively clean the dumbbells before pressing overhead.",
+    "description": "Drive from the hips and finish overhead. Avoid curling the weights.",
+    "avoidIf": [
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "💪",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Clean Press"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "dumbbell-snatch",
+    "name": "Dumbbell Snatch",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Drive the dumbbell overhead in one smooth explosive motion.",
+    "description": "Generate power through the hips. Avoid pulling primarily with the arm.",
+    "avoidIf": [
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "⚡",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "power"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Arm DB Snatch"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "dumbbell-swing",
+    "name": "Dumbbell Swing",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Glutes",
+      "Hamstrings",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Snap the hips to swing the dumbbell to chest height.",
+    "description": "Drive with your hips instead of lifting with your arms. Avoid rounding the back.",
+    "avoidIf": [
+      "lower-back",
+      "shoulder"
+    ],
+    "icon": "🔄",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Swing"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "dumbbell-devil-press",
+    "name": "Dumbbell Devil Press",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Chest",
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Perform a burpee before swinging both dumbbells overhead.",
+    "description": "Flow continuously through each repetition. Avoid muscling the dumbbells overhead.",
+    "avoidIf": [
+      "wrist",
+      "shoulder",
+      "lower-back",
+      "knee"
+    ],
+    "icon": "😈",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Devil Press"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "dumbbell-man-maker",
+    "name": "Dumbbell Man Maker",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Chest",
+      "Back",
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Combine a push-up, row, clean and press into one sequence.",
+    "description": "Stay smooth between each phase. Avoid twisting during the rows.",
+    "avoidIf": [
+      "wrist",
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "🔥",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "power",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Man Maker"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "dumbbell-burpee",
+    "name": "Dumbbell Burpee",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Chest",
+      "Shoulders",
+      "Quads"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Hold the dumbbells throughout the burpee.",
+    "description": "Maintain control during transitions. Avoid dropping the weights.",
+    "avoidIf": [
+      "wrist",
+      "knee",
+      "shoulder"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Burpee"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "dumbbell-farmers-carry",
+    "name": "Dumbbell Farmer's Carry",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Walk tall while carrying heavy dumbbells at your sides.",
+    "description": "Maintain posture and steady breathing. Avoid leaning to one side.",
+    "avoidIf": [],
+    "icon": "🚶",
+    "mechanic": "Compound",
+    "pattern": "Carry",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Carry"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "kettlebell-swing-conditioning",
+    "name": "Kettlebell Swing",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Glutes",
+      "Hamstrings",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive through the hips to propel the kettlebell forward.",
+    "description": "Explode from the hips and let the bell float. Avoid lifting with the arms.",
+    "avoidIf": [
+      "lower-back",
+      "shoulder"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Swing"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "kettlebell-clean-and-press",
+    "name": "Kettlebell Clean and Press",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Clean the kettlebell before driving it overhead.",
+    "description": "Use hip power and a smooth rack position. Avoid pressing from an unstable position.",
+    "avoidIf": [
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "power",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Clean Press"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "kettlebell-snatch-conditioning",
+    "name": "Kettlebell Snatch",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Drive the kettlebell overhead in one continuous motion.",
+    "description": "Use the hips to accelerate the bell. Avoid letting it crash onto your forearm.",
+    "avoidIf": [
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "⚡",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "power"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Snatch"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "kettlebell-thruster",
+    "name": "Kettlebell Thruster",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Quads",
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive out of the squat into a powerful overhead press.",
+    "description": "Use momentum from the legs. Avoid pressing with loose core tension.",
+    "avoidIf": [
+      "knee",
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Thruster"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "turkish-get-up",
+    "name": "Turkish Get-Up",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Core/Abs",
+      "Glutes"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Stand up while keeping the kettlebell locked overhead.",
+    "description": "Move deliberately through every position. Avoid rushing the transitions.",
+    "avoidIf": [
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "🛡️",
+    "mechanic": "Compound",
+    "pattern": "Carry",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "TGU"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-clean-conditioning",
+    "name": "Kettlebell Clean",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Snap the kettlebell into the rack position.",
+    "description": "Use hip power instead of curling the bell. Avoid banging your forearm.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "power"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Clean"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "kettlebell-figure-eight",
+    "name": "Kettlebell Figure Eight",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Glutes"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Pass the kettlebell between your legs in a figure-eight pattern.",
+    "description": "Maintain an athletic stance throughout. Avoid excessive spinal movement.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Figure 8"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "double-kettlebell-clean",
+    "name": "Double Kettlebell Clean",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs",
+      "Shoulders"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Explosively clean two kettlebells into the rack position.",
+    "description": "Drive through the hips while keeping the bells close. Avoid curling them upward.",
+    "avoidIf": [
+      "lower-back",
+      "shoulder"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Double KB Clean"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "barbell-thruster",
+    "name": "Barbell Thruster",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Quads",
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Drive from the front squat directly into the overhead press.",
+    "description": "Use leg drive to power the bar overhead. Avoid pressing with a loose core.",
+    "avoidIf": [
+      "knee",
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "BB Thruster"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "barbell-clean-and-press-conditioning",
+    "name": "Barbell Clean and Press",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Clean the bar before pressing overhead in one fluid sequence.",
+    "description": "Generate power from the hips. Avoid muscling the bar with the arms.",
+    "avoidIf": [
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "BB Clean Press"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "barbell-complex",
+    "name": "Barbell Complex",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Back",
+      "Quads",
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Perform several barbell movements back-to-back without setting the bar down.",
+    "description": "Maintain excellent technique throughout every phase. Avoid sacrificing form for speed.",
+    "avoidIf": [
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "🔥",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "BB Complex"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "barbell-clean-conditioning",
+    "name": "Barbell Clean",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Glutes",
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Explode through the hips to rack the bar smoothly.",
+    "description": "Keep the bar close to your body. Avoid pulling with the arms too early.",
+    "avoidIf": [
+      "lower-back",
+      "shoulder"
+    ],
+    "icon": "⚡",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Olympic Clean"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "medicine-ball-slam-conditioning",
+    "name": "Medicine Ball Slam",
     "muscleGroup": "Full Body/Cardio",
     "secondaryMuscles": [
       "Core/Abs",
       "Shoulders",
-      "Hamstrings"
+      "Back"
     ],
     "equipment": [
-      "bodyweight"
+      "medicine-ball"
     ],
-    "difficulty": "Beginner",
-    "cue": "Hinge, walk your hands out to a plank, walk your feet in, stand.",
-    "description": "Hinge and walk your hands out along the floor into a plank, then walk your feet up toward your hands and stand tall. A gentle full-body warm-up that mobilizes the hamstrings and shoulders in one flowing move.",
+    "difficulty": "Intermediate",
+    "cue": "Raise the ball overhead before slamming it into the floor with force.",
+    "description": "Generate power through your entire body. Avoid rounding your back at the finish.",
     "avoidIf": [
-      "wrist"
+      "shoulder",
+      "lower-back"
     ],
-    "icon": "🐛"
+    "icon": "💥",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Med Ball Slam"
+    ],
+    "category": "power"
   },
   {
-    "id": "step-up-cardio",
-    "name": "Fast Step-Ups",
+    "id": "wall-ball-shot",
+    "name": "Wall Ball",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Quads",
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "medicine-ball"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Squat before driving the medicine ball toward a high target.",
+    "description": "Use your legs to generate power. Avoid throwing only with the arms.",
+    "avoidIf": [
+      "knee",
+      "shoulder"
+    ],
+    "icon": "🎯",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "endurance",
+      "power"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Wall Ball Shot"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "medicine-ball-chest-pass-conditioning",
+    "name": "Medicine Ball Chest Pass",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Chest",
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "medicine-ball"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Explosively throw the ball straight forward from your chest.",
+    "description": "Finish with full extension through the arms. Avoid arching the lower back.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🏀",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Chest Pass"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "medicine-ball-overhead-throw",
+    "name": "Medicine Ball Overhead Throw",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Core/Abs",
+      "Glutes"
+    ],
+    "equipment": [
+      "medicine-ball"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive the ball overhead and throw explosively.",
+    "description": "Generate force from your legs and hips. Avoid excessive lumbar extension.",
+    "avoidIf": [
+      "shoulder",
+      "lower-back"
+    ],
+    "icon": "🚀",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Overhead Throw"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "medicine-ball-burpee",
+    "name": "Medicine Ball Burpee",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Chest",
+      "Shoulders",
+      "Quads",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "medicine-ball"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Complete a burpee before lifting or throwing the medicine ball.",
+    "description": "Maintain control during every transition. Avoid collapsing into the floor.",
+    "avoidIf": [
+      "wrist",
+      "knee",
+      "shoulder"
+    ],
+    "icon": "💣",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Med Ball Burpee"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "medicine-ball-rotational-throw",
+    "name": "Medicine Ball Rotational Throw",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Shoulders",
+      "Glutes"
+    ],
+    "equipment": [
+      "medicine-ball"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rotate forcefully through the hips before throwing the ball.",
+    "description": "Lead with the hips and torso together. Avoid twisting only through the spine.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🌪️",
+    "mechanic": "Compound",
+    "pattern": "Rotation",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "power"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Rotational Med Ball Throw"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "box-jump-over",
+    "name": "Box Jump Over",
     "muscleGroup": "Full Body/Cardio",
     "secondaryMuscles": [
       "Quads",
@@ -14215,16 +15410,230 @@ const EXERCISES = [
       "Calves"
     ],
     "equipment": [
-      "bodyweight"
+      "box"
     ],
-    "difficulty": "Beginner",
-    "cue": "Quick alternating step-ups onto the bench, driving your arms.",
-    "description": "Step up and down onto the bench at a brisk pace, alternating your lead foot and pumping your arms for rhythm. A simple, low-impact cardio driver — the bench height sets the intensity.",
+    "difficulty": "Advanced",
+    "cue": "Jump onto the box and continue over the opposite side.",
+    "description": "Land softly before stepping or jumping down. Avoid stiff-legged landings.",
     "avoidIf": [
       "knee",
-      "balance"
+      "high-impact"
     ],
-    "icon": "🪜"
+    "icon": "📦",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power",
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Box Overs"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "burpee-box-jump-over",
+    "name": "Burpee Box Jump Over",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Chest",
+      "Quads",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "box"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Perform a burpee before jumping over the box.",
+    "description": "Keep your movement continuous and controlled. Avoid sloppy landings.",
+    "avoidIf": [
+      "wrist",
+      "knee",
+      "high-impact"
+    ],
+    "icon": "📦",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "endurance",
+      "power"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Burpee Box Overs"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "lateral-box-shuffle",
+    "name": "Lateral Box Shuffle",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Quads",
+      "Glutes",
+      "Calves"
+    ],
+    "equipment": [
+      "box"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Shuffle rapidly side-to-side over a low box.",
+    "description": "Stay light on your feet throughout. Avoid crossing your feet.",
+    "avoidIf": [
+      "knee",
+      "high-impact"
+    ],
+    "icon": "↔️",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Box Shuffle"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "trx-burpee",
+    "name": "TRX Burpee",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Chest",
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Keep tension on the straps throughout the burpee.",
+    "description": "Control the straps during every transition. Avoid swinging excessively.",
+    "avoidIf": [
+      "wrist",
+      "shoulder"
+    ],
+    "icon": "🟡",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Suspension Burpee"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "trx-atomic-push-up-conditioning",
+    "name": "TRX Atomic Push-Up",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Chest",
+      "Core/Abs",
+      "Shoulders"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Perform a push-up before tucking your knees toward your chest.",
+    "description": "Brace your core to control the straps. Avoid letting your hips sag.",
+    "avoidIf": [
+      "wrist",
+      "shoulder"
+    ],
+    "icon": "⚛️",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Atomic Push-Up"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "rowing-machine-sprint",
+    "name": "Rowing Machine Sprint",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Back",
+      "Quads",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive explosively through your legs before finishing with your arms.",
+    "description": "Maintain consistent stroke mechanics throughout. Avoid pulling early with the arms.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🚣",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "endurance",
+      "power"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Erg Sprint",
+      "Row Erg"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "assault-bike-sprint",
+    "name": "Assault Bike Sprint",
+    "muscleGroup": "Full Body/Cardio",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Quads",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Push and pull the handles aggressively while driving the pedals.",
+    "description": "Maintain maximum effort for the work interval. Avoid shortening your stroke.",
+    "avoidIf": [],
+    "icon": "🚴",
+    "mechanic": "Compound",
+    "pattern": "Conditioning",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "endurance",
+      "power"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Air Bike Sprint",
+      "Echo Bike Sprint"
+    ],
+    "category": "conditioning"
   }
 ];
 
