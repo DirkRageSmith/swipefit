@@ -1,7 +1,7 @@
 /*
- * SwipeFit dataset. Chest, Back, Shoulders, Biceps, Triceps, Quads, Hamstrings fully
- * produced (all equipment types). Remaining groups are placeholders carried from the
- * original 170 (equipment normalized to arrays), replaced batch by batch. equipment =
+ * SwipeFit dataset. Chest, Back, Shoulders, Biceps, Triceps, Quads, Hamstrings, Glutes
+ * fully produced (all equipment types). Remaining groups are placeholders carried from
+ * the original 170 (equipment normalized to arrays), replaced batch by batch. equipment =
  * array of EQUIPMENT ids. Run `node validate.js`.
  */
 
@@ -9660,6 +9660,1444 @@ const EXERCISES = [
     "category": "strength"
   },
   {
+    "id": "glute-bridge",
+    "name": "Glute Bridge",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Drive through your feet and squeeze your glutes to lift your hips.",
+    "description": "Keep your ribs down and hips level at the top. Avoid arching through your lower back.",
+    "avoidIf": [],
+    "icon": "🍑",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bodyweight Glute Bridge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-leg-glute-bridge",
+    "name": "Single-Leg Glute Bridge",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lift your hips while driving through one planted foot.",
+    "description": "Keep your pelvis level throughout the movement. Avoid rotating your hips.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🍑",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Leg Bridge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "glute-bridge-march",
+    "name": "Glute Bridge March",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Core/Abs",
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold a bridge position while alternating knee lifts.",
+    "description": "Keep your hips steady while marching. Avoid dropping your pelvis side to side.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🍑",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "endurance",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bridge March"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "bodyweight-hip-thrust",
+    "name": "Bodyweight Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Rest your shoulders on a bench and drive your hips upward.",
+    "description": "Squeeze your glutes fully at the top. Avoid hyperextending your lower back.",
+    "avoidIf": [],
+    "icon": "🍑",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Shoulder-Elevated Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-leg-hip-thrust",
+    "name": "Single-Leg Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive through one foot while lifting your hips.",
+    "description": "Keep your working knee aligned throughout. Avoid twisting your pelvis.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🍑",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Leg Bodyweight Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "frog-pump",
+    "name": "Frog Pump",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Place your feet together and drive your hips upward.",
+    "description": "Focus on glute contraction at the top. Avoid using momentum from your lower back.",
+    "avoidIf": [],
+    "icon": "🐸",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Frog Glute Pump"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "frog-bridge",
+    "name": "Frog Bridge",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Use a frog-leg position while lifting your hips.",
+    "description": "Keep your core engaged during the lift. Avoid arching your lower back.",
+    "avoidIf": [],
+    "icon": "🐸",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Frog Glute Bridge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "donkey-kick",
+    "name": "Donkey Kick",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Drive one heel upward while keeping your knee bent.",
+    "description": "Keep your hips square during the movement. Avoid rotating your torso.",
+    "avoidIf": [],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Quadruped Hip Extension Kick"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "quadruped-hip-extension",
+    "name": "Quadruped Hip Extension",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Extend one leg behind you from a hands-and-knees position.",
+    "description": "Move slowly and keep your spine neutral. Avoid swinging the leg.",
+    "avoidIf": [],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bird Dog Hip Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "fire-hydrant",
+    "name": "Fire Hydrant",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lift your bent knee out to the side.",
+    "description": "Keep your hips stable during the movement. Avoid shifting your weight.",
+    "avoidIf": [],
+    "icon": "🐕",
+    "mechanic": "Isolation",
+    "pattern": "Hip Abduction",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "mobility",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Quadruped Hip Abduction"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "clamshell",
+    "name": "Clamshell",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Rotate your top knee upward while keeping your feet together.",
+    "description": "Control the rotation with your hip muscles. Avoid rolling your pelvis backward.",
+    "avoidIf": [],
+    "icon": "🦪",
+    "mechanic": "Isolation",
+    "pattern": "Hip Abduction",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "mobility",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Side-Lying Clamshell"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "side-lying-hip-abduction",
+    "name": "Side-Lying Hip Abduction",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lift your top leg upward while lying on your side.",
+    "description": "Keep your toes facing forward during the lift. Avoid rotating your hip open.",
+    "avoidIf": [],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Hip Abduction",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Side Leg Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "standing-hip-abduction",
+    "name": "Standing Hip Abduction",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lift one leg out to the side while standing tall.",
+    "description": "Maintain upright posture during the movement. Avoid leaning away from the working leg.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Hip Abduction",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Standing Side Leg Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "curtsy-hold-glute-squeeze",
+    "name": "Curtsy Hold Glute Squeeze",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Quads"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold a curtsy position and squeeze the glute of the standing leg.",
+    "description": "Stay controlled in the hold position. Avoid collapsing the knee inward.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🍑",
+    "mechanic": "Isolation",
+    "pattern": "Lunge",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Curtsy Glute Hold"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "bench-reverse-hyper",
+    "name": "Bench Reverse Hyper",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lie supported and lift your legs behind you using your hips.",
+    "description": "Squeeze your glutes at the top of the movement. Avoid swinging your legs.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bodyweight Reverse Hyper"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "prone-plank-hip-extension",
+    "name": "Prone Plank Hip Extension",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lift one leg while holding a plank position.",
+    "description": "Keep your hips level and core engaged. Avoid rotating your body.",
+    "avoidIf": [],
+    "icon": "🔥",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Plank Leg Lift"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-hip-thrust",
+    "name": "Dumbbell Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Place a dumbbell across your hips and drive upward through your feet.",
+    "description": "Squeeze your glutes fully at the top while keeping your spine neutral. Avoid arching your lower back.",
+    "avoidIf": [],
+    "icon": "🍑",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-glute-bridge",
+    "name": "Dumbbell Glute Bridge",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hold a dumbbell on your hips while lifting into a bridge.",
+    "description": "Maintain tension through your glutes throughout the movement. Avoid pushing through your lower back.",
+    "avoidIf": [],
+    "icon": "🍑",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Weighted Glute Bridge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-frog-pump",
+    "name": "Dumbbell Frog Pump",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hold a dumbbell on your hips and pump from a frog-leg position.",
+    "description": "Focus on repeated glute contractions. Avoid using momentum from your torso.",
+    "avoidIf": [],
+    "icon": "🐸",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Weighted Frog Pump"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-single-leg-hip-thrust",
+    "name": "Dumbbell Single-Leg Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Balance a dumbbell on your hip while driving upward with one leg.",
+    "description": "Keep your hips square and controlled. Avoid twisting during the lift.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🍑",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Leg DB Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-b-stance-hip-thrust",
+    "name": "Dumbbell B-Stance Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Use a staggered stance while driving the hips upward.",
+    "description": "Keep most tension on the lead leg. Avoid shifting into the rear foot.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🍑",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "B-Stance DB Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-sumo-squat-glute-focus",
+    "name": "Dumbbell Sumo Squat Glute Focus",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Quads"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold a dumbbell low and squat with a wide stance.",
+    "description": "Drive through your heels and squeeze your glutes. Avoid excessive depth if mobility is limited.",
+    "avoidIf": [
+      "knee",
+      "hip"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Sumo Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-single-leg-glute-bridge",
+    "name": "Dumbbell Single-Leg Glute Bridge",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Place a dumbbell on your hip and bridge with one leg.",
+    "description": "Control the pelvis throughout the movement. Avoid rotating your hips.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🍑",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Weighted Single Leg Bridge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-hip-thrust",
+    "name": "Kettlebell Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "kettlebell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rest the kettlebell across your hips and thrust upward.",
+    "description": "Lock out by squeezing your glutes. Avoid overextending your spine.",
+    "avoidIf": [
+      "pregnancy"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-glute-bridge",
+    "name": "Kettlebell Glute Bridge",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hold a kettlebell on your hips while bridging upward.",
+    "description": "Keep constant glute tension throughout the movement. Avoid arching your back.",
+    "avoidIf": [],
+    "icon": "🔔",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Weighted KB Bridge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-sumo-squat-glute-focus",
+    "name": "Kettlebell Sumo Squat Glute Focus",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Quads"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold the kettlebell and squat with a wide stance.",
+    "description": "Push your knees outward and squeeze your glutes. Avoid losing your posture.",
+    "avoidIf": [
+      "knee",
+      "hip"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Sumo Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-frog-pump",
+    "name": "Kettlebell Frog Pump",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hold the kettlebell over your hips and perform frog pumps.",
+    "description": "Maintain controlled contractions. Avoid using momentum.",
+    "avoidIf": [],
+    "icon": "🔔",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Frog Pump"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-hip-thrust",
+    "name": "Barbell Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive a loaded barbell upward by extending your hips.",
+    "description": "Pause and squeeze at lockout. Avoid hyperextending your lower back.",
+    "avoidIf": [
+      "pregnancy"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "BB Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-glute-bridge",
+    "name": "Barbell Glute Bridge",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Place a barbell across your hips and bridge upward.",
+    "description": "Brace your core while squeezing your glutes. Avoid excessive spinal extension.",
+    "avoidIf": [
+      "pregnancy"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Weighted Barbell Bridge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-frog-pump",
+    "name": "Barbell Frog Pump",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Perform frog pumps with a barbell across your hips.",
+    "description": "Use controlled repetitions and squeeze the glutes. Avoid bouncing the weight.",
+    "avoidIf": [
+      "pregnancy"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Weighted Barbell Frog Pump"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-single-leg-hip-thrust",
+    "name": "Barbell Single-Leg Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Drive the bar upward using one leg at a time.",
+    "description": "Keep the bar level throughout the movement. Avoid rotating your hips.",
+    "avoidIf": [
+      "balance",
+      "pregnancy"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Single Leg Barbell Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "b-stance-barbell-hip-thrust",
+    "name": "B-Stance Barbell Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Use a staggered stance and drive through the lead foot.",
+    "description": "Maintain control and load the working glute. Avoid shifting weight to the back foot.",
+    "avoidIf": [
+      "balance",
+      "pregnancy"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "B-Stance BB Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "hip-thrust-machine",
+    "name": "Hip Thrust Machine",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Brace your core and drive the machine platform upward with your hips.",
+    "description": "Squeeze your glutes at full extension. Avoid overextending your lower back.",
+    "avoidIf": [
+      "pregnancy"
+    ],
+    "icon": "🍑",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Machine Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "glute-kickback-machine",
+    "name": "Glute Kickback Machine",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press the machine pad backward using your glute.",
+    "description": "Move with control and avoid rotating your hips. Do not swing the leg.",
+    "avoidIf": [],
+    "icon": "🍑",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Machine Glute Kickback"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "hip-abduction-machine",
+    "name": "Hip Abduction Machine",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Push your knees outward against the machine pads.",
+    "description": "Keep the movement controlled and focused on the outer glutes. Avoid bouncing the weight.",
+    "avoidIf": [],
+    "icon": "🍑",
+    "mechanic": "Isolation",
+    "pattern": "Hip Abduction",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Seated Hip Abduction"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "smith-machine-hip-thrust",
+    "name": "Smith Machine Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "machine",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Position your shoulders on a bench and drive the guided bar upward.",
+    "description": "Pause at the top while squeezing your glutes. Avoid arching your spine.",
+    "avoidIf": [
+      "pregnancy"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Smith Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-glute-kickback",
+    "name": "Cable Glute Kickback",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Drive your leg backward against cable resistance.",
+    "description": "Keep your hips square and squeeze at the end range. Avoid swinging your leg.",
+    "avoidIf": [],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Kickback"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "standing-cable-hip-abduction",
+    "name": "Standing Cable Hip Abduction",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Move your leg outward against cable resistance.",
+    "description": "Stay tall and controlled throughout the movement. Avoid leaning away.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Hip Abduction",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "endurance",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Hip Abduction"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-hip-thrust",
+    "name": "Cable Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "cable",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive your hips upward while holding cable resistance.",
+    "description": "Focus on hip extension and glute contraction. Avoid pulling with your arms.",
+    "avoidIf": [],
+    "icon": "🔗",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Loaded Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kneeling-cable-kickback",
+    "name": "Kneeling Cable Kickback",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Extend your leg backward from a kneeling cable position.",
+    "description": "Keep your torso stable while squeezing your glute. Avoid rotating your hips.",
+    "avoidIf": [],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Kneeling Glute Kickback"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "banded-hip-thrust",
+    "name": "Banded Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "resistance-band",
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Drive your hips upward while pressing outward against the band.",
+    "description": "Maintain tension on the band throughout the movement. Avoid letting your knees collapse inward.",
+    "avoidIf": [],
+    "icon": "🟢",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Resistance Band Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "banded-glute-bridge",
+    "name": "Banded Glute Bridge",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press your knees outward while bridging against band tension.",
+    "description": "Keep constant glute engagement. Avoid arching your lower back.",
+    "avoidIf": [],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "endurance",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Glute Bridge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "banded-lateral-walk",
+    "name": "Banded Lateral Walk",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Quads"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Step sideways while maintaining band tension around your legs.",
+    "description": "Keep your knees tracking outward during steps. Avoid standing upright between steps.",
+    "avoidIf": [],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Hip Abduction",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "endurance",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Lateral Band Walk"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "monster-walk",
+    "name": "Monster Walk",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Quads"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Walk forward with knees pushed outward against band resistance.",
+    "description": "Maintain a controlled athletic stance. Avoid letting the band lose tension.",
+    "avoidIf": [],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Hip Abduction",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Banded Monster Walk"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "banded-clamshell",
+    "name": "Banded Clamshell",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Open your knees against band tension while lying on your side.",
+    "description": "Keep your feet together and pelvis stable. Avoid rolling backward.",
+    "avoidIf": [],
+    "icon": "🦪",
+    "mechanic": "Isolation",
+    "pattern": "Hip Abduction",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Resistance Band Clamshell"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "banded-standing-kickback",
+    "name": "Banded Standing Kickback",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Extend one leg backward while keeping band tension.",
+    "description": "Keep your torso still and squeeze your glute. Avoid swinging your leg.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Glute Kickback"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "banded-hip-abduction",
+    "name": "Banded Hip Abduction",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Move your legs outward against band resistance.",
+    "description": "Keep the movement controlled and deliberate. Avoid using momentum.",
+    "avoidIf": [],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Hip Abduction",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Hip Abduction"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-hip-thrust",
+    "name": "TRX Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Use suspension straps for support while driving hips upward.",
+    "description": "Maintain a controlled hip extension pattern. Avoid arching your back.",
+    "avoidIf": [],
+    "icon": "〰️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Suspension Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "box-shoulder-elevated-hip-thrust",
+    "name": "Box Shoulder-Elevated Hip Thrust",
+    "muscleGroup": "Glutes",
+    "secondaryMuscles": [
+      "Hamstrings"
+    ],
+    "equipment": [
+      "box"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rest your shoulders on a box and drive your hips upward.",
+    "description": "Control the full movement and squeeze your glutes at lockout. Avoid excessive lower-back extension.",
+    "avoidIf": [],
+    "icon": "📦",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Box Hip Thrust"
+    ],
+    "category": "strength"
+  },
+  {
     "id": "plank",
     "name": "Plank",
     "muscleGroup": "Core/Abs",
@@ -10018,284 +11456,6 @@ const EXERCISES = [
       "shoulder"
     ],
     "icon": "🧘"
-  },
-  {
-    "id": "glute-bridge",
-    "name": "Glute Bridge",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [
-      "Hamstrings",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Drive through your heels and squeeze your glutes to lift your hips.",
-    "description": "Lying with knees bent and feet flat, drive your hips up until your body is straight from knees to shoulders, squeeze hard, and lower. The lift should come from the glutes — think 'tuck and lift', not 'arch and push'.",
-    "avoidIf": [
-      "pregnancy"
-    ],
-    "icon": "🌉"
-  },
-  {
-    "id": "db-hip-thrust",
-    "name": "Dumbbell Hip Thrust",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [
-      "Hamstrings",
-      "Quads"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Upper back on the bench, dumbbell over your hips — drive up to a flat tabletop.",
-    "description": "With your upper back on the bench and a dumbbell held across your hips (pad it), drive your hips up until your torso is level, chin tucked, then lower. The heaviest direct glute loading you can do with dumbbells.",
-    "avoidIf": [
-      "hip",
-      "pregnancy"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "single-leg-glute-bridge",
-    "name": "Single-Leg Glute Bridge",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [
-      "Hamstrings",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "One foot down, one leg extended — hips rise level, no tilting.",
-    "description": "A glute bridge on one leg with the other held straight or hugged in, which doubles the load on the working glute. Keep the hips level as you rise — a tilting pelvis means the lower back is out-voting the glute.",
-    "avoidIf": [
-      "pregnancy"
-    ],
-    "icon": "🌉"
-  },
-  {
-    "id": "donkey-kick",
-    "name": "Donkey Kick",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [
-      "Hamstrings",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "From all fours, press one flexed foot toward the ceiling, knee bent at 90°.",
-    "description": "On hands and knees, keep one knee bent at 90° and press that foot toward the ceiling by squeezing the glute, then lower without touching down. Stop where your back would start to arch — the range is smaller than momentum wants.",
-    "avoidIf": [
-      "wrist",
-      "knee"
-    ],
-    "icon": "🐴"
-  },
-  {
-    "id": "fire-hydrant",
-    "name": "Fire Hydrant",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [
-      "Core/Abs"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "From all fours, lift one bent knee out to the side without tilting your hips.",
-    "description": "On hands and knees, lift one bent leg out to the side while keeping both hips square to the floor, then lower. Works the side glutes that stabilize every step — height doesn't matter, keeping the torso still does.",
-    "avoidIf": [
-      "wrist",
-      "knee",
-      "hip"
-    ],
-    "icon": "🚒"
-  },
-  {
-    "id": "clamshell",
-    "name": "Clamshell",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Lie on your side, knees bent, and open the top knee — feet stay together.",
-    "description": "Lying on your side with knees bent and stacked, keep your feet touching and lift the top knee open without rolling your pelvis back, then close slowly. A physical-therapy staple for the deep side glutes.",
-    "avoidIf": [],
-    "icon": "🐚"
-  },
-  {
-    "id": "db-frog-pump",
-    "name": "Dumbbell Frog Pump",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Soles of the feet together, knees wide; pump the hips up, dumbbell on the hips.",
-    "description": "Lying on your back with the soles of your feet together and knees splayed out, hold a light dumbbell on your hips and pump them up, squeezing the glutes at the top. The frog position biases the work toward the glutes over the hamstrings.",
-    "avoidIf": [
-      "pregnancy"
-    ],
-    "icon": "🐸"
-  },
-  {
-    "id": "db-bulgarian-glute",
-    "name": "Dumbbell B-Stance Hip Thrust",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [
-      "Hamstrings"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Back on the bench; one foot flat, the other just as a kickstand.",
-    "description": "A hip thrust with most of the weight on one foot while the other rests lightly forward as a kickstand, so one glute does the lion's share. A dumbbell on the hips loads it; keep both hips rising level.",
-    "avoidIf": [
-      "hip",
-      "pregnancy"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "step-through-lunge",
-    "name": "Curtsy Lunge",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [
-      "Quads",
-      "Hamstrings"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Step one leg diagonally behind the other and lower into a curtsy.",
-    "description": "From standing, step one foot diagonally behind and across the other, then bend both knees into a curtsy before returning. The crossed angle targets the side glutes strongly — keep your front knee tracking over your foot.",
-    "avoidIf": [
-      "knee",
-      "balance",
-      "hip"
-    ],
-    "icon": "💃"
-  },
-  {
-    "id": "db-single-rdl-glute",
-    "name": "Dumbbell Kickstand RDL",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [
-      "Hamstrings",
-      "Back"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "One foot back on its toes as a kickstand; hinge and drive the front glute.",
-    "description": "Hold dumbbells and place one foot slightly back on its toes for balance, then hinge over the front leg and stand by squeezing that glute. The kickstand gives you the single-leg glute focus without the full balance demand.",
-    "avoidIf": [
-      "lower-back"
-    ],
-    "icon": "🦵"
-  },
-  {
-    "id": "hip-abduction-side",
-    "name": "Side-Lying Leg Raise",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "On your side, raise the top leg straight up, toes pointing forward.",
-    "description": "Lying on your side, raise the top leg straight up with the toes pointing forward (not up), then lower slowly to work the side glute. Keeping the toe forward rather than rotated up keeps the focus on the glute, not the hip flexor.",
-    "avoidIf": [],
-    "icon": "🦵"
-  },
-  {
-    "id": "db-sumo-squat-glute",
-    "name": "Dumbbell Sumo Squat",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [
-      "Quads",
-      "Hamstrings"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Wide stance, toes out; hold one dumbbell low and squat between your heels.",
-    "description": "Take a wide stance with toes turned out, hold a dumbbell hanging between your legs, and squat straight down, driving your knees out. The wide stance shifts emphasis onto the glutes and inner thighs.",
-    "avoidIf": [
-      "knee",
-      "hip"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "glute-bridge-march",
-    "name": "Glute Bridge March",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [
-      "Core/Abs",
-      "Hamstrings"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Hold a bridge and slowly lift one foot, then the other — hips stay level.",
-    "description": "Hold the top of a glute bridge and slowly march one foot up at a time while keeping your hips from dropping or tilting. The support glute has to work overtime to keep everything level.",
-    "avoidIf": [
-      "pregnancy"
-    ],
-    "icon": "🌉"
-  },
-  {
-    "id": "reverse-hyper-bench",
-    "name": "Bench Reverse Hyper",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [
-      "Hamstrings",
-      "Back"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Hips on the bench edge, torso down; raise straight legs to level, no higher.",
-    "description": "Lie face-down with your hips at the edge of the bench and legs hanging, then raise your straight legs up to body level by squeezing the glutes. Stop at level rather than swinging higher, which just arches the lower back.",
-    "avoidIf": [
-      "lower-back"
-    ],
-    "icon": "🍑"
-  },
-  {
-    "id": "db-good-glute-morning",
-    "name": "Dumbbell Hip Hinge",
-    "muscleGroup": "Glutes",
-    "secondaryMuscles": [
-      "Hamstrings",
-      "Back"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Dumbbells at your sides; push your hips straight back, then stand tall.",
-    "description": "Hold light dumbbells at your sides and push your hips straight back with a flat back until you feel the glutes and hamstrings load, then drive your hips forward to stand. The foundational hinge pattern — master it light before loading heavy.",
-    "avoidIf": [
-      "lower-back"
-    ],
-    "icon": "🍑"
   },
   {
     "id": "standing-calf-raise",
