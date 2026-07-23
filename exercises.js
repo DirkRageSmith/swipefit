@@ -1,7 +1,8 @@
 /*
- * SwipeFit dataset. Chest, Back, Shoulders, Biceps fully produced (all equipment types).
- * Remaining groups are placeholders carried from the original 170 (equipment normalized to
- * arrays), replaced batch by batch. equipment = array of EQUIPMENT ids. Run `node validate.js`.
+ * SwipeFit dataset. Chest, Back, Shoulders, Biceps, Triceps fully produced (all equipment
+ * types). Remaining groups are placeholders carried from the original 170 (equipment
+ * normalized to arrays), replaced batch by batch. equipment = array of EQUIPMENT ids.
+ * Run `node validate.js`.
  */
 
 const MUSCLE_GROUPS = [
@@ -5966,7 +5967,7 @@ const EXERCISES = [
     "category": "strength"
   },
   {
-    "id": "bench-dip",
+    "id": "bench-dip-triceps",
     "name": "Bench Dip",
     "muscleGroup": "Triceps",
     "secondaryMuscles": [
@@ -5974,145 +5975,32 @@ const EXERCISES = [
       "Shoulders"
     ],
     "equipment": [
-      "bodyweight"
+      "bench"
     ],
-    "difficulty": "Intermediate",
-    "cue": "Hands on the bench behind you; lower until elbows hit 90°, no deeper.",
-    "description": "With your hands on the bench edge behind you and legs out front, bend your elbows to lower your hips, then press up. Going too deep stresses the shoulder — 90° at the elbow is plenty; bend your knees to make it easier.",
+    "difficulty": "Beginner",
+    "cue": "Lower until your elbows reach about 90°, then press back up.",
+    "description": "Keep your hips close to the bench throughout the movement. Avoid letting your shoulders roll excessively forward.",
     "avoidIf": [
       "shoulder",
       "wrist"
     ],
-    "icon": "🪑"
+    "icon": "🪑",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bench Triceps Dip"
+    ],
+    "category": "strength"
   },
   {
-    "id": "overhead-db-extension",
-    "name": "Overhead Dumbbell Extension",
-    "muscleGroup": "Triceps",
-    "secondaryMuscles": [
-      "Shoulders"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Both hands under one dumbbell overhead; lower it behind your head, elbows in.",
-    "description": "Hold one dumbbell overhead with both hands and bend only at the elbows to lower it behind your head, then press up. Keep your elbows pointing forward and your ribs stacked rather than arching your back.",
-    "avoidIf": [
-      "shoulder",
-      "neck"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "diamond-pushup",
-    "name": "Diamond Push-Up",
-    "muscleGroup": "Triceps",
-    "secondaryMuscles": [
-      "Chest",
-      "Shoulders",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Thumbs and index fingers form a diamond under your chest.",
-    "description": "A push-up with hands close together under your chest, thumbs and index fingers touching, shifting the work heavily onto the triceps. The narrow hand position cranks the wrists — elevate or widen slightly if they protest.",
-    "avoidIf": [
-      "wrist",
-      "shoulder"
-    ],
-    "icon": "💎"
-  },
-  {
-    "id": "db-kickback",
-    "name": "Dumbbell Triceps Kickback",
-    "muscleGroup": "Triceps",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Hinge forward, upper arm parallel to the floor, straighten the elbow fully.",
-    "description": "Brace a hand on the bench, raise your upper arm parallel to the floor, and extend the dumbbell back until your arm is completely straight. All the value is in the full extension and the squeeze at lockout — light weight, no swinging.",
-    "avoidIf": [
-      "lower-back"
-    ],
-    "icon": "💪"
-  },
-  {
-    "id": "db-skull-crusher",
-    "name": "Dumbbell Skull Crusher",
-    "muscleGroup": "Triceps",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Lying down, lower the dumbbells beside your head, elbows pointing up.",
-    "description": "Lie on the bench with dumbbells held over your chest and bend at the elbows to lower them beside your ears, then extend up. Dumbbells let your wrists sit neutrally, which most elbows prefer over a straight bar.",
-    "avoidIf": [
-      "shoulder"
-    ],
-    "icon": "💀"
-  },
-  {
-    "id": "db-tate-press",
-    "name": "Tate Press",
-    "muscleGroup": "Triceps",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Lower the dumbbells toward your chest, elbows flaring out.",
-    "description": "Lying on the bench, press two dumbbells up, then lower them toward your chest by flaring the elbows so the weights meet over your sternum, and press back. An old powerlifting move that targets the inner triceps.",
-    "avoidIf": [
-      "shoulder"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "db-jm-press",
-    "name": "Dumbbell JM Press",
-    "muscleGroup": "Triceps",
-    "secondaryMuscles": [
-      "Chest"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Half press, half skull crusher — lower toward your upper chest.",
-    "description": "A hybrid of a close press and a skull crusher: lower the dumbbells toward your upper chest with elbows tucked, then press. It blends pressing strength with triceps isolation and is easier on the elbows than a strict skull crusher.",
-    "avoidIf": [
-      "shoulder"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "close-pushup",
-    "name": "Close-Grip Push-Up",
-    "muscleGroup": "Triceps",
-    "secondaryMuscles": [
-      "Chest",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Hands under your shoulders, elbows brushing your ribs as you lower.",
-    "description": "A push-up with hands about shoulder-width and elbows tracking tight to your sides, emphasising the triceps over the chest. Keep the elbows in rather than flaring to keep the load where you want it.",
-    "avoidIf": [
-      "wrist",
-      "shoulder"
-    ],
-    "icon": "💪"
-  },
-  {
-    "id": "bench-dip-feet-up",
+    "id": "feet-elevated-bench-dip",
     "name": "Feet-Elevated Bench Dip",
     "muscleGroup": "Triceps",
     "secondaryMuscles": [
@@ -6120,51 +6008,123 @@ const EXERCISES = [
       "Shoulders"
     ],
     "equipment": [
-      "bodyweight"
+      "bench"
     ],
-    "difficulty": "Advanced",
-    "cue": "Hands on one bench, heels on another; dip to 90° elbows.",
-    "description": "A bench dip with your heels raised on a second surface, adding bodyweight to the triceps. Keep the depth to a 90° elbow — the elevated, loaded version is even less forgiving to the shoulders than the standard dip.",
+    "difficulty": "Intermediate",
+    "cue": "Elevate your feet and lower under control before pressing upward.",
+    "description": "Maintain a tall chest throughout the movement. Avoid dropping too deep into shoulder extension.",
     "avoidIf": [
       "shoulder",
       "wrist"
     ],
-    "icon": "🪑"
+    "icon": "🪑",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Elevated Bench Dip"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-floor-extension",
-    "name": "Floor Triceps Extension",
+    "id": "bodyweight-triceps-extension",
+    "name": "Bodyweight Triceps Extension",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Bend only your elbows as you lower toward the bench.",
+    "description": "Keep your body rigid while extending through the elbows. Avoid allowing your hips to sag.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bench Triceps Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "bench-supported-skull-crusher",
+    "name": "Bench-Supported Skull Crusher",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lower your forehead toward the bench by bending only the elbows.",
+    "description": "Extend smoothly back to the start. Avoid letting the shoulders drift excessively.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "💀",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bodyweight Skull Crusher"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "two-hand-overhead-dumbbell-extension",
+    "name": "Two-Hand Overhead Dumbbell Extension",
     "muscleGroup": "Triceps",
     "secondaryMuscles": [],
     "equipment": [
       "dumbbell"
     ],
     "difficulty": "Beginner",
-    "cue": "On the floor, lower dumbbells beside your head; the floor caps the range.",
-    "description": "A lying triceps extension done on the floor so your upper arms rest down and the range is naturally limited. The floor makes it the gentlest way to load the triceps overhead-style if the bench version bothers your shoulders.",
-    "avoidIf": [],
-    "icon": "💪"
+    "cue": "Lower the dumbbell behind your head before extending your elbows.",
+    "description": "Keep your upper arms mostly vertical. Avoid flaring the elbows excessively.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Overhead Extension"
+    ],
+    "category": "strength"
   },
   {
-    "id": "db-close-press",
-    "name": "Close Neutral-Grip Press",
-    "muscleGroup": "Triceps",
-    "secondaryMuscles": [
-      "Chest",
-      "Shoulders"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Dumbbells touching, elbows tucked; press straight up.",
-    "description": "Press two dumbbells held together with a neutral grip while keeping your elbows tucked close to your body, shifting the press onto the triceps. The touching dumbbells and tucked elbows keep it easy on the shoulders.",
-    "avoidIf": [],
-    "icon": "🏋️"
-  },
-  {
-    "id": "db-overhead-single",
-    "name": "Single-Arm Overhead Extension",
+    "id": "single-arm-overhead-dumbbell-extension",
+    "name": "Single-Arm Overhead Dumbbell Extension",
     "muscleGroup": "Triceps",
     "secondaryMuscles": [
       "Core/Abs"
@@ -6173,33 +6133,811 @@ const EXERCISES = [
       "dumbbell"
     ],
     "difficulty": "Intermediate",
-    "cue": "One dumbbell overhead in one hand; lower behind your head, elbow high.",
-    "description": "Press one dumbbell overhead and lower it behind your head one arm at a time, keeping the elbow pointing at the ceiling. Working one side at a time exposes and fixes left-right differences; brace your core so you don't lean.",
+    "cue": "Extend the dumbbell overhead while keeping your elbow pointed upward.",
+    "description": "Move only through the elbow joint. Avoid leaning sideways.",
     "avoidIf": [
-      "shoulder",
-      "neck"
+      "shoulder"
     ],
-    "icon": "💪"
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Arm DB Overhead Extension"
+    ],
+    "category": "strength"
   },
   {
-    "id": "bodyweight-skullcrusher",
-    "name": "Bodyweight Triceps Extension",
+    "id": "dumbbell-skull-crusher",
+    "name": "Dumbbell Skull Crusher",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lower the dumbbells beside your head before extending.",
+    "description": "Maintain fixed upper arms throughout the movement. Avoid dropping the elbows outward.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "💀",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Lying Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-triceps-kickback",
+    "name": "Dumbbell Triceps Kickback",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Extend your arm fully behind you without moving the upper arm.",
+    "description": "Pause briefly at full extension. Avoid swinging the weight.",
+    "avoidIf": [],
+    "icon": "↩️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Kickback"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-tate-press",
+    "name": "Dumbbell Tate Press",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Chest"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lower the dumbbells toward your chest with elbows flared slightly.",
+    "description": "Extend smoothly to emphasize the triceps. Avoid bouncing off the chest.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Tate Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-jm-press",
+    "name": "Dumbbell JM Press",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Chest"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Lower the dumbbells between a press and extension path.",
+    "description": "Keep the elbows tucked throughout the lift. Avoid turning it into a standard bench press.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB JM Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-neutral-grip-triceps-press",
+    "name": "Dumbbell Neutral-Grip Triceps Press",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Chest"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press with palms facing each other while keeping elbows close.",
+    "description": "Emphasize elbow extension at the top. Avoid flaring the elbows.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Neutral Grip DB Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-floor-triceps-extension",
+    "name": "Dumbbell Floor Triceps Extension",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lower the dumbbells toward the floor before extending.",
+    "description": "Use the floor to limit shoulder range of motion. Avoid letting your elbows flare.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "💀",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Floor DB Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "seated-overhead-dumbbell-extension",
+    "name": "Seated Overhead Dumbbell Extension",
     "muscleGroup": "Triceps",
     "secondaryMuscles": [
       "Core/Abs"
     ],
     "equipment": [
-      "bodyweight"
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Keep your torso upright while lowering the dumbbell behind your head.",
+    "description": "Maintain a stable seated posture throughout. Avoid arching your lower back.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🪑",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Seated DB Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "incline-dumbbell-skull-crusher",
+    "name": "Incline Dumbbell Skull Crusher",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell",
+      "bench"
     ],
     "difficulty": "Advanced",
-    "cue": "Hands on the bench, body straight; bend only at the elbows to lower your head.",
-    "description": "In a plank against the bench, bend only at the elbows to lower your forehead toward the bench edge, then extend back — a bodyweight skull crusher. Move your feet back to make it harder; keep the body rigid throughout.",
+    "cue": "Lower the dumbbells behind your head from an incline bench.",
+    "description": "Control the stretched position carefully. Avoid excessive shoulder movement.",
     "avoidIf": [
-      "wrist",
       "shoulder",
-      "lower-back"
+      "wrist"
     ],
-    "icon": "💀"
+    "icon": "💀",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Incline DB Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cross-body-dumbbell-triceps-extension",
+    "name": "Cross-Body Dumbbell Triceps Extension",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Extend the dumbbell diagonally across your body.",
+    "description": "Keep the upper arm stable throughout the repetition. Avoid rotating your torso.",
+    "avoidIf": [],
+    "icon": "↘️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Cross Body DB Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "ez-bar-skull-crusher",
+    "name": "EZ-Bar Skull Crusher",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "ez-bar",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lower the EZ-bar toward your forehead while keeping your elbows fixed.",
+    "description": "Extend through the elbows until your arms are straight. Avoid letting your elbows flare outward.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "💀",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "EZ Skull Crusher",
+      "EZ-Bar Lying Triceps Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "ez-bar-overhead-triceps-extension",
+    "name": "EZ-Bar Overhead Triceps Extension",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "ez-bar"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lower the bar behind your head while keeping your upper arms vertical.",
+    "description": "Control the stretch before extending back overhead. Avoid excessive shoulder movement.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "EZ Overhead Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "ez-bar-jm-press",
+    "name": "EZ-Bar JM Press",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Chest"
+    ],
+    "equipment": [
+      "ez-bar",
+      "bench"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Lower the bar between your upper chest and chin before pressing upward.",
+    "description": "Blend a press and extension while keeping elbows tucked. Avoid turning it into a bench press.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "EZ JM Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-skull-crusher",
+    "name": "Barbell Skull Crusher",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lower the barbell toward your forehead under control.",
+    "description": "Keep your upper arms fixed throughout the lift. Avoid bouncing the bar or flaring the elbows.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "💀",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "BB Skull Crusher"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "reverse-grip-barbell-press",
+    "name": "Reverse-Grip Barbell Press",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Chest"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Press with a reverse grip while keeping your wrists stacked.",
+    "description": "Move slowly and maintain full control throughout the lift. Avoid allowing your wrists to collapse.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Reverse Grip Bench Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "rope-triceps-pushdown",
+    "name": "Rope Triceps Pushdown",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Push the rope downward and separate the ends at full extension.",
+    "description": "Keep your elbows pinned to your sides. Avoid leaning your body over the cable.",
+    "avoidIf": [],
+    "icon": "🪢",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Rope Pushdown"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "straight-bar-triceps-pushdown",
+    "name": "Straight-Bar Triceps Pushdown",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press the straight bar down while keeping your elbows fixed.",
+    "description": "Pause briefly at full extension before returning. Avoid bending your wrists.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Straight Bar Pushdown"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "overhead-cable-triceps-extension",
+    "name": "Overhead Cable Triceps Extension",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Extend the rope overhead while keeping your elbows close together.",
+    "description": "Move only through the elbow joint. Avoid arching your lower back.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Overhead Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-arm-cable-triceps-pushdown",
+    "name": "Single-Arm Cable Triceps Pushdown",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Push the handle downward while keeping your elbow against your side.",
+    "description": "Control both the extension and return. Avoid rotating your torso.",
+    "avoidIf": [],
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "One Arm Cable Pushdown"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cross-body-cable-triceps-extension",
+    "name": "Cross-Body Cable Triceps Extension",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Press the cable diagonally across your body to full extension.",
+    "description": "Maintain a stable shoulder throughout the movement. Avoid twisting through your torso.",
+    "avoidIf": [],
+    "icon": "↘️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cross Body Cable Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "machine-triceps-extension",
+    "name": "Machine Triceps Extension",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Extend the machine handles until your elbows are straight.",
+    "description": "Maintain steady tension throughout the repetition. Avoid slamming the weight stack.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Triceps Extension Machine"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "assisted-dip-machine-triceps",
+    "name": "Assisted Dip Machine",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Chest",
+      "Shoulders"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Use the assistance platform to perform controlled dips.",
+    "description": "Keep your elbows tracking naturally throughout the movement. Avoid dropping too deeply into the shoulders.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Machine Assisted Dip"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "triceps-dip-machine",
+    "name": "Triceps Dip Machine",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Chest"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Drive the machine handles downward using your triceps.",
+    "description": "Maintain smooth repetitions without locking out forcefully. Avoid shrugging your shoulders.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Dip Machine"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "resistance-band-triceps-pushdown",
+    "name": "Resistance Band Triceps Pushdown",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press the band downward while keeping your elbows at your sides.",
+    "description": "Maintain constant band tension throughout the movement. Avoid using your shoulders to finish the rep.",
+    "avoidIf": [],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Pushdown"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "resistance-band-overhead-triceps-extension",
+    "name": "Resistance Band Overhead Triceps Extension",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Extend the band overhead while keeping your upper arms still.",
+    "description": "Control the lowering phase throughout the exercise. Avoid arching your back.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Overhead Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "resistance-band-triceps-kickback",
+    "name": "Resistance Band Triceps Kickback",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Extend your arm behind you against the band's resistance.",
+    "description": "Keep your upper arm fixed throughout the movement. Avoid swinging through the shoulder.",
+    "avoidIf": [],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Kickback"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-overhead-triceps-extension",
+    "name": "Kettlebell Overhead Triceps Extension",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lower the kettlebell behind your head before extending upward.",
+    "description": "Keep your elbows close together throughout the lift. Avoid excessive shoulder movement.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "🔔",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Overhead Triceps Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-triceps-extension",
+    "name": "TRX Triceps Extension",
+    "muscleGroup": "Triceps",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lean into the straps and extend your elbows to return upright.",
+    "description": "Keep your body rigid throughout the movement. Avoid letting your elbows flare outward.",
+    "avoidIf": [
+      "shoulder"
+    ],
+    "icon": "〰️",
+    "mechanic": "Isolation",
+    "pattern": "Vertical Push",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Suspension Triceps Extension"
+    ],
+    "category": "strength"
   },
   {
     "id": "plank",
