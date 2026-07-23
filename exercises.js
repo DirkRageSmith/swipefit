@@ -1,8 +1,8 @@
 /*
- * SwipeFit dataset. Chest, Back, Shoulders, Biceps, Triceps fully produced (all equipment
- * types). Remaining groups are placeholders carried from the original 170 (equipment
- * normalized to arrays), replaced batch by batch. equipment = array of EQUIPMENT ids.
- * Run `node validate.js`.
+ * SwipeFit dataset. Chest, Back, Shoulders, Biceps, Triceps, Quads fully produced (all
+ * equipment types). Remaining groups are placeholders carried from the original 170
+ * (equipment normalized to arrays), replaced batch by batch. equipment = array of
+ * EQUIPMENT ids. Run `node validate.js`.
  */
 
 const MUSCLE_GROUPS = [
@@ -6940,6 +6940,1625 @@ const EXERCISES = [
     "category": "strength"
   },
   {
+    "id": "bodyweight-squat",
+    "name": "Bodyweight Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Sit your hips down and back while keeping your chest tall.",
+    "description": "Descend until comfortable depth before standing tall. Avoid letting your knees collapse inward.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🦵",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Air Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "pause-bodyweight-squat",
+    "name": "Pause Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pause for two seconds at the bottom before standing.",
+    "description": "Maintain tension during the pause. Avoid relaxing into the bottom position.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "⏸️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Paused Air Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "tempo-bodyweight-squat",
+    "name": "Tempo Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lower for three seconds before standing smoothly.",
+    "description": "Control every inch of the descent. Avoid dropping quickly into the bottom.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🐢",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Slow Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "pulse-squat",
+    "name": "Pulse Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Stay near the bottom and perform short controlled pulses.",
+    "description": "Keep tension throughout the set. Avoid standing fully between repetitions.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "〰️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "endurance",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Squat Pulses"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "bodyweight-split-squat",
+    "name": "Split Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lower straight down while keeping your front foot planted.",
+    "description": "Push through your front foot to stand. Avoid letting your front knee cave inward.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🦵",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Static Lunge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "walking-lunge",
+    "name": "Walking Lunge",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Step forward into each lunge with controlled balance.",
+    "description": "Alternate legs as you move forward. Avoid pushing off the rear foot excessively.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🚶",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Walking Lunges"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "forward-lunge",
+    "name": "Forward Lunge",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Step forward and lower under control.",
+    "description": "Drive back to the starting position through the front leg. Avoid collapsing the knee inward.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "➡️",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Front Lunge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "reverse-lunge",
+    "name": "Reverse Lunge",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Step backward into the lunge while keeping your torso upright.",
+    "description": "Return by driving through the front heel. Avoid wobbling during the step.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "⬅️",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Rear Lunge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "curtsy-lunge",
+    "name": "Curtsy Lunge",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Step diagonally behind your body before lowering.",
+    "description": "Keep your hips facing forward throughout. Avoid twisting your knees.",
+    "avoidIf": [
+      "knee",
+      "balance",
+      "hip"
+    ],
+    "icon": "↙️",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Curtsy Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cossack-squat",
+    "name": "Cossack Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Shift your weight fully to one side while keeping the other leg straight.",
+    "description": "Descend only as deep as your mobility allows. Avoid collapsing through the planted knee.",
+    "avoidIf": [
+      "knee",
+      "balance",
+      "hip"
+    ],
+    "icon": "↔️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "mobility",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Side Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "sissy-squat",
+    "name": "Sissy Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Lean backward while driving your knees forward under control.",
+    "description": "Maintain a straight body line throughout. Avoid dropping quickly into the stretch.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bodyweight Sissy Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "wall-sit",
+    "name": "Wall Sit",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press your back into the wall and hold a seated position.",
+    "description": "Maintain even pressure through both feet. Avoid letting your hips rise.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🧱",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Wall Chair"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "wall-sit-march",
+    "name": "Wall Sit March",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Alternate lifting one foot while maintaining the wall sit.",
+    "description": "Keep your hips level throughout the movement. Avoid rocking side to side.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🚶",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Marching Wall Sit"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "pistol-squat",
+    "name": "Pistol Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Keep one leg extended while lowering under full control.",
+    "description": "Use your full foot for balance throughout the movement. Avoid collapsing into the knee.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🎯",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Leg Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "shrimp-squat",
+    "name": "Shrimp Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Hold your rear foot while lowering on one leg.",
+    "description": "Move slowly through the full range of motion. Avoid twisting your hips.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🦐",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Shrimp Squat Hold"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "skater-squat",
+    "name": "Skater Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Lower onto one leg while keeping the rear leg behind you.",
+    "description": "Maintain balance throughout the movement. Avoid dropping your rear knee abruptly.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "⛸️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Leg Skater Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "box-jump",
+    "name": "Box Jump",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Full Body/Cardio"
+    ],
+    "equipment": [
+      "box"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Jump softly onto the box and land with bent knees.",
+    "description": "Step down between repetitions when possible. Avoid landing with locked knees.",
+    "avoidIf": [
+      "knee",
+      "high-impact"
+    ],
+    "icon": "📦",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Plyometric Box Jump"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "box-step-up",
+    "name": "Box Step-Up",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "box"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Drive through the elevated foot without pushing off the trailing leg.",
+    "description": "Stand fully before stepping back down. Avoid using momentum.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "📦",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Step Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-goblet-squat",
+    "name": "Dumbbell Goblet Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hold one dumbbell at chest height and squat between your knees.",
+    "description": "Keep your torso tall and elbows close to your body. Avoid letting your heels lift off the floor.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Goblet Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-squat",
+    "name": "Dumbbell Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hold dumbbells at your sides and squat with control.",
+    "description": "Drive through your whole foot to stand tall. Avoid collapsing your knees inward.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-front-squat",
+    "name": "Dumbbell Front Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rack the dumbbells on your shoulders and keep your elbows high.",
+    "description": "Maintain an upright torso throughout the lift. Avoid rounding your upper back.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Front Rack Dumbbell Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "heel-elevated-goblet-squat",
+    "name": "Heel-Elevated Goblet Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Raise your heels slightly and keep your knees tracking forward.",
+    "description": "Stay upright while emphasizing knee flexion. Avoid bouncing from the bottom.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🦵",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Cyclist Goblet Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-bulgarian-split-squat",
+    "name": "Dumbbell Bulgarian Split Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rest your rear foot on a bench and lower straight down.",
+    "description": "Drive through your front foot to stand. Avoid leaning excessively forward.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Bulgarian Split Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-split-squat",
+    "name": "Dumbbell Split Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hold dumbbells at your sides while lowering vertically.",
+    "description": "Keep your front heel planted throughout the movement. Avoid wobbling side to side.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Split Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-walking-lunge",
+    "name": "Dumbbell Walking Lunge",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Carry dumbbells while taking controlled forward steps.",
+    "description": "Push through the front heel each repetition. Avoid rushing your stride.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🚶",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Walking Lunges"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-reverse-lunge",
+    "name": "Dumbbell Reverse Lunge",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Step backward while keeping dumbbells stable at your sides.",
+    "description": "Drive upward through the front leg. Avoid shifting your weight onto the rear foot.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Reverse Lunge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-forward-lunge",
+    "name": "Dumbbell Forward Lunge",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Step forward under control while carrying dumbbells.",
+    "description": "Lower until both knees are comfortably bent. Avoid pushing off your rear foot.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Front Lunge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-step-up",
+    "name": "Dumbbell Step-Up",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell",
+      "box"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive through the elevated foot without jumping.",
+    "description": "Stand completely before stepping back down. Avoid pushing off the trailing leg.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "📦",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Box Step-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-curtsy-lunge",
+    "name": "Dumbbell Curtsy Lunge",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Cross one leg behind while holding dumbbells at your sides.",
+    "description": "Keep your torso upright throughout the movement. Avoid twisting through the knees.",
+    "avoidIf": [
+      "knee",
+      "balance",
+      "hip"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Curtsy Lunge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-cossack-squat",
+    "name": "Dumbbell Cossack Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Hold a dumbbell at your chest while shifting side to side.",
+    "description": "Descend only as far as mobility allows. Avoid collapsing into the planted knee.",
+    "avoidIf": [
+      "knee",
+      "balance",
+      "hip"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Side Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-goblet-squat",
+    "name": "Kettlebell Goblet Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hold the kettlebell at chest height throughout the squat.",
+    "description": "Keep your elbows tucked close to your body. Avoid letting your chest collapse.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Goblet Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-front-squat",
+    "name": "Kettlebell Front Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rack the kettlebells and maintain high elbows.",
+    "description": "Keep your torso upright through the entire lift. Avoid rounding forward.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Front Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-lunge",
+    "name": "Kettlebell Lunge",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Carry kettlebells while lowering under control.",
+    "description": "Maintain a stable torso throughout the movement. Avoid collapsing the front knee.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Lunge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-step-up",
+    "name": "Kettlebell Step-Up",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "kettlebell",
+      "box"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Step onto the box under control while carrying kettlebells.",
+    "description": "Drive through the lead leg to stand fully. Avoid pushing off the trailing foot.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Box Step-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "double-kettlebell-front-squat",
+    "name": "Double Kettlebell Front Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Core/Abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Rack both kettlebells securely before squatting.",
+    "description": "Brace your core throughout the lift. Avoid allowing the bells to pull you forward.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Double KB Front Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-reverse-lunge",
+    "name": "Kettlebell Reverse Lunge",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Step backward while maintaining a tall torso.",
+    "description": "Drive upward through the front leg. Avoid shifting weight onto the rear foot.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Reverse Lunge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-back-squat",
+    "name": "Barbell Back Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Brace your core and squat with the bar across your upper back.",
+    "description": "Drive through your feet while maintaining a stable torso. Avoid letting your knees collapse inward.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Back Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-front-squat",
+    "name": "Barbell Front Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Keep the bar racked on your shoulders while maintaining an upright torso.",
+    "description": "Control the descent and drive upward through your feet. Avoid dropping your elbows.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Front Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-box-squat",
+    "name": "Barbell Box Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "barbell",
+      "box"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Squat back to the box before driving upward.",
+    "description": "Use the box as a depth target without relaxing fully. Avoid bouncing off the surface.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "📦",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Box Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-pause-squat",
+    "name": "Barbell Pause Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Pause at the bottom before driving back upward.",
+    "description": "Maintain tension during the pause. Avoid losing your brace before the ascent.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "⏸️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Paused Barbell Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "zercher-squat",
+    "name": "Zercher Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Hold the bar in your elbow crease and squat upright.",
+    "description": "Brace your torso and control the descent. Avoid letting the bar pull you forward.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Zercher Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-overhead-squat",
+    "name": "Barbell Overhead Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Hold the bar overhead while squatting with control.",
+    "description": "Maintain shoulder stability and a strong brace. Avoid losing the overhead position.",
+    "avoidIf": [
+      "knee",
+      "shoulder",
+      "balance"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Overhead Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-split-squat",
+    "name": "Barbell Split Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Lower vertically while supporting the bar across your shoulders.",
+    "description": "Keep your front foot planted throughout. Avoid shifting your hips sideways.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Barbell Static Lunge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "leg-press-machine",
+    "name": "Leg Press",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press the platform away while keeping your feet stable.",
+    "description": "Lower under control before pressing back up. Avoid locking your knees forcefully.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🦵",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Machine Leg Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "hack-squat-machine",
+    "name": "Hack Squat Machine",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lower the sled while keeping your back supported.",
+    "description": "Drive through your feet to extend the knees. Avoid lifting your heels.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Machine Hack Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "leg-extension-machine",
+    "name": "Leg Extension",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Extend your knees until your legs are straight.",
+    "description": "Use controlled repetitions and avoid swinging the weight. Avoid snapping the knees at lockout.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Machine Leg Extension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "pendulum-belt-squat",
+    "name": "Pendulum Belt Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Squat through a guided machine path while keeping your torso stable.",
+    "description": "Control the bottom position before driving upward. Avoid rushing the movement.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Belt Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "smith-machine-squat",
+    "name": "Smith Machine Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Squat along the guided bar path with your feet positioned comfortably.",
+    "description": "Maintain control throughout the movement. Avoid relying entirely on the machine path.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Smith Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-squat",
+    "name": "Resistance Band Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Squat while maintaining tension from the resistance band.",
+    "description": "Keep constant tension through the movement. Avoid letting the knees cave inward.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🟢",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "banded-lunge",
+    "name": "Resistance Band Lunge",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Perform a lunge while resisting the band's pull.",
+    "description": "Keep your front foot stable throughout. Avoid losing alignment through the knee.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "🟢",
+    "mechanic": "Compound",
+    "pattern": "Lunge",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Lunge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-squat",
+    "name": "TRX Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Use the straps for balance while squatting under control.",
+    "description": "Keep your feet planted and chest tall. Avoid pulling yourself upward with the straps.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "〰️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Suspension Squat"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-assisted-pistol-squat",
+    "name": "TRX Assisted Pistol Squat",
+    "muscleGroup": "Quads",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Use the straps for assistance while lowering on one leg.",
+    "description": "Control the descent and maintain balance. Avoid relying entirely on the straps.",
+    "avoidIf": [
+      "knee",
+      "balance"
+    ],
+    "icon": "〰️",
+    "mechanic": "Compound",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "TRX Pistol Squat"
+    ],
+    "category": "strength"
+  },
+  {
     "id": "plank",
     "name": "Plank",
     "muscleGroup": "Core/Abs",
@@ -7576,335 +9195,6 @@ const EXERCISES = [
       "lower-back"
     ],
     "icon": "🍑"
-  },
-  {
-    "id": "bodyweight-squat",
-    "name": "Bodyweight Squat",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes",
-      "Hamstrings",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Sit back and down between your hips, chest up, heels planted.",
-    "description": "Feet about shoulder width, sit down between your hips as deep as comfortable and stand back up, knees tracking in line with the toes. The most useful pattern in the library — the depth that feels strong is your depth.",
-    "avoidIf": [
-      "knee"
-    ],
-    "icon": "🦵"
-  },
-  {
-    "id": "goblet-squat",
-    "name": "Goblet Squat",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Hug one dumbbell at your chest — it counterbalances you into a deeper squat.",
-    "description": "Hold a dumbbell vertically against your chest and squat; the front-loaded weight acts as a counterbalance so most people squat deeper and more upright. The thinking person's first loaded squat.",
-    "avoidIf": [
-      "knee"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "forward-lunge",
-    "name": "Forward Lunge",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes",
-      "Hamstrings"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Step forward, lower the back knee toward the floor, push back to standing.",
-    "description": "Step forward into a split stance and lower until both knees near 90°, then push off the front foot to return. The braking of the forward step is what makes it harder on the knees than its reverse cousin.",
-    "avoidIf": [
-      "knee",
-      "balance"
-    ],
-    "icon": "🦵"
-  },
-  {
-    "id": "reverse-lunge",
-    "name": "Reverse Lunge",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes",
-      "Hamstrings"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Step backward into the lunge — easier on the knees than stepping forward.",
-    "description": "Step one foot backward and lower the back knee toward the floor, then drive through the front heel to stand. Removing the forward braking step makes this the knee-friendlier lunge and easier to balance.",
-    "avoidIf": [
-      "knee",
-      "balance"
-    ],
-    "icon": "🦵"
-  },
-  {
-    "id": "bulgarian-split-squat",
-    "name": "Bulgarian Split Squat",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes",
-      "Hamstrings",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Rear foot on the bench, drop straight down — the front leg does the work.",
-    "description": "A split squat with your rear foot on the bench behind you and dumbbells at your sides, loading one leg hard with none of the spinal load of a barbell. Find the foot spacing before adding weight; the balance is half the battle.",
-    "avoidIf": [
-      "knee",
-      "balance",
-      "hip"
-    ],
-    "icon": "🦵"
-  },
-  {
-    "id": "wall-sit",
-    "name": "Wall Sit",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Back flat on the wall, thighs parallel to the floor, and hold.",
-    "description": "Slide down a wall until your thighs are parallel and knees are over your ankles, then hold the invisible chair with your hands off your legs. Raise the seat height (shallower angle) to make it kinder to the knees.",
-    "avoidIf": [
-      "knee"
-    ],
-    "icon": "🪑"
-  },
-  {
-    "id": "step-up",
-    "name": "Step-Up",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes",
-      "Calves"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Whole foot on the bench; drive through that heel without pushing off the floor leg.",
-    "description": "Step onto the bench, driving up through the leading leg until you stand tall on it, then step down with control. The honest version barely pushes off the bottom foot — lower the step if you can't help cheating.",
-    "avoidIf": [
-      "knee",
-      "balance"
-    ],
-    "icon": "🦵"
-  },
-  {
-    "id": "db-step-up",
-    "name": "Dumbbell Step-Up",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes",
-      "Calves"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Dumbbells at your sides; step up under control, no bouncing off the floor.",
-    "description": "A step-up onto the bench holding a dumbbell in each hand, adding real load to a very functional pattern. Keep the movement slow and honest — push through the top foot, don't spring off the bottom one.",
-    "avoidIf": [
-      "knee",
-      "balance"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "db-squat",
-    "name": "Dumbbell Squat",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes",
-      "Hamstrings",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "A dumbbell in each hand at your sides; squat down and stand tall.",
-    "description": "Hold a dumbbell in each hand at your sides and squat to a comfortable depth, then stand. Loading at your sides keeps your torso upright and is an easy way to add weight once bodyweight squats feel light.",
-    "avoidIf": [
-      "knee"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "db-front-squat",
-    "name": "Dumbbell Front Squat",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Rest dumbbells on your shoulders; squat with an upright chest.",
-    "description": "Hold two dumbbells on the front of your shoulders and squat, keeping your torso tall and elbows up. The front-loaded position hammers the quads and demands an upright, braced trunk.",
-    "avoidIf": [
-      "knee"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "split-squat",
-    "name": "Static Split Squat",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Feet split front and back; drop straight down, no stepping.",
-    "description": "Set your feet in a split stance and lower straight down until the back knee nears the floor, then press up — all reps on one side before switching. Staying in place makes it easier to balance than a lunge while still loading each leg.",
-    "avoidIf": [
-      "knee",
-      "balance"
-    ],
-    "icon": "🦵"
-  },
-  {
-    "id": "cossack-squat",
-    "name": "Cossack Squat",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes",
-      "Hamstrings"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Wide stance; shift onto one bent leg while the other stays straight.",
-    "description": "From a very wide stance, shift your weight down onto one bent leg while the other stays straight with the toe up, then push back to center and switch. A deep, mobility-heavy squat — ease into the depth over time.",
-    "avoidIf": [
-      "knee",
-      "hip",
-      "balance"
-    ],
-    "icon": "🦵"
-  },
-  {
-    "id": "pause-squat",
-    "name": "Paused Bodyweight Squat",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Sit to the bottom, hold three seconds, then stand.",
-    "description": "A bodyweight squat with a three-second pause at the bottom, which removes any bounce and makes the legs work from a dead stop. The pause builds control and makes bodyweight surprisingly challenging.",
-    "avoidIf": [
-      "knee"
-    ],
-    "icon": "🦵"
-  },
-  {
-    "id": "wall-sit-march",
-    "name": "Wall Sit March",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Core/Abs"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Hold a wall sit and slowly lift one foot, then the other.",
-    "description": "Hold a wall sit and slowly march one foot up at a time while keeping your hips level against the wall. Lifting a foot doubles the load on the standing leg and adds a balance element to the burn.",
-    "avoidIf": [
-      "knee"
-    ],
-    "icon": "🪑"
-  },
-  {
-    "id": "sissy-squat",
-    "name": "Sissy Squat",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Hold support, rise on your toes, and lean back bending only your knees.",
-    "description": "Holding a support for balance, rise onto your toes and lean your torso back as you bend your knees forward, keeping hips and shoulders in line. It isolates the quads intensely and stretches them hard — build up slowly, and skip it if your knees object.",
-    "avoidIf": [
-      "knee",
-      "balance"
-    ],
-    "icon": "🦵"
-  },
-  {
-    "id": "heel-elevated-squat",
-    "name": "Heel-Elevated Goblet Squat",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Heels on a small plate or wedge; hug a dumbbell and squat deep.",
-    "description": "A goblet squat with your heels slightly raised, which lets you sit straighter and deeper and shifts more work onto the quads. Great for taller people or anyone whose squat depth feels blocked at the ankles.",
-    "avoidIf": [
-      "knee"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "tempo-lunge",
-    "name": "Slow Tempo Reverse Lunge",
-    "muscleGroup": "Quads",
-    "secondaryMuscles": [
-      "Glutes",
-      "Hamstrings"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Three seconds down into the lunge, pause, then drive up.",
-    "description": "A reverse lunge slowed to a three-second descent with a pause at the bottom, which builds control and single-leg strength without any load. The slow tempo also lightens the impact on the knee compared to fast reps.",
-    "avoidIf": [
-      "knee",
-      "balance"
-    ],
-    "icon": "🦵"
   },
   {
     "id": "db-rdl",
