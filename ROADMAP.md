@@ -317,14 +317,14 @@ Progress (2026-07-17):
 - ✅ **Back done** — 57 exercises (3 sub-batches). Bodyweight 7 / Home 18 / Full gym 57.
 - ✅ **Shoulders done** — 51 exercises (3 sub-batches). Bodyweight 3 / Home 22 / Full gym 51.
 - ✅ **Biceps done** — 35 exercises (2 sub-batches). Bodyweight 2 / Home 16 / Full gym 35.
-- ✅ **Triceps done** — 33 exercises (2 sub-batches). Home 15 / Full gym 33. Library now
-  **313 total**, 71% metadata. **All 5 upper-body groups complete.**
-- ⏳ **Remaining 6 groups are placeholders** — carried over from the old 170, equipment
+- ✅ **Triceps done** — 33 exercises (2 sub-batches). All 5 upper-body groups complete.
+- ✅ **Quads done** — 52 exercises (3 sub-batches). Bodyweight 16 / Home 27 / Full gym 52.
+  Library now **348 total**, 79% metadata; box now populated.
+- ⏳ **Remaining 5 groups are placeholders** — carried over from the old 170, equipment
   normalized to arrays, but still dumbbell/bodyweight-only and without the new metadata.
-  Each gets **replaced** as ChatGPT produces its batch. Order (per GPT): **Quads next**,
-  then Hamstrings, Glutes, Calves, Core/Abs, Full Body/Cardio.
-- Still-empty equipment (fill via upcoming groups): box (Quads/Glutes/Cardio step-ups &
-  jumps), ab-wheel (Core), jump-rope (Cardio).
+  Each gets **replaced** as ChatGPT produces its batch. Order (per GPT): **Hamstrings next**,
+  then Glutes, Calves, Core/Abs, Full Body/Cardio.
+- Still-empty equipment (fill via upcoming groups): ab-wheel (Core), jump-rope (Cardio).
 - Note: a few carried-over pull/hang moves are tagged `pull-up-bar`; the rest of the
   placeholder groups' equipment is coarse and gets fixed on regeneration.
 
