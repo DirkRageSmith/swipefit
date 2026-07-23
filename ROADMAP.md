@@ -303,32 +303,17 @@ library, first-run onboarding that works for someone who isn't Matt, and generat
 sessions. **D–F** (in-workout mode, progress, rule-based adjustments) are polish that can
 land *during* the beta as feedback comes in.
 
-**Phase A — Data & schema (unblocks everything). — IN PROGRESS**
-ChatGPT delivers the ~500 deck as per-group batches, Chest first as a pilot (§6.1); Claude
-format-proofs the pilot, then integrates the full set (§5, §6.3). Ships the richer library,
-the array-based gear model, and `aliases`/`category` (the latter future-proofs the ~1,200
-DB in §5d).
+**Phase A — Data & schema. — ✅ COMPLETE (2026-07-23).** All 11 groups produced by ChatGPT,
+integrated and deployed: **506 exercises, 100% metadata coverage, all 15 equipment types
+populated, zero duplicate ids.** Live at the URL above. Enum additions during the build:
+patterns gained `Hip Abduction`; categories gained `power`. Next up: **Phase B (onboarding)**.
 
-Progress (2026-07-17):
-- ✅ **Schema shipped & deployed** (schemaVersion 3): `equipment` is an array of ids;
-  15-type `EQUIPMENT` taxonomy; superset gear filter + one-tap presets (Bodyweight / Home /
-  Home+ / Full gym); `validate.js` updated (hard core / soft metadata). Live.
-- ✅ **Chest done** — 46 exercises, all equipment types (17% bodyweight-only), full metadata.
-- ✅ **Back done** — 57 exercises (3 sub-batches). Bodyweight 7 / Home 18 / Full gym 57.
-- ✅ **Shoulders done** — 51 exercises (3 sub-batches). Bodyweight 3 / Home 22 / Full gym 51.
-- ✅ **Biceps done** — 35 exercises (2 sub-batches). Bodyweight 2 / Home 16 / Full gym 35.
-- ✅ **Triceps done** — 33 exercises (2 sub-batches). All 5 upper-body groups complete.
-- ✅ **Quads done** — 52 exercises (3 sub-batches). All-equipment; box now populated.
-- ✅ **Hamstrings done** — 36 exercises (2 sub-batches).
-- ✅ **Glutes done** — 49 exercises (3 sub-batches). Added `Hip Abduction` to the pattern enum.
-- ✅ **Calves done** — 26 exercises (2 sub-batches).
-- ✅ **Core/Abs done** — 68 exercises, curated & deduped from a large multi-batch GPT dump.
-  Added `power` to the category enum. Library now **470 total**, 96% metadata; ab-wheel populated.
-- ⏳ **Last group is a placeholder** — Full Body/Cardio (17), carried over from the old 170.
-  Gets **replaced** by ChatGPT's batch → then **all 11 groups done** (~490 total). Full
-  Body/Cardio populates the final empty equipment: **jump-rope**.
-- Note: a few carried-over pull/hang moves are tagged `pull-up-bar`; the rest of the
-  placeholder groups' equipment is coarse and gets fixed on regeneration.
+Final per-group counts: Chest 46 · Back 57 · Shoulders 51 · Biceps 35 · Triceps 33 ·
+Core/Abs 68 · Glutes 49 · Quads 52 · Hamstrings 36 · Calves 26 · Full Body/Cardio 53 = **506**.
+Built group-by-group from ChatGPT batches (equipment-family sub-batches), each validated with
+`scratchpad/check-part.js` and integrated with a `scratchpad/build-<group>.js` script that
+protects finalized groups and de-dupes. Core/Abs was curated down from a large duplicate-heavy
+dump. Every batch swap bumped `sw.js` `CACHE_VERSION` (now v13).
 
 **Phase B — Onboarding & personalization axes.**
 Turn setup into a short, swipe-friendly questionnaire that sets the filters we already
