@@ -352,6 +352,10 @@
     if (!deckBuilt || remaining <= 0) return;
 
     const visible = deck.slice(deckIndex, deckIndex + 3);
+    // Theme the whole deck by the top card's muscle-group color, so the
+    // deck header reads "red = chest day" at a glance as you swipe.
+    const topGroup = GROUP_BY_NAME[visible[0].muscleGroup];
+    $("#screen-deck").style.setProperty("--group-color", topGroup ? topGroup.color : "#888");
     for (let depth = visible.length - 1; depth >= 0; depth--) {
       const card = buildCard(visible[depth], depth);
       stage.appendChild(card);
