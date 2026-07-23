@@ -1,8 +1,8 @@
 /*
- * SwipeFit dataset. Chest, Back, Shoulders, Biceps, Triceps, Quads fully produced (all
- * equipment types). Remaining groups are placeholders carried from the original 170
- * (equipment normalized to arrays), replaced batch by batch. equipment = array of
- * EQUIPMENT ids. Run `node validate.js`.
+ * SwipeFit dataset. Chest, Back, Shoulders, Biceps, Triceps, Quads, Hamstrings fully
+ * produced (all equipment types). Remaining groups are placeholders carried from the
+ * original 170 (equipment normalized to arrays), replaced batch by batch. equipment =
+ * array of EQUIPMENT ids. Run `node validate.js`.
  */
 
 const MUSCLE_GROUPS = [
@@ -8559,6 +8559,1107 @@ const EXERCISES = [
     "category": "strength"
   },
   {
+    "id": "nordic-hamstring-curl",
+    "name": "Nordic Hamstring Curl",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight",
+      "bench"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Kneel anchored and lower your body forward under control.",
+    "description": "Use your hamstrings to resist the descent. Avoid dropping quickly without control.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Nordic Curl",
+      "Natural Hamstring Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "slider-leg-curl",
+    "name": "Slider Leg Curl",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Slide your heels toward your hips while lifting your hips.",
+    "description": "Maintain a strong bridge position throughout. Avoid letting your hips drop.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Towel Hamstring Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "glute-bridge-leg-curl-walkout",
+    "name": "Glute Bridge Leg Curl Walkout",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lift into a bridge and slowly walk your heels away.",
+    "description": "Keep your hips elevated while moving your feet. Avoid arching your lower back.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🦵",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bridge Walkout"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-leg-hip-hinge-reach",
+    "name": "Single-Leg Hip Hinge Reach",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Balance on one leg while reaching your hands toward the floor.",
+    "description": "Keep your hips square as you hinge. Avoid rotating your torso.",
+    "avoidIf": [
+      "lower-back",
+      "balance"
+    ],
+    "icon": "⚖️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "mobility",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bodyweight Single Leg RDL"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "razor-curl",
+    "name": "Razor Curl",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight",
+      "bench"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Anchor your feet and curl your body using your hamstrings.",
+    "description": "Control the entire movement with tension. Avoid dropping into the bottom position.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Razor Hamstring Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "hamstring-bridge-hold",
+    "name": "Hamstring Bridge Hold",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lift your hips and hold a bridge position.",
+    "description": "Maintain tension through the back of your legs. Avoid letting your hips sag.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Hinge",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bridge Isometric Hold"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-leg-glute-bridge-hamstring-march",
+    "name": "Single-Leg Glute Bridge Hamstring March",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold a bridge while alternating lifted legs.",
+    "description": "Keep your pelvis level during each march. Avoid rotating side to side.",
+    "avoidIf": [
+      "lower-back",
+      "balance"
+    ],
+    "icon": "🦵",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bridge March"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "bodyweight-good-morning",
+    "name": "Bodyweight Good Morning",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hinge at your hips while keeping your spine neutral.",
+    "description": "Push your hips backward to load the hamstrings. Avoid rounding your lower back.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🌅",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bodyweight Hip Hinge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-romanian-deadlift",
+    "name": "Dumbbell Romanian Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hinge your hips back while lowering dumbbells close to your legs.",
+    "description": "Keep tension through your hamstrings throughout the lift. Avoid rounding your back.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB RDL"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-leg-dumbbell-rdl",
+    "name": "Single-Leg Dumbbell Romanian Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold a dumbbell while hinging on one leg.",
+    "description": "Keep your hips level during the movement. Avoid losing balance by rushing.",
+    "avoidIf": [
+      "lower-back",
+      "balance"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Leg DB RDL"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-stiff-leg-deadlift",
+    "name": "Dumbbell Stiff-Leg Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lower dumbbells with minimal knee bend and a strong hip hinge.",
+    "description": "Maintain a neutral spine as you stretch the hamstrings. Avoid turning it into a squat.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Stiff Leg Deadlift"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-b-stance-rdl",
+    "name": "Dumbbell B-Stance Romanian Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Use a staggered stance and load the front leg.",
+    "description": "Keep most weight on the working leg. Avoid rotating your hips open.",
+    "avoidIf": [
+      "lower-back",
+      "balance"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Kickstand DB RDL"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-good-morning",
+    "name": "Dumbbell Good Morning",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold a dumbbell at your chest and hinge forward.",
+    "description": "Drive your hips backward to load the hamstrings. Avoid rounding your spine.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Good Morning"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "seated-dumbbell-leg-curl",
+    "name": "Seated Dumbbell Leg Curl",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Secure a dumbbell between your feet and curl your legs.",
+    "description": "Move slowly through the curl. Avoid using momentum to lift the weight.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Leg Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "prone-dumbbell-leg-curl",
+    "name": "Prone Dumbbell Leg Curl",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Curl a dumbbell with your feet while lying face down.",
+    "description": "Keep the movement controlled and isolated. Avoid lifting your hips off the bench.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Lying DB Leg Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-sumo-rdl",
+    "name": "Dumbbell Sumo Romanian Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Take a wide stance and hinge while holding the dumbbell.",
+    "description": "Keep your chest tall during the hinge. Avoid turning it into a squat.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Sumo RDL"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "staggered-stance-dumbbell-rdl",
+    "name": "Staggered-Stance Dumbbell Romanian Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Place one foot slightly behind while hinging forward.",
+    "description": "Keep tension on the front leg. Avoid shifting fully onto the rear foot.",
+    "avoidIf": [
+      "lower-back",
+      "balance"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Staggered DB RDL"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-hip-hinge",
+    "name": "Dumbbell Hip Hinge",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Practice pushing your hips back while holding a dumbbell.",
+    "description": "Learn the hinge pattern with control. Avoid bending through the lower back.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "mobility",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Loaded Hip Hinge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-romanian-deadlift",
+    "name": "Barbell Romanian Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hinge your hips back while lowering the bar close to your legs.",
+    "description": "Maintain a neutral spine and controlled stretch through the hamstrings. Avoid rounding your lower back.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Barbell RDL"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-stiff-leg-deadlift",
+    "name": "Barbell Stiff-Leg Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Lower the bar with nearly straight legs and a controlled hip hinge.",
+    "description": "Keep the bar close to your body throughout the lift. Avoid rounding your spine.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Stiff-Leg Barbell Deadlift"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-good-morning",
+    "name": "Barbell Good Morning",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Hinge forward with the bar on your upper back.",
+    "description": "Move through the hips while keeping your spine stable. Avoid using excessive weight.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🌅",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Good Morning"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "snatch-grip-romanian-deadlift",
+    "name": "Snatch-Grip Romanian Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Back"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Use a wide grip while hinging the bar down under control.",
+    "description": "Keep your lats engaged and spine neutral. Avoid allowing the bar to drift away.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Snatch Grip RDL"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "deficit-romanian-deadlift",
+    "name": "Deficit Romanian Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "barbell",
+      "box"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Stand elevated and hinge deeper while controlling the bar.",
+    "description": "Maintain tension through the hamstrings. Avoid forcing depth beyond your mobility.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "📦",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Deficit RDL"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "lying-leg-curl-machine",
+    "name": "Lying Leg Curl",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl your heels toward your glutes while lying face down.",
+    "description": "Control the lowering phase for tension. Avoid lifting your hips from the pad.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Prone Leg Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "seated-leg-curl-machine",
+    "name": "Seated Leg Curl",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl the padded lever downward while seated upright.",
+    "description": "Keep your hips against the pad during the movement. Avoid using momentum.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Seated Hamstring Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "glute-ham-raise",
+    "name": "Glute-Ham Raise",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Lower your torso while resisting with your hamstrings.",
+    "description": "Maintain a straight line from knees through shoulders. Avoid dropping uncontrolled.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🦵",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "GHR"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "forty-five-degree-back-extension",
+    "name": "45 Degree Back Extension",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Back"
+    ],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hinge at the hips on the angled bench and raise your torso.",
+    "description": "Squeeze your glutes at the top position. Avoid hyperextending your lower back.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "45 Degree Hyperextension"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-pull-through",
+    "name": "Cable Pull-Through",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull the cable through your legs while driving your hips forward.",
+    "description": "Use your hips to generate movement. Avoid pulling with your arms.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🔗",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Hip Hinge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-romanian-deadlift",
+    "name": "Cable Romanian Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hinge away from the cable while maintaining tension.",
+    "description": "Keep constant resistance through the movement. Avoid rounding your back.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🔗",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable RDL"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-leg-curl",
+    "name": "Cable Leg Curl",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Attach an ankle strap and curl your heel toward your body.",
+    "description": "Keep the movement isolated and controlled. Avoid rotating your hips.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Standing Cable Leg Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-romanian-deadlift",
+    "name": "Kettlebell Romanian Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hold the kettlebell and hinge your hips backward.",
+    "description": "Keep the kettlebell close to your body. Avoid squatting the movement.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB RDL"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-leg-kettlebell-rdl",
+    "name": "Single-Leg Kettlebell Romanian Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Balance on one leg while lowering the kettlebell.",
+    "description": "Keep your hips square and controlled. Avoid rotating during the hinge.",
+    "avoidIf": [
+      "lower-back",
+      "balance"
+    ],
+    "icon": "🔔",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Leg KB RDL"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-romanian-deadlift",
+    "name": "Resistance Band Romanian Deadlift",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Stand on the band and hinge while holding the handles.",
+    "description": "Drive your hips forward against resistance. Avoid rounding your back.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🟢",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band RDL"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-leg-curl",
+    "name": "Resistance Band Leg Curl",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Anchor the band and curl your heel toward your glutes.",
+    "description": "Keep the motion smooth and controlled. Avoid using momentum.",
+    "avoidIf": [
+      "knee"
+    ],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "hypertrophy",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Hamstring Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-pull-through",
+    "name": "Resistance Band Pull-Through",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hinge forward and extend your hips against band resistance.",
+    "description": "Move through the hips rather than the lower back. Avoid leaning backward.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🟢",
+    "mechanic": "Compound",
+    "pattern": "Hinge",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Hip Hinge"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-hamstring-curl",
+    "name": "TRX Hamstring Curl",
+    "muscleGroup": "Hamstrings",
+    "secondaryMuscles": [
+      "Glutes",
+      "Core/Abs"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Place heels in straps and curl while holding a bridge.",
+    "description": "Keep your hips elevated throughout. Avoid letting your lower back arch.",
+    "avoidIf": [
+      "lower-back",
+      "knee"
+    ],
+    "icon": "〰️",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy",
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Suspension Hamstring Curl"
+    ],
+    "category": "strength"
+  },
+  {
     "id": "plank",
     "name": "Plank",
     "muscleGroup": "Core/Abs",
@@ -9195,263 +10296,6 @@ const EXERCISES = [
       "lower-back"
     ],
     "icon": "🍑"
-  },
-  {
-    "id": "db-rdl",
-    "name": "Dumbbell Romanian Deadlift",
-    "muscleGroup": "Hamstrings",
-    "secondaryMuscles": [
-      "Glutes",
-      "Back"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Push your hips straight back, soft knees, until the hamstrings pull the brakes.",
-    "description": "Holding dumbbells in front of your thighs, hinge by pushing your hips back with a proud chest and slight knee bend, lowering until the hamstrings hit their stretch, then drive the hips forward. A rounding back is the signal to stop shallower.",
-    "avoidIf": [
-      "lower-back"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "single-leg-rdl",
-    "name": "Single-Leg Romanian Deadlift",
-    "muscleGroup": "Hamstrings",
-    "secondaryMuscles": [
-      "Glutes",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Hinge on one leg, the other extending behind you as a counterweight.",
-    "description": "Balance on one leg and hinge forward, letting the free leg extend straight behind you until your body forms a T, then return. Hamstrings plus a serious balance challenge — keep fingertips on a wall while learning.",
-    "avoidIf": [
-      "lower-back",
-      "balance"
-    ],
-    "icon": "🦩"
-  },
-  {
-    "id": "nordic-curl",
-    "name": "Nordic Hamstring Curl",
-    "muscleGroup": "Hamstrings",
-    "secondaryMuscles": [
-      "Glutes",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Ankles anchored, kneel tall, and lower your body forward as slowly as possible.",
-    "description": "Kneel with your ankles anchored under the bench and lower your straight body toward the floor using only your hamstrings as brakes, catching yourself with your hands. Even a few clean negatives are elite-level.",
-    "avoidIf": [
-      "knee"
-    ],
-    "icon": "🧎"
-  },
-  {
-    "id": "db-stiff-leg-deadlift",
-    "name": "Dumbbell Stiff-Leg Deadlift",
-    "muscleGroup": "Hamstrings",
-    "secondaryMuscles": [
-      "Glutes",
-      "Back"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Nearly straight knees; hinge and lower the dumbbells down your shins.",
-    "description": "Like a Romanian deadlift but with the knees kept nearly straight, which puts an even bigger stretch on the hamstrings. Keep a flat back and only go as low as your hamstring flexibility allows without rounding.",
-    "avoidIf": [
-      "lower-back"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "db-b-stance-rdl",
-    "name": "Dumbbell B-Stance RDL",
-    "muscleGroup": "Hamstrings",
-    "secondaryMuscles": [
-      "Glutes"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "One foot back on its toes as a kickstand; hinge over the front leg.",
-    "description": "A Romanian deadlift with one foot set back on its toes as a light kickstand, biasing most of the load onto the front hamstring without the full balance test of a single-leg version. A great bridge toward true single-leg work.",
-    "avoidIf": [
-      "lower-back"
-    ],
-    "icon": "🦵"
-  },
-  {
-    "id": "slider-leg-curl",
-    "name": "Sliding Leg Curl",
-    "muscleGroup": "Hamstrings",
-    "secondaryMuscles": [
-      "Glutes"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Heels on sliders in a bridge; slide your feet out, then curl them back.",
-    "description": "In a glute bridge with your heels on towels or sliders, slide your feet out until your legs are almost straight, then curl them back in while keeping your hips up. A tough bodyweight hamstring curl — bend one leg to assist if needed.",
-    "avoidIf": [
-      "pregnancy"
-    ],
-    "icon": "🛝"
-  },
-  {
-    "id": "bench-hamstring-walkout",
-    "name": "Glute Bridge Walkout",
-    "muscleGroup": "Hamstrings",
-    "secondaryMuscles": [
-      "Glutes",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Hold a bridge; walk your heels out step by step, then back in.",
-    "description": "Hold a glute bridge and slowly step your heels away from your hips one at a time until your legs are long, then walk them back in, keeping the hips lifted throughout. The further out your feet, the harder the hamstrings work.",
-    "avoidIf": [
-      "pregnancy"
-    ],
-    "icon": "🌉"
-  },
-  {
-    "id": "db-single-leg-rdl-supported",
-    "name": "Kickstand RDL (Hamstring)",
-    "muscleGroup": "Hamstrings",
-    "secondaryMuscles": [
-      "Glutes",
-      "Back"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Toes of the back foot down for balance; hinge over the front leg.",
-    "description": "Hold dumbbells with one foot slightly back on its toes and hinge over the front leg, feeling the hamstring load, then stand. The kickstand foot removes the balance struggle so you can focus on the hinge and the stretch.",
-    "avoidIf": [
-      "lower-back"
-    ],
-    "icon": "🦵"
-  },
-  {
-    "id": "prone-hamstring-curl-db",
-    "name": "Prone Dumbbell Leg Curl",
-    "muscleGroup": "Hamstrings",
-    "secondaryMuscles": [
-      "Calves"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Lie face-down, squeeze a light dumbbell between your feet, curl your heels up.",
-    "description": "Lying face-down on the bench, pinch a light dumbbell between your feet and curl your heels toward your glutes, then lower slowly. A homemade lying leg curl — start with the lightest dumbbell you can grip securely.",
-    "avoidIf": [],
-    "icon": "🦵"
-  },
-  {
-    "id": "good-morning-bw",
-    "name": "Bodyweight Good Morning",
-    "muscleGroup": "Hamstrings",
-    "secondaryMuscles": [
-      "Glutes",
-      "Back"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Hands behind your head; bow forward from the hips with a flat back.",
-    "description": "With hands behind your head and knees soft, bow your torso forward from the hips until you feel the hamstrings load, then stand tall by squeezing them. A gentle, unloaded way to groove the hinge and warm up the posterior chain.",
-    "avoidIf": [
-      "lower-back"
-    ],
-    "icon": "🌅"
-  },
-  {
-    "id": "db-good-morning",
-    "name": "Dumbbell Good Morning",
-    "muscleGroup": "Hamstrings",
-    "secondaryMuscles": [
-      "Glutes",
-      "Back"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Hold one dumbbell at your chest; bow forward with a locked-flat spine.",
-    "description": "Hold a dumbbell against your upper chest and hinge forward until your torso approaches parallel, then stand by driving the hips forward. The load sits far from your hips, so keep it light and your back granite-flat.",
-    "avoidIf": [
-      "lower-back",
-      "hip"
-    ],
-    "icon": "🌅"
-  },
-  {
-    "id": "single-leg-hip-hinge-reach",
-    "name": "Single-Leg Hinge Reach",
-    "muscleGroup": "Hamstrings",
-    "secondaryMuscles": [
-      "Glutes",
-      "Core/Abs"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Balance on one leg; hinge and reach your hands toward the floor.",
-    "description": "Stand on one leg and hinge forward, reaching your hands toward the floor while the free leg floats back, then return to standing tall. An unloaded single-leg RDL that builds hamstring control and balance at the same time.",
-    "avoidIf": [
-      "balance"
-    ],
-    "icon": "🦩"
-  },
-  {
-    "id": "seated-db-leg-curl",
-    "name": "Seated Dumbbell Hamstring Curl",
-    "muscleGroup": "Hamstrings",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Sit on the bench edge, dumbbell between your feet, curl your lower legs back.",
-    "description": "Perch on the edge of the bench with a light dumbbell held between your feet and curl your lower legs back underneath you, then extend. A simple seated curl variation for the hamstrings when you have no machine.",
-    "avoidIf": [],
-    "icon": "🦵"
-  },
-  {
-    "id": "hamstring-bridge-hold",
-    "name": "Long-Lever Bridge Hold",
-    "muscleGroup": "Hamstrings",
-    "secondaryMuscles": [
-      "Glutes"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Heels far from your hips, only the heels down; hold the bridge high.",
-    "description": "Set up a glute bridge with your heels placed far from your hips and only your heels on the floor, then hold the top position, which loads the hamstrings much more than a normal bridge. Add a light single-leg version once it feels easy.",
-    "avoidIf": [
-      "pregnancy"
-    ],
-    "icon": "🌉"
   },
   {
     "id": "standing-calf-raise",
