@@ -1,8 +1,8 @@
 /*
- * SwipeFit dataset. Chest, Back, Shoulders, Biceps, Triceps, Quads, Hamstrings, Glutes
- * fully produced (all equipment types). Remaining groups are placeholders carried from
- * the original 170 (equipment normalized to arrays), replaced batch by batch. equipment =
- * array of EQUIPMENT ids. Run `node validate.js`.
+ * SwipeFit dataset. Chest, Back, Shoulders, Biceps, Triceps, Quads, Hamstrings, Glutes,
+ * Calves fully produced (all equipment types). Remaining groups are placeholders carried
+ * from the original 170 (equipment normalized to arrays), replaced batch by batch.
+ * equipment = array of EQUIPMENT ids. Run `node validate.js`.
  */
 
 const MUSCLE_GROUPS = [
@@ -11098,6 +11098,705 @@ const EXERCISES = [
     "category": "strength"
   },
   {
+    "id": "standing-calf-raise",
+    "name": "Standing Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Rise onto the balls of your feet and squeeze your calves at the top.",
+    "description": "Perform controlled repetitions through a full range of motion. Avoid bouncing through the movement.",
+    "avoidIf": [],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bodyweight Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-leg-calf-raise",
+    "name": "Single-Leg Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Balance on one foot and raise your heel as high as possible.",
+    "description": "Control the lowering phase to build strength. Avoid shifting your weight side to side.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Leg Standing Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "seated-calf-raise-bodyweight",
+    "name": "Seated Calf Raise Bodyweight",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Sit down and lift your heels by pressing through your toes.",
+    "description": "Keep your knees stable while contracting your calves. Avoid using your feet to bounce.",
+    "avoidIf": [],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Seated Bodyweight Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "donkey-calf-raise",
+    "name": "Donkey Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hinge forward and raise your heels while supported.",
+    "description": "Maintain a strong calf contraction at the top. Avoid bouncing the heels.",
+    "avoidIf": [],
+    "icon": "🫏",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bent-Over Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "wall-lean-calf-raise",
+    "name": "Wall-Lean Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lean into a wall and perform controlled calf raises.",
+    "description": "Keep your body aligned while lifting your heels. Avoid using your arms for assistance.",
+    "avoidIf": [],
+    "icon": "🧱",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Wall Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "calf-raise-pulse",
+    "name": "Calf Raise Pulse",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Stay elevated on your toes and perform short controlled pulses.",
+    "description": "Keep constant tension in the calves. Avoid letting your heels drop fully.",
+    "avoidIf": [],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Calf Pulses"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "tempo-calf-raise",
+    "name": "Tempo Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Raise and lower your heels using a slow controlled tempo.",
+    "description": "Emphasize the lowering phase for more tension. Avoid rushing repetitions.",
+    "avoidIf": [],
+    "icon": "⏱️",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Slow Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "toe-walk",
+    "name": "Toe Walk",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [
+      "Full Body/Cardio"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Walk forward while staying elevated on your toes.",
+    "description": "Maintain posture and controlled steps. Avoid collapsing onto your heels.",
+    "avoidIf": [],
+    "icon": "🚶",
+    "mechanic": "Isolation",
+    "pattern": "Conditioning",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Tiptoe Walk"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "deficit-calf-raise-box",
+    "name": "Deficit Calf Raise Off Box",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "box"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Stand on an elevated surface and lower your heels below the platform.",
+    "description": "Use a controlled stretch and contraction. Avoid dropping quickly into the bottom position.",
+    "avoidIf": [],
+    "icon": "📦",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Step Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-leg-deficit-calf-raise-box",
+    "name": "Single-Leg Deficit Calf Raise Off Box",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "box"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Perform a single-leg calf raise from an elevated surface.",
+    "description": "Control the descent and maintain balance. Avoid rotating your ankle.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "📦",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Leg Step Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-calf-raise",
+    "name": "Dumbbell Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hold dumbbells and rise onto the balls of your feet.",
+    "description": "Pause at the top of each repetition. Avoid bouncing with the weights.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "single-leg-dumbbell-calf-raise",
+    "name": "Single-Leg Dumbbell Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold one dumbbell and perform a single-leg calf raise.",
+    "description": "Keep the ankle stable and controlled. Avoid losing balance.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Leg DB Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "seated-dumbbell-calf-raise",
+    "name": "Seated Dumbbell Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Place a dumbbell on your knee and lift your heel upward.",
+    "description": "Focus on the contraction of the calves. Avoid moving the entire leg.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Seated DB Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-standing-calf-raise",
+    "name": "Barbell Standing Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold a barbell and rise onto the balls of your feet.",
+    "description": "Control the lowering phase and fully contract your calves. Avoid bouncing the weight.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "BB Standing Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "barbell-seated-calf-raise",
+    "name": "Barbell Seated Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rest a barbell across your knees and lift your heels.",
+    "description": "Keep your feet stable while squeezing your calves. Avoid lifting the knees.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "BB Seated Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "standing-calf-raise-machine",
+    "name": "Standing Calf Raise Machine",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive through your toes against the machine pads.",
+    "description": "Use a full controlled range of motion. Avoid bouncing at the bottom.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Machine Standing Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "seated-calf-raise-machine",
+    "name": "Seated Calf Raise Machine",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Place your knees under the pad and raise your heels.",
+    "description": "Pause at peak contraction and control the stretch. Avoid moving too quickly.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Machine Seated Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "leg-press-calf-raise",
+    "name": "Leg Press Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [
+      "Quads"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Press through the balls of your feet on the leg press platform.",
+    "description": "Keep your knees mostly fixed while moving through the ankles. Avoid locking out aggressively.",
+    "avoidIf": [],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Leg Press Machine Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "smith-machine-calf-raise",
+    "name": "Smith Machine Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Place the bar across your shoulders and raise your heels.",
+    "description": "Stay balanced and controlled throughout the movement. Avoid relying on momentum.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Smith Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "hack-squat-machine-calf-raise",
+    "name": "Hack Squat Machine Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [
+      "Quads"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Use the hack squat platform to perform controlled calf raises.",
+    "description": "Focus on ankle movement rather than pushing with your legs. Avoid knee extension.",
+    "avoidIf": [],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Hack Machine Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-calf-raise",
+    "name": "Kettlebell Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hold a kettlebell and rise onto your toes.",
+    "description": "Maintain steady balance and control. Avoid bouncing at the top.",
+    "avoidIf": [],
+    "icon": "🔔",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-seated-calf-raise",
+    "name": "Kettlebell Seated Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Rest a kettlebell on your knee and raise your heel.",
+    "description": "Keep the ankle movement isolated. Avoid lifting the entire leg.",
+    "avoidIf": [],
+    "icon": "🔔",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Seated Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-calf-raise",
+    "name": "Band Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press through your toes while resisting the band tension.",
+    "description": "Maintain a smooth tempo and strong contraction. Avoid snapping through the band.",
+    "avoidIf": [],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Resistance Band Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-seated-calf-raise",
+    "name": "Band Seated Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Anchor the band and press your toes forward while seated.",
+    "description": "Keep tension consistent throughout each repetition. Avoid jerking the band.",
+    "avoidIf": [],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Seated Band Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "banded-single-leg-calf-raise",
+    "name": "Banded Single-Leg Calf Raise",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Perform a single-leg calf raise while resisting a band.",
+    "description": "Keep your ankle aligned and controlled. Avoid losing balance.",
+    "avoidIf": [
+      "balance"
+    ],
+    "icon": "🟢",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Single Leg Band Calf Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "eccentric-heel-drop",
+    "name": "Eccentric Heel Drop",
+    "muscleGroup": "Calves",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Rise up and slowly lower your heels below the starting position.",
+    "description": "Emphasize the slow lowering phase. Avoid dropping quickly.",
+    "avoidIf": [],
+    "icon": "🦶",
+    "mechanic": "Isolation",
+    "pattern": "Squat",
+    "force": "Push",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Heel Drop Stretch"
+    ],
+    "category": "strength"
+  },
+  {
     "id": "plank",
     "name": "Plank",
     "muscleGroup": "Core/Abs",
@@ -11456,128 +12155,6 @@ const EXERCISES = [
       "shoulder"
     ],
     "icon": "🧘"
-  },
-  {
-    "id": "standing-calf-raise",
-    "name": "Standing Calf Raise",
-    "muscleGroup": "Calves",
-    "secondaryMuscles": [],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Rise to your tiptoes, pause at the top, lower until you feel a heel stretch.",
-    "description": "Stand tall with fingertips on a wall for balance, rise onto the balls of your feet, pause, and lower until your heels feel a gentle stretch. A step edge gives extra range — calves respond to full range and patience, not bouncing.",
-    "avoidIf": [],
-    "icon": "🦶"
-  },
-  {
-    "id": "single-leg-calf-raise",
-    "name": "Single-Leg Calf Raise",
-    "muscleGroup": "Calves",
-    "secondaryMuscles": [],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "All your weight on one foot — full rise, full stretch, no bouncing.",
-    "description": "A calf raise on one leg, doubling the load and exposing how much stronger one side is. Hold a wall with one hand; the single-leg stance is itself a small balance drill.",
-    "avoidIf": [
-      "balance"
-    ],
-    "icon": "🦶"
-  },
-  {
-    "id": "db-calf-raise",
-    "name": "Dumbbell Calf Raise",
-    "muscleGroup": "Calves",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Dumbbell in one hand, other hand on the wall — raise, pause, stretch.",
-    "description": "A standing calf raise holding a dumbbell in one hand while the other hand steadies you against a wall. The simplest way to add load to calves at home — do all reps one side, then swap the weight over.",
-    "avoidIf": [],
-    "icon": "🦶"
-  },
-  {
-    "id": "db-seated-calf-raise",
-    "name": "Seated Dumbbell Calf Raise",
-    "muscleGroup": "Calves",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Sit on the bench, dumbbells on your knees; press up through the balls of your feet.",
-    "description": "Sit on the bench with dumbbells resting on your knees and raise your heels through a full range, then lower into a stretch. The bent knee shifts the work to the soleus, the deep calf muscle a standing raise mostly misses.",
-    "avoidIf": [],
-    "icon": "🦶"
-  },
-  {
-    "id": "toe-walk",
-    "name": "Toe Walks",
-    "muscleGroup": "Calves",
-    "secondaryMuscles": [
-      "Core/Abs"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Walk on your tiptoes, tall as possible, heels never touching down.",
-    "description": "Rise onto the balls of your feet and walk, staying as tall as you can for a slow lap of the room. Ankle strength, calf endurance, and a little balance practice disguised as a silly walk.",
-    "avoidIf": [
-      "balance"
-    ],
-    "icon": "🩰"
-  },
-  {
-    "id": "step-calf-raise",
-    "name": "Deficit Calf Raise",
-    "muscleGroup": "Calves",
-    "secondaryMuscles": [],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Balls of your feet on a step edge; drop the heels low, then press high.",
-    "description": "Stand with the balls of your feet on the edge of a step and let your heels drop below the step for a deep stretch before pressing all the way up. The added range at the bottom is what makes calves grow.",
-    "avoidIf": [],
-    "icon": "🦶"
-  },
-  {
-    "id": "db-jump-rope-calf",
-    "name": "Calf Raise Pulse",
-    "muscleGroup": "Calves",
-    "secondaryMuscles": [],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Small fast pulses at the top of a calf raise, staying on your toes.",
-    "description": "Rise onto your toes and perform small, fast pulses near the top of the range without dropping your heels all the way down, keeping constant tension on the calves. A burnout finisher — no jumping, just quick controlled pulses.",
-    "avoidIf": [],
-    "icon": "🦶"
-  },
-  {
-    "id": "db-farmer-calf",
-    "name": "Loaded Calf Raise Hold",
-    "muscleGroup": "Calves",
-    "secondaryMuscles": [
-      "Core/Abs"
-    ],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Heavy dumbbells at your sides; rise onto your toes and hold at the top.",
-    "description": "Hold a heavy dumbbell in each hand, rise onto your toes, and hold the top position for time, which trains the calves isometrically along with your grip and posture. Stay tall and controlled; use a wall if balance wavers.",
-    "avoidIf": [
-      "balance"
-    ],
-    "icon": "🦶"
   },
   {
     "id": "burpee",
