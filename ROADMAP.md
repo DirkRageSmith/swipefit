@@ -320,12 +320,13 @@ Progress (2026-07-17):
 - ✅ **Triceps done** — 33 exercises (2 sub-batches). All 5 upper-body groups complete.
 - ✅ **Quads done** — 52 exercises (3 sub-batches). All-equipment; box now populated.
 - ✅ **Hamstrings done** — 36 exercises (2 sub-batches).
-- ✅ **Glutes done** — 49 exercises (3 sub-batches). Bodyweight 13 / Home 23 / Full gym 49.
-  Library now **404 total**, 89% metadata. Added `Hip Abduction` to the pattern enum.
-- ⏳ **Remaining 3 groups are placeholders** — carried over from the old 170, equipment
+- ✅ **Glutes done** — 49 exercises (3 sub-batches). Added `Hip Abduction` to the pattern enum.
+- ✅ **Calves done** — 26 exercises (2 sub-batches). Bodyweight 9 / Home 12 / Full gym 26.
+  Library now **422 total**, 91% metadata.
+- ⏳ **Remaining 2 groups are placeholders** — carried over from the old 170, equipment
   normalized to arrays, but still dumbbell/bodyweight-only and without the new metadata.
-  Each gets **replaced** as ChatGPT produces its batch. Order (per GPT): **Calves next**,
-  then Core/Abs, Full Body/Cardio.
+  Each gets **replaced** as ChatGPT produces its batch. Order (per GPT): **Core/Abs next**,
+  then Full Body/Cardio (the last group).
 - Still-empty equipment (fill via upcoming groups): ab-wheel (Core), jump-rope (Cardio).
 - Note: a few carried-over pull/hang moves are tagged `pull-up-bar`; the rest of the
   placeholder groups' equipment is coarse and gets fixed on regeneration.
