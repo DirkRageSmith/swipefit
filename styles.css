@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────
-   SwipeFit — ink, white & electric
+   FitFlexr — ink, white & electric
    Dark (near-black) is the default look: white type, blue = save,
    red = skip. Theme is driven by html[data-theme="light|dark"],
    set by an inline script before paint and by app.js afterwards.
@@ -286,12 +286,12 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 9px 14px;
+  gap: 6px;
+  padding: 6px 12px;
   border: 1.5px solid var(--border);
   border-radius: 999px;
   background: var(--surface);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--muted);
   transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
@@ -300,13 +300,16 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
 .chip:active { transform: scale(0.95); }
 
 .chip-dot {
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--chip, var(--muted));
-  opacity: 0.45;
+  opacity: 0;
   transition: opacity 0.15s ease;
 }
+
+/* The colored dot stays hidden until the chip is hovered or selected. */
+.chip-group:hover .chip-dot { opacity: 0.55; }
 
 .chip-group[aria-pressed="true"] {
   background: color-mix(in srgb, var(--chip) 16%, var(--surface));

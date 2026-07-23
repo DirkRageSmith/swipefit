@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * SwipeFit dataset validator — the scripted gate (smoke-test item 4).
+ * FitFlexr dataset validator — the scripted gate (smoke-test item 4).
  * Run: node validate.js   (exits 1 on any hard contract violation)
  *
  * HARD (fail): the 10 core fields, unique kebab ids, valid muscle groups,
@@ -87,7 +87,7 @@ for (const [e, n] of Object.entries(perEquip)) if (n === 0) warnings.push(`no ex
 
 // Report.
 const N = EXERCISES.length;
-console.log(`SwipeFit dataset: ${N} exercises · ${MUSCLE_GROUPS.length} groups · ${EQUIPMENT.length} equipment · ${CONDITIONS.length} conditions`);
+console.log(`FitFlexr dataset: ${N} exercises · ${MUSCLE_GROUPS.length} groups · ${EQUIPMENT.length} equipment · ${CONDITIONS.length} conditions`);
 console.log("Per group:   " + Object.entries(perGroup).map(([g, n]) => `${g} ${n}`).join(" · "));
 console.log("Per equip:   " + Object.entries(perEquip).map(([e, n]) => `${e} ${n}`).join(" · "));
 console.log("Metadata coverage: " + Object.entries(metaCoverage).map(([k, n]) => `${k} ${Math.round(n / N * 100)}%`).join(" · "));

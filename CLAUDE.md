@@ -1,8 +1,9 @@
-# SwipeFit
+# FitFlexr
 
-A personal, offline-first PWA for swiping through exercises (right = save to My Routine,
-left = skip). The core safety feature: "conditions to avoid" filters remove risky
-exercises from the deck before the user ever sees them.
+A personal, offline-first PWA for swiping through exercises (right = save to your
+FitFlex Stack, left = skip). The core safety feature: "conditions to avoid" filters remove
+risky exercises from the Flexr Deck before the user ever sees them. (Formerly "SwipeFit";
+renamed 2026-07-23 — the localStorage key is now `fitflexr`.)
 
 ## Ground rules (don't relitigate these in any session)
 
@@ -36,8 +37,8 @@ exercises from the deck before the user ever sees them.
 
 - Validate dataset: `node validate.js`
 - Serve locally (service worker needs HTTP): `python -m http.server 8642` from this folder
-- Deploy: live at <https://dirkragesmith.github.io/swipefit/>, served from the `gh-pages`
-  branch of <https://github.com/DirkRageSmith/swipefit>. To ship: `git push origin main main:gh-pages`
+- Deploy: live at <https://dirkragesmith.github.io/fitflexr/>, served from the `gh-pages`
+  branch of <https://github.com/DirkRageSmith/fitflexr>. To ship: `git push origin main main:gh-pages`
   (push BOTH branches or the site goes stale). All paths are relative, so subpath hosting works.
 - Commits use the GitHub no-reply author email (repo-local git config) — keep it that way; the repo is public.
 

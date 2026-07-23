@@ -1,7 +1,7 @@
 {
-  "name": "SwipeFit",
-  "short_name": "SwipeFit",
-  "description": "Swipe through exercises: right to save to your routine, left to skip. Conditions you toggle filter risky movements out of the deck.",
+  "name": "FitFlexr",
+  "short_name": "FitFlexr",
+  "description": "Swipe through exercises: right to save to your FitFlex Stack, left to skip. Conditions you toggle filter risky movements out of the deck.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

@@ -1,5 +1,5 @@
 /*
- * SwipeFit app logic. Data (MUSCLE_GROUPS, CONDITIONS, EXERCISES) comes from
+ * FitFlexr app logic. Data (MUSCLE_GROUPS, CONDITIONS, EXERCISES) comes from
  * exercises.js, loaded before this file. No frameworks, no network calls.
  */
 "use strict";
@@ -40,7 +40,7 @@
   ];
 
   // ── Persistent state (localStorage, schema-versioned) ────
-  const STORAGE_KEY = "swipefit";
+  const STORAGE_KEY = "fitflexr";
   const SCHEMA_VERSION = 3;
   const EQUIPMENT_SET = new Set(ALL_EQUIP_IDS);
   // Sensible starting gear (Matt's home setup); also the fallback when none is stored.
@@ -105,7 +105,7 @@
       }
       return migrated;
     } catch (err) {
-      console.warn("SwipeFit: couldn't read saved data, starting fresh.", err);
+      console.warn("FitFlexr: couldn't read saved data, starting fresh.", err);
       return defaultState();
     }
   }
@@ -114,7 +114,7 @@
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (err) {
-      console.warn("SwipeFit: couldn't save data.", err);
+      console.warn("FitFlexr: couldn't save data.", err);
     }
   }
 
@@ -149,7 +149,7 @@
       });
     });
     if (problems.length) {
-      console.warn("SwipeFit dataset problems:\n" + problems.join("\n"));
+      console.warn("FitFlexr dataset problems:\n" + problems.join("\n"));
     }
     return problems;
   }
@@ -693,7 +693,7 @@
   // ── Export ───────────────────────────────────────────────
   function exportString() {
     const payload = Object.assign(
-      { app: "SwipeFit", exportedAt: new Date().toISOString() },
+      { app: "FitFlexr", exportedAt: new Date().toISOString() },
       state
     );
     return JSON.stringify(payload, null, 2);
@@ -704,7 +704,7 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "swipefit-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+    a.download = "fitflexr-backup-" + new Date().toISOString().slice(0, 10) + ".json";
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -739,7 +739,7 @@
 
     $("#btn-clear-routine").addEventListener("click", () =>
       showModal({
-        title: "Clear My Routine?",
+        title: "Clear your FitFlex Stack?",
         text: "This removes every saved exercise plus their sets and notes. There's no undo — export from Settings first if you want a backup.",
         confirmLabel: "Clear everything",
         onConfirm: () => {
@@ -815,9 +815,9 @@
       if (location.protocol !== "http:" && location.protocol !== "https:") return;
       navigator.serviceWorker
         .register("./sw.js")
-        .catch((err) => console.warn("SwipeFit: service worker registration failed.", err));
+        .catch((err) => console.warn("FitFlexr: service worker registration failed.", err));
     } catch (err) {
-      console.warn("SwipeFit: service worker registration skipped.", err);
+      console.warn("FitFlexr: service worker registration skipped.", err);
     }
   }
 
@@ -838,7 +838,7 @@
   registerServiceWorker();
 
   // Read-only handle for scripted smoke tests (see CLAUDE.md checklist).
-  window.SwipeFitDebug = {
+  window.FitFlexrDebug = {
     get deckRemaining() { return deck.slice(deckIndex); },
     get sessionSkipped() { return Array.from(sessionSkipped); },
     get state() { return JSON.parse(JSON.stringify(state)); },

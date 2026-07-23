@@ -1,4 +1,7 @@
-# SwipeFit — Product Roadmap & Shared Spec
+# FitFlexr — Product Roadmap & Shared Spec
+
+> **Note:** the app was renamed **SwipeFit → FitFlexr** on 2026-07-23. Older references to
+> "SwipeFit" in the prose below refer to this same app; the schema and rules are unchanged.
 
 **Purpose:** one document that keeps two collaborators in sync — the *Claude Code*
 sessions that build against the real repo, and the *ChatGPT* sessions Matt uses for
@@ -6,7 +9,7 @@ product brainstorming and bulk content. If you are an AI reading this: this file
 contract. Follow the schema in §5 exactly; don't invent fields or relax the safety
 rules in §9.
 
-**Status as of 2026-07-17:** live PWA at <https://dirkragesmith.github.io/swipefit/>,
+**Status as of 2026-07-17:** live PWA at <https://dirkragesmith.github.io/fitflexr/>,
 170 exercises (Bodyweight + Dumbbell), muscle/gear/condition filters, My Routine, dark
 theme, offline service worker. Vanilla HTML/CSS/JS, no build step, no backend,
 `localStorage` only. See `CLAUDE.md` for ground rules and the smoke-test checklist.
@@ -369,9 +372,9 @@ Only after real usage proves demand:
   not a chat box. Needs server-side inference or a paid API → Tier 2 cost.
 - **Publishing path:** modest Google Play registration; keep hosting cheap (static)
   until accounts/sync/AI actually require a backend.
-- **Naming/branding note:** the obvious name/domain is taken — `swipefit.app` is an
-  existing (Brazilian) fitness swipe app. If this ever goes public, pick a distinct
-  name + domain. No action needed while it's personal.
+- **Naming/branding note:** RESOLVED 2026-07-23 — renamed to **FitFlexr** (the original
+  `swipefit.app` is an existing Brazilian fitness swipe app). A distinct public domain is
+  still TBD if this ever goes public; the in-app name and GitHub repo are now `fitflexr`.
 
 ---
 

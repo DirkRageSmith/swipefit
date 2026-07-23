@@ -1,5 +1,5 @@
 /*
- * SwipeFit dataset — ALL 11 muscle groups fully produced (ChatGPT-generated, all equipment
+ * FitFlexr dataset — ALL 11 muscle groups fully produced (ChatGPT-generated, all equipment
  * types). equipment = array of EQUIPMENT ids; see ROADMAP.md for the schema. Per-group edits
  * should preserve permanent ids (user data references them). Run `node validate.js`.
  */

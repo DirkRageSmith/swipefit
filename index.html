@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>SwipeFit</title>
+  <title>FitFlexr</title>
   <meta name="description" content="Swipe through exercises: right to save, left to skip. Your conditions filter risky movements out before you see them.">
   <meta name="theme-color" content="#0a0b0d">
   <link rel="manifest" href="./manifest.json">
@@ -11,11 +11,11 @@
   <link rel="apple-touch-icon" href="./icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="SwipeFit">
+  <meta name="apple-mobile-web-app-title" content="FitFlexr">
   <script>
     // Resolve the theme before styles paint to avoid a light/dark flash.
     try {
-      var saved = JSON.parse(localStorage.getItem("swipefit") || "{}");
+      var saved = JSON.parse(localStorage.getItem("fitflexr") || "{}");
       var mode = saved.theme === "light" || saved.theme === "dark" ? saved.theme : "dark";
       document.documentElement.dataset.theme = mode;
     } catch (e) { document.documentElement.dataset.theme = "dark"; }
@@ -25,7 +25,7 @@
 <body>
   <div id="app">
     <header class="app-header">
-      <span class="wordmark">Swipe<span class="wordmark-volt">Fit</span></span>
+      <span class="wordmark">Fit<span class="wordmark-volt">Flexr</span></span>
     </header>
 
     <main id="main">
@@ -67,7 +67,7 @@
       <!-- ───────────── Swipe deck ───────────── -->
       <section id="screen-deck" class="screen screen-deck" hidden>
         <div class="deck-top">
-          <span class="eyebrow">The deck</span>
+          <span class="eyebrow">Flexr Deck</span>
           <span id="deck-counter" class="deck-counter" aria-live="polite"></span>
         </div>
 
@@ -82,7 +82,7 @@
             <span class="deck-message-emoji">🏁</span>
             <h2>You've been through them all!</h2>
             <p>Every card in this deck has been swiped. Nice work.</p>
-            <button id="btn-empty-routine" class="cta" type="button">See My Routine</button>
+            <button id="btn-empty-routine" class="cta" type="button">See my Stack</button>
             <button id="btn-empty-filters" class="secondary-btn" type="button">Change filters</button>
           </div>
         </div>
@@ -98,7 +98,7 @@
       <!-- ───────────── My Routine ───────────── -->
       <section id="screen-routine" class="screen" hidden>
         <div class="screen-head-row">
-          <h1 class="screen-title">My Routine</h1>
+          <h1 class="screen-title">FitFlex Stack</h1>
           <span id="routine-count" class="count-pill"></span>
         </div>
         <div id="routine-empty" class="deck-message routine-empty">
@@ -138,7 +138,7 @@
         <div class="setting-block">
           <span class="eyebrow">About</span>
           <p id="about-stats" class="hint"></p>
-          <p class="hint">SwipeFit is a personal filtering tool, not medical advice. The condition tags are conservative defaults, not a professional assessment — listen to your own body and your doctor.</p>
+          <p class="hint">FitFlexr is a personal filtering tool, not medical advice. The condition tags are conservative defaults, not a professional assessment — listen to your own body and your doctor.</p>
         </div>
       </section>
     </main>
@@ -146,7 +146,7 @@
     <nav class="tabbar" aria-label="Screens">
       <button class="tab-btn" data-screen="filters" type="button"><span class="tab-ico" aria-hidden="true">🎛️</span><span>Setup</span></button>
       <button class="tab-btn" data-screen="deck" type="button"><span class="tab-ico" aria-hidden="true">🔥</span><span>Swipe</span></button>
-      <button class="tab-btn" data-screen="routine" type="button"><span class="tab-ico" aria-hidden="true">📋</span><span>Routine</span></button>
+      <button class="tab-btn" data-screen="routine" type="button"><span class="tab-ico" aria-hidden="true">📋</span><span>Stack</span></button>
       <button class="tab-btn" data-screen="settings" type="button"><span class="tab-ico" aria-hidden="true">⚙️</span><span>Settings</span></button>
     </nav>
   </div>
@@ -162,7 +162,7 @@
     </div>
   </div>
 
-  <noscript><p style="padding:2rem;text-align:center">SwipeFit needs JavaScript — everything runs on your device, nothing is sent anywhere.</p></noscript>
+  <noscript><p style="padding:2rem;text-align:center">FitFlexr needs JavaScript — everything runs on your device, nothing is sent anywhere.</p></noscript>
 
   <script src="./exercises.js"></script>
   <script src="./app.js"></script>

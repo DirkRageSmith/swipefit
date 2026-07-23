@@ -1,11 +1,11 @@
 /*
- * SwipeFit service worker — precaches the whole app for offline use.
+ * FitFlexr service worker — precaches the whole app for offline use.
  *
  * IMPORTANT: CACHE_VERSION must be bumped whenever ANY app file changes
  * (index.html, styles.css, app.js, exercises.js, manifest.json, icons, or
  * this file). Installed users only receive updates when the version changes.
  */
-const CACHE_VERSION = "swipefit-v13";
+const CACHE_VERSION = "fitflexr-v14";
 
 const ASSETS = [
   "./",
