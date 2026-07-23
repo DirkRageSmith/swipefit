@@ -23,7 +23,7 @@ const MECHANIC = ["Compound", "Isolation"];
 const PATTERNS = ["Horizontal Push", "Vertical Push", "Horizontal Pull", "Vertical Pull", "Squat", "Hinge", "Lunge", "Carry", "Rotation", "Core", "Conditioning", "Hip Abduction"];
 const FORCES = ["Push", "Pull", "Static", "Explosive"];
 const FOCUS = ["strength", "hypertrophy", "endurance", "power", "mobility"];
-const CATEGORY = ["strength", "conditioning", "stretch", "mobility", "warmup", "cooldown", "rehab", "carry"];
+const CATEGORY = ["strength", "conditioning", "stretch", "mobility", "warmup", "cooldown", "rehab", "carry", "power"];
 
 const groupNames = new Set(MUSCLE_GROUPS.map((g) => g.name));
 const equipIds = new Set(EQUIPMENT.map((e) => e.id));

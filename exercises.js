@@ -1,8 +1,7 @@
 /*
- * SwipeFit dataset. Chest, Back, Shoulders, Biceps, Triceps, Quads, Hamstrings, Glutes,
- * Calves fully produced (all equipment types). Remaining groups are placeholders carried
- * from the original 170 (equipment normalized to arrays), replaced batch by batch.
- * equipment = array of EQUIPMENT ids. Run `node validate.js`.
+ * SwipeFit dataset. All muscle groups except Full Body/Cardio fully produced (all equipment
+ * types). Full Body/Cardio remains a placeholder from the original 170 (equipment normalized
+ * to arrays) until its batch lands. equipment = array of EQUIPMENT ids. Run `node validate.js`.
  */
 
 const MUSCLE_GROUPS = [
@@ -11797,271 +11796,126 @@ const EXERCISES = [
     "category": "strength"
   },
   {
-    "id": "plank",
-    "name": "Plank",
+    "id": "forearm-plank",
+    "name": "Forearm Plank",
     "muscleGroup": "Core/Abs",
     "secondaryMuscles": [
-      "Shoulders",
-      "Glutes"
+      "Shoulders"
     ],
     "equipment": [
       "bodyweight"
     ],
     "difficulty": "Beginner",
-    "cue": "Forearms down, glutes squeezed, one straight line from head to heels.",
-    "description": "Hold a straight-body position on your forearms and toes, squeezing your glutes and bracing your abs like you're about to take a light punch. When the line breaks and your hips sag, the set is over.",
+    "cue": "Brace your core and hold a straight line from head to heels.",
+    "description": "Maintain tension throughout your trunk while breathing steadily. Avoid letting your hips sag or rise.",
     "avoidIf": [],
-    "icon": "🧘"
+    "icon": "🧘",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Plank",
+      "Elbow Plank"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "high-plank",
+    "name": "High Plank",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press into the floor and hold a rigid straight-arm plank.",
+    "description": "Keep your core engaged and body straight. Avoid dumping weight into your shoulders.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "🧘",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Straight-Arm Plank"
+    ],
+    "category": "strength"
   },
   {
     "id": "side-plank",
     "name": "Side Plank",
     "muscleGroup": "Core/Abs",
     "secondaryMuscles": [
-      "Shoulders",
-      "Glutes"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Stacked feet, hips lifted high — don't let them sag toward the floor.",
-    "description": "Prop up on one forearm with your elbow under your shoulder and lift your hips into a straight line, targeting the obliques and deep side stabilizers. Drop the bottom knee to the floor for an easier version.",
-    "avoidIf": [
-      "shoulder"
-    ],
-    "icon": "🧘"
-  },
-  {
-    "id": "dead-bug",
-    "name": "Dead Bug",
-    "muscleGroup": "Core/Abs",
-    "secondaryMuscles": [],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Lower back pressed flat while opposite arm and leg reach away.",
-    "description": "On your back with arms up and knees bent to 90°, slowly extend one arm overhead and the opposite leg long, keeping your lower back glued to the floor, then switch. Quietly one of the best back-friendly core drills there is.",
-    "avoidIf": [
-      "pregnancy"
-    ],
-    "icon": "🪲"
-  },
-  {
-    "id": "bird-dog",
-    "name": "Bird Dog",
-    "muscleGroup": "Core/Abs",
-    "secondaryMuscles": [
-      "Glutes",
-      "Back"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "From all fours, reach opposite arm and leg long without tipping your hips.",
-    "description": "On hands and knees, extend one arm and the opposite leg until both are level with your torso, pause, and return without letting your hips tip. A rehab-world classic for keeping the spine still while the limbs move.",
-    "avoidIf": [
-      "wrist",
-      "knee"
-    ],
-    "icon": "🐕"
-  },
-  {
-    "id": "crunch",
-    "name": "Crunch",
-    "muscleGroup": "Core/Abs",
-    "secondaryMuscles": [],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Curl your ribs toward your hips — shoulder blades off the floor is far enough.",
-    "description": "Lying with knees bent, curl your upper spine forward until your shoulder blades leave the floor, then lower. It's a short movement, not a sit-up — don't yank your head; fingertips behind the ears, elbows wide.",
-    "avoidIf": [
-      "lower-back",
-      "neck",
-      "pregnancy"
-    ],
-    "icon": "🤸"
-  },
-  {
-    "id": "situp",
-    "name": "Sit-Up",
-    "muscleGroup": "Core/Abs",
-    "secondaryMuscles": [],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Roll up one vertebra at a time; exhale on the way up.",
-    "description": "From lying with knees bent, curl all the way up to sitting, then roll back down with control. The full range works the abs and hip flexors, but repeated full spinal flexion is what cranky lower backs dislike.",
-    "avoidIf": [
-      "lower-back",
-      "neck",
-      "pregnancy"
-    ],
-    "icon": "🤸"
-  },
-  {
-    "id": "russian-twist",
-    "name": "Russian Twist",
-    "muscleGroup": "Core/Abs",
-    "secondaryMuscles": [],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Lean back to 45°, rotate your chest side to side from the ribs.",
-    "description": "Seated, lean back until your abs switch on, then rotate side to side, touching the floor beside each hip. Rotate through the mid-back rather than whipping the arms — skip it if twisting under load bothers your spine.",
-    "avoidIf": [
-      "lower-back",
-      "pregnancy"
-    ],
-    "icon": "🌀"
-  },
-  {
-    "id": "lying-leg-raise",
-    "name": "Lying Leg Raise",
-    "muscleGroup": "Core/Abs",
-    "secondaryMuscles": [
-      "Quads"
-    ],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Legs up to vertical, then lower only as far as your lower back stays down.",
-    "description": "Lying flat, raise your legs to vertical and lower them toward the floor without letting your lower back peel up — the lowering is the exercise. Bend the knees to make it easier; stop higher the moment your back arches.",
-    "avoidIf": [
-      "lower-back",
-      "pregnancy"
-    ],
-    "icon": "🦵"
-  },
-  {
-    "id": "hollow-hold",
-    "name": "Hollow Body Hold",
-    "muscleGroup": "Core/Abs",
-    "secondaryMuscles": [],
-    "equipment": [
-      "bodyweight"
-    ],
-    "difficulty": "Advanced",
-    "cue": "Press your lower back into the floor and hover shoulders and legs — banana shape.",
-    "description": "Press your lower back into the floor and lift your shoulders and straight legs a few inches, arms overhead, into a shallow banana shape. Tuck the knees or raise the legs higher to scale it down.",
-    "avoidIf": [
-      "lower-back",
-      "neck",
-      "pregnancy"
-    ],
-    "icon": "🍌"
-  },
-  {
-    "id": "hanging-knee-raise",
-    "name": "Hanging Knee Raise",
-    "muscleGroup": "Core/Abs",
-    "secondaryMuscles": [
-      "Quads"
-    ],
-    "equipment": [
-      "pull-up-bar"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Hang from a bar; curl your knees up toward your chest, no swinging.",
-    "description": "Hang from a pull-up bar and curl your knees up toward your chest by rolling your pelvis, then lower without swinging. Controlling the swing is the whole skill — a slight backward tuck of the pelvis is what works the abs.",
-    "avoidIf": [
-      "shoulder"
-    ],
-    "icon": "🦵"
-  },
-  {
-    "id": "db-weighted-crunch",
-    "name": "Weighted Crunch",
-    "muscleGroup": "Core/Abs",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Intermediate",
-    "cue": "Hold a dumbbell on your chest; curl your ribs toward your hips.",
-    "description": "A crunch with a light dumbbell held against your chest to add resistance to the abs. Keep it a short curl rather than a full sit-up, and don't let the added weight pull your head forward.",
-    "avoidIf": [
-      "lower-back",
-      "neck",
-      "pregnancy"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "db-side-bend",
-    "name": "Dumbbell Side Bend",
-    "muscleGroup": "Core/Abs",
-    "secondaryMuscles": [],
-    "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Dumbbell in one hand; bend sideways toward it, then pull straight up.",
-    "description": "Hold a dumbbell in one hand and bend sideways toward it, then contract the opposite oblique to pull straight back up. Only load one side at a time and keep the motion strictly side-to-side, not twisting.",
-    "avoidIf": [
-      "lower-back",
-      "pregnancy"
-    ],
-    "icon": "🏋️"
-  },
-  {
-    "id": "db-suitcase-hold",
-    "name": "Suitcase Carry Hold",
-    "muscleGroup": "Core/Abs",
-    "secondaryMuscles": [
-      "Back",
       "Shoulders"
     ],
     "equipment": [
-      "dumbbell"
-    ],
-    "difficulty": "Beginner",
-    "cue": "Hold one dumbbell at your side and stand tall — don't let it tip you.",
-    "description": "Hold a single heavy dumbbell at one side and either stand tall or walk, resisting the pull that wants to bend you sideways. An anti-lateral-flexion drill that quietly builds a strong, stable core and grip.",
-    "avoidIf": [],
-    "icon": "🧳"
-  },
-  {
-    "id": "reverse-crunch",
-    "name": "Reverse Crunch",
-    "muscleGroup": "Core/Abs",
-    "secondaryMuscles": [],
-    "equipment": [
       "bodyweight"
     ],
-    "difficulty": "Beginner",
-    "cue": "Knees bent, curl your hips off the floor toward your ribs.",
-    "description": "Lying on your back with knees bent, curl your hips up off the floor toward your ribcage using your lower abs, then lower slowly. It's a small, controlled roll of the pelvis — no throwing the legs for momentum.",
+    "difficulty": "Intermediate",
+    "cue": "Support on one forearm and stack your body in a straight line.",
+    "description": "Engage your obliques to hold a stable position. Avoid rotating your hips forward or back.",
     "avoidIf": [
-      "lower-back",
-      "pregnancy"
+      "shoulder"
     ],
-    "icon": "🤸"
+    "icon": "🧘",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Lateral Plank"
+    ],
+    "category": "strength"
   },
   {
-    "id": "bicycle-crunch",
-    "name": "Bicycle Crunch",
+    "id": "side-plank-hip-dip",
+    "name": "Side Plank Hip Dip",
     "muscleGroup": "Core/Abs",
-    "secondaryMuscles": [],
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
     "equipment": [
       "bodyweight"
     ],
     "difficulty": "Intermediate",
-    "cue": "Opposite elbow toward opposite knee, slow and deliberate.",
-    "description": "Lying down, bring one elbow toward the opposite knee while extending the other leg, then switch in a slow pedaling motion. The rotation hits the obliques — go slow rather than fast and don't tug on your neck.",
+    "cue": "Lower and raise your hips while holding a side plank.",
+    "description": "Control the movement through your obliques. Avoid collapsing your shoulder.",
     "avoidIf": [
-      "lower-back",
-      "neck",
-      "pregnancy"
+      "shoulder"
     ],
-    "icon": "🚲"
+    "icon": "🧘",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Side Plank Dips"
+    ],
+    "category": "strength"
   },
   {
     "id": "plank-shoulder-tap",
@@ -12074,87 +11928,1951 @@ const EXERCISES = [
       "bodyweight"
     ],
     "difficulty": "Intermediate",
-    "cue": "From a high plank, tap each hand to the opposite shoulder, hips still.",
-    "description": "In a high plank with feet wide, tap one hand to the opposite shoulder while keeping your hips from rocking, then alternate. The anti-rotation demand is the point — the slower and stiller your hips, the harder it works.",
+    "cue": "Tap the opposite shoulder while holding a stable high plank.",
+    "description": "Minimize hip rotation during each tap. Avoid shifting your weight excessively.",
     "avoidIf": [
-      "wrist",
-      "shoulder"
+      "wrist"
     ],
-    "icon": "🧘"
+    "icon": "🖐️",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Shoulder Tap Plank"
+    ],
+    "category": "strength"
   },
   {
-    "id": "v-up",
-    "name": "V-Up",
+    "id": "body-saw-plank",
+    "name": "Body Saw Plank",
     "muscleGroup": "Core/Abs",
     "secondaryMuscles": [
-      "Quads"
+      "Shoulders"
     ],
     "equipment": [
       "bodyweight"
     ],
     "difficulty": "Advanced",
-    "cue": "Reach hands to toes, folding into a V, then lower with control.",
-    "description": "Lying flat, simultaneously lift your straight legs and torso to reach your hands toward your toes, folding into a V, then lower. A demanding full-length ab move — bend the knees or do tuck-ups to scale it down.",
+    "cue": "Rock your body forward and back while holding a forearm plank.",
+    "description": "Maintain a rigid plank throughout. Avoid dropping your hips.",
     "avoidIf": [
-      "lower-back",
-      "neck",
-      "pregnancy"
+      "shoulder"
     ],
-    "icon": "✅"
+    "icon": "🪚",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Plank Body Saw"
+    ],
+    "category": "strength"
   },
   {
-    "id": "hollow-rock",
-    "name": "Hollow Rock",
+    "id": "bear-plank-hold",
+    "name": "Bear Plank Hold",
     "muscleGroup": "Core/Abs",
-    "secondaryMuscles": [],
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
     "equipment": [
       "bodyweight"
     ],
-    "difficulty": "Advanced",
-    "cue": "Hold the banana shape and rock gently from shoulders to hips.",
-    "description": "Get into a hollow hold, then rock your whole rigid body back and forth like a rocking chair without losing the banana shape. The rocking adds a dynamic challenge on top of the hollow hold's tension.",
+    "difficulty": "Beginner",
+    "cue": "Hover your knees an inch above the floor while bracing your core.",
+    "description": "Keep a stable spine and steady breathing. Avoid shifting your weight excessively.",
     "avoidIf": [
-      "lower-back",
-      "neck",
-      "pregnancy"
+      "wrist"
     ],
-    "icon": "🍌"
+    "icon": "🐻",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bear Hold"
+    ],
+    "category": "strength"
   },
   {
-    "id": "toe-touch-crunch",
-    "name": "Toe-Touch Crunch",
+    "id": "plank-knee-to-elbow",
+    "name": "Plank Knee to Elbow",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Drive your knee toward your same-side elbow from a plank.",
+    "description": "Maintain shoulder stability and core tension. Avoid rotating excessively.",
+    "avoidIf": [
+      "wrist"
+    ],
+    "icon": "🦵",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Spiderman Plank"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dead-bug",
+    "name": "Dead Bug",
     "muscleGroup": "Core/Abs",
     "secondaryMuscles": [],
     "equipment": [
       "bodyweight"
     ],
     "difficulty": "Beginner",
-    "cue": "Legs up to vertical; reach your hands toward your toes.",
-    "description": "Lying with your legs pointed straight up, crunch up and reach your hands toward your toes, then lower your shoulders back down. Keeping the legs vertical takes the hip flexors out and puts the focus on the upper abs.",
-    "avoidIf": [
-      "neck",
-      "pregnancy"
+    "cue": "Lower opposite arm and leg while keeping your lower back flat.",
+    "description": "Move slowly while maintaining core tension. Avoid arching your lower back.",
+    "avoidIf": [],
+    "icon": "🪲",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "mobility"
     ],
-    "icon": "🦶"
+    "homeFriendly": true,
+    "aliases": [
+      "Deadbug"
+    ],
+    "category": "strength"
   },
   {
-    "id": "plank-reach",
-    "name": "Plank Reach-Out",
+    "id": "bird-dog",
+    "name": "Bird Dog",
     "muscleGroup": "Core/Abs",
     "secondaryMuscles": [
-      "Shoulders",
+      "Back",
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Extend opposite arm and leg while keeping your spine neutral.",
+    "description": "Focus on stability through your trunk. Avoid rotating your hips.",
+    "avoidIf": [],
+    "icon": "🐕",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Quadruped Reach"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "bird-dog-hold",
+    "name": "Bird Dog Hold",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
       "Back"
     ],
     "equipment": [
       "bodyweight"
     ],
-    "difficulty": "Intermediate",
-    "cue": "From a forearm plank, reach one arm forward without shifting your hips.",
-    "description": "In a forearm plank, extend one arm straight out in front of you and hold briefly before switching, keeping your hips square and level. Removing a support point makes the core fight hard to stop any rotation.",
+    "difficulty": "Beginner",
+    "cue": "Extend opposite arm and leg and pause while staying balanced.",
+    "description": "Keep your hips square and spine neutral. Avoid rotating toward the lifted side.",
+    "avoidIf": [],
+    "icon": "🐕",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Quadruped Hold"
+    ],
+    "category": "mobility"
+  },
+  {
+    "id": "side-plank-knee-drive",
+    "name": "Side Plank Knee Drive",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Drive your top knee toward your chest from a side plank.",
+    "description": "Maintain side-plank alignment while moving. Avoid collapsing your shoulder.",
     "avoidIf": [
       "shoulder"
     ],
-    "icon": "🧘"
+    "icon": "↔️",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Side Plank Crunch"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "crunch",
+    "name": "Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl your shoulders toward your hips using your abs.",
+    "description": "Move with control and avoid pulling on your neck. Avoid excessive speed.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Ab Crunch"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "reverse-crunch",
+    "name": "Reverse Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Curl your hips upward while keeping your lower back controlled.",
+    "description": "Use your abs to lift your pelvis rather than swinging your legs. Avoid momentum.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🔄",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Pelvic Curl"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "bicycle-crunch",
+    "name": "Bicycle Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rotate your torso, bringing opposite elbow toward opposite knee.",
+    "description": "Control each rotation through your core. Avoid pulling your neck forward.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🚲",
+    "mechanic": "Isolation",
+    "pattern": "Rotation",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bicycle Twist"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "sit-up",
+    "name": "Sit-Up",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Roll your torso up until your chest moves toward your knees.",
+    "description": "Use your core instead of momentum. Avoid straining your neck.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "💪",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Full Sit-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "v-up",
+    "name": "V-Up",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Lift your torso and legs together to form a V shape.",
+    "description": "Move with control and keep your core engaged. Avoid using momentum.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🔺",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Jackknife Sit-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "tuck-up",
+    "name": "Tuck-Up",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Bring your knees and torso together, balancing on your hips.",
+    "description": "Control the extension and contraction phases. Avoid rounding excessively.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🔺",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Tuck Crunch"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "toe-touch-crunch",
+    "name": "Toe Touch Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Reach toward your toes while contracting your abs.",
+    "description": "Lift with your core instead of your neck. Avoid using momentum.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "👣",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Toe Touch"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "side-crunch",
+    "name": "Side Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Lift your shoulder toward your hip using your obliques.",
+    "description": "Focus on shortening the side of your torso. Avoid pulling your neck.",
+    "avoidIf": [
+      "lower-back",
+      "neck"
+    ],
+    "icon": "↔️",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Oblique Crunch"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "standing-oblique-crunch",
+    "name": "Standing Oblique Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Bring your elbow toward your raised knee using your side abs.",
+    "description": "Contract your obliques through controlled side bending. Avoid twisting excessively.",
+    "avoidIf": [
+      "lower-back",
+      "neck"
+    ],
+    "icon": "↔️",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Standing Side Crunch"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "lying-leg-raise",
+    "name": "Lying Leg Raise",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Raise straight legs upward while keeping your lower back controlled.",
+    "description": "Control the lowering phase and avoid swinging. Avoid arching your lower back.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🦵",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Straight Leg Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "flutter-kick",
+    "name": "Flutter Kicks",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Alternate small controlled leg lifts while bracing your core.",
+    "description": "Keep movements low and controlled. Avoid arching your back.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🌊",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Flutter Kick"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "scissor-kick",
+    "name": "Scissor Kicks",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Cross your legs in alternating scissor motions while bracing.",
+    "description": "Maintain a stable torso throughout. Avoid lifting your lower back.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "✂️",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Scissor Abs"
+    ],
+    "category": "conditioning"
+  },
+  {
+    "id": "lying-knee-tuck",
+    "name": "Lying Knee Tuck",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Pull your knees toward your chest while curling your hips upward.",
+    "description": "Use controlled abdominal contraction. Avoid swinging your legs.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🔄",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Knee Tuck"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "hollow-body-hold",
+    "name": "Hollow Body Hold",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Press your lower back into the floor while holding a hollow position.",
+    "description": "Maintain full-body tension throughout the hold. Avoid letting your back arch.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "⭕",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Hollow Hold"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "hollow-body-rock",
+    "name": "Hollow Body Rock",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Hold a hollow position and rock gently without losing tension.",
+    "description": "Keep your ribs down and body rigid. Avoid relaxing between rocks.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🌙",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Hollow Rock"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "boat-hold",
+    "name": "Boat Hold",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Balance on your sit bones with torso and legs elevated.",
+    "description": "Maintain a strong core position throughout the hold. Avoid collapsing your chest.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "⛵",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Navasana",
+      "Boat Pose"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "windshield-wiper",
+    "name": "Windshield Wiper",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Rotate your legs side to side while controlling your core.",
+    "description": "Move slowly through rotation. Avoid using momentum from your hips.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🚗",
+    "mechanic": "Compound",
+    "pattern": "Rotation",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Floor Windshield Wipers"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "crab-reach",
+    "name": "Crab Reach",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders",
+      "Glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rotate from a crab position and reach one arm overhead.",
+    "description": "Move through controlled rotation and extension. Avoid collapsing into your shoulder.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "🦀",
+    "mechanic": "Compound",
+    "pattern": "Rotation",
+    "force": "Push",
+    "unilateral": true,
+    "focus": [
+      "mobility",
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Crab Rotation"
+    ],
+    "category": "mobility"
+  },
+  {
+    "id": "hanging-knee-raise",
+    "name": "Hanging Knee Raise",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hang from a bar and raise your knees toward your chest.",
+    "description": "Control the movement without swinging. Avoid using momentum.",
+    "avoidIf": [
+      "lower-back",
+      "shoulder",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🪜",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Hanging Knee Lift"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "hanging-leg-raise",
+    "name": "Hanging Leg Raise",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Raise straight legs while hanging from an overhead bar.",
+    "description": "Maintain control throughout. Avoid swinging or using momentum.",
+    "avoidIf": [
+      "lower-back",
+      "shoulder",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "⬆️",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Straight Leg Raise Hang"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "toes-to-bar",
+    "name": "Toes-to-Bar",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Bring your toes to the bar under control.",
+    "description": "Use your core to drive the movement. Avoid excessive momentum.",
+    "avoidIf": [
+      "lower-back",
+      "shoulder",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🦶",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "power"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "T2B"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "hanging-oblique-knee-raise",
+    "name": "Hanging Oblique Knee Raise",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "pull-up-bar"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Raise your knees toward one side while hanging.",
+    "description": "Rotate under control using your obliques. Avoid twisting aggressively.",
+    "avoidIf": [
+      "lower-back",
+      "shoulder",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "↔️",
+    "mechanic": "Isolation",
+    "pattern": "Rotation",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Hanging Side Knee Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "weighted-crunch-dumbbell",
+    "name": "Weighted Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold a dumbbell at your chest and curl your torso upward.",
+    "description": "Contract your abs to lift your shoulders. Avoid pulling your neck forward.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Weighted Crunch"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "weighted-sit-up-dumbbell",
+    "name": "Weighted Sit-Up",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold a dumbbell and sit up under control.",
+    "description": "Use your core to raise your torso and lower slowly. Avoid jerking or pulling your neck.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Sit-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-side-bend",
+    "name": "Dumbbell Side Bend",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hold one dumbbell and bend sideways under control.",
+    "description": "Engage the obliques to return upright. Avoid twisting instead of bending.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Side Bend"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-russian-twist",
+    "name": "Dumbbell Russian Twist",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rotate your torso side to side while holding a dumbbell.",
+    "description": "Move through controlled rotation using your core. Avoid rounding aggressively.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🔄",
+    "mechanic": "Isolation",
+    "pattern": "Rotation",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Weighted Russian Twist"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-woodchopper",
+    "name": "Dumbbell Woodchopper",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Move the dumbbell diagonally across your body with controlled rotation.",
+    "description": "Rotate through your trunk while staying controlled. Avoid using only your arms.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🪓",
+    "mechanic": "Compound",
+    "pattern": "Rotation",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "DB Wood Chop"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dumbbell-suitcase-carry",
+    "name": "Dumbbell Suitcase Carry",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Carry one dumbbell at your side while resisting lateral bending.",
+    "description": "Walk tall with a braced core. Avoid leaning toward the weight.",
+    "avoidIf": [],
+    "icon": "🧳",
+    "mechanic": "Isolation",
+    "pattern": "Carry",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Suitcase Walk"
+    ],
+    "category": "carry"
+  },
+  {
+    "id": "kettlebell-windmill",
+    "name": "Kettlebell Windmill",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Hold a kettlebell overhead and hinge sideways toward the floor.",
+    "description": "Maintain a strong overhead position and rotate through the trunk. Avoid collapsing the shoulder.",
+    "avoidIf": [
+      "shoulder",
+      "lower-back",
+      "balance"
+    ],
+    "icon": "🌬️",
+    "mechanic": "Compound",
+    "pattern": "Rotation",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "mobility"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Windmill"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-side-bend",
+    "name": "Kettlebell Side Bend",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Hold a kettlebell and bend laterally under control.",
+    "description": "Engage your obliques to return to standing. Avoid rotating the torso.",
+    "avoidIf": [
+      "lower-back"
+    ],
+    "icon": "🔔",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Side Bend"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-russian-twist",
+    "name": "Kettlebell Russian Twist",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rotate your torso while holding a kettlebell in front of you.",
+    "description": "Control each rotation using your core. Avoid excessive spinal movement.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🔔",
+    "mechanic": "Isolation",
+    "pattern": "Rotation",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Russian Twist"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kettlebell-suitcase-carry",
+    "name": "Kettlebell Suitcase Carry",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Carry one kettlebell at your side while maintaining upright posture.",
+    "description": "Resist side bending and walk with control. Avoid leaning toward the weight.",
+    "avoidIf": [],
+    "icon": "🔔",
+    "mechanic": "Isolation",
+    "pattern": "Carry",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "KB Suitcase Carry"
+    ],
+    "category": "carry"
+  },
+  {
+    "id": "medicine-ball-russian-twist",
+    "name": "Medicine Ball Russian Twist",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "medicine-ball"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rotate side to side while holding a medicine ball.",
+    "description": "Use controlled trunk rotation. Avoid forcing the range of motion.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🏐",
+    "mechanic": "Isolation",
+    "pattern": "Rotation",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Med Ball Twist"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "medicine-ball-sit-up-throw",
+    "name": "Medicine Ball Sit-Up Throw",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "medicine-ball"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Perform a sit-up and throw the medicine ball at the top.",
+    "description": "Generate power from your core and control the return. Avoid using momentum alone.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🏐",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Explosive",
+    "unilateral": false,
+    "focus": [
+      "power"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Med Ball Sit-Up Throw"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "medicine-ball-woodchopper",
+    "name": "Medicine Ball Woodchopper",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "medicine-ball"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rotate and drive the medicine ball diagonally across your body.",
+    "description": "Use your trunk to create movement. Avoid twisting only with your arms.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🪓",
+    "mechanic": "Compound",
+    "pattern": "Rotation",
+    "force": "Explosive",
+    "unilateral": true,
+    "focus": [
+      "power",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Med Ball Chop"
+    ],
+    "category": "power"
+  },
+  {
+    "id": "medicine-ball-v-up-pass",
+    "name": "Medicine Ball V-Up Pass",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "medicine-ball"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Pass a medicine ball between your hands and feet during a V-up.",
+    "description": "Keep the movement controlled through your core. Avoid straining your neck.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🏐",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Med Ball V-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "kneeling-ab-wheel-rollout",
+    "name": "Kneeling Ab-Wheel Rollout",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "ab-wheel"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Roll forward from your knees while keeping a braced core.",
+    "description": "Control the rollout and keep your spine neutral. Avoid letting your lower back sag.",
+    "avoidIf": [
+      "lower-back",
+      "shoulder"
+    ],
+    "icon": "⭕",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Ab Wheel Rollout"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "standing-ab-wheel-rollout",
+    "name": "Standing Ab-Wheel Rollout",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "ab-wheel"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Roll the wheel forward from standing while keeping full-body tension.",
+    "description": "Brace strongly and control the return. Avoid extending through the lower back.",
+    "avoidIf": [
+      "lower-back",
+      "shoulder"
+    ],
+    "icon": "⭕",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Standing Rollout"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-crunch",
+    "name": "Cable Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Kneel at a cable station and curl your ribs toward your pelvis.",
+    "description": "Contract your abs through spinal flexion while controlling the weight. Avoid pulling with your arms.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Kneeling Cable Crunch",
+      "Rope Cable Crunch"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-woodchopper",
+    "name": "Cable Woodchopper",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Pull the cable diagonally across your body using controlled rotation.",
+    "description": "Rotate through your trunk while keeping tension on the cable. Avoid twisting only with your arms.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🪓",
+    "mechanic": "Compound",
+    "pattern": "Rotation",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Chop",
+      "High-to-Low Chop"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "standing-cable-oblique-twist",
+    "name": "Standing Cable Oblique Twist",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rotate your torso against cable resistance while staying tall.",
+    "description": "Move with controlled rotation from your core. Avoid yanking the handle with your arms.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🔗",
+    "mechanic": "Isolation",
+    "pattern": "Rotation",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Cable Oblique Rotation"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "cable-pallof-press",
+    "name": "Cable Pallof Press",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Press the cable straight out while resisting rotation.",
+    "description": "Maintain a square stance and brace against the pull. Avoid rotating toward the weight.",
+    "avoidIf": [],
+    "icon": "🔒",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Pallof Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "ab-crunch-machine",
+    "name": "Ab Crunch Machine",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Sit in the machine and curl your torso forward against resistance.",
+    "description": "Focus on contracting the abs rather than moving quickly. Avoid pulling with your neck.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🏋️",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Machine Crunch"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "torso-rotation-machine",
+    "name": "Torso Rotation Machine",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rotate your torso against resistance while keeping your hips stable.",
+    "description": "Control the rotation through the obliques. Avoid forcing excessive range.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🔄",
+    "mechanic": "Isolation",
+    "pattern": "Rotation",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Rotary Torso Machine"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "captains-chair-leg-raise",
+    "name": "Captain's Chair Leg Raise",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Support yourself on the pads and raise your knees or legs.",
+    "description": "Control the movement using your core. Avoid swinging your body.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "shoulder",
+      "pregnancy"
+    ],
+    "icon": "🪜",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Vertical Knee Raise"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-pallof-press",
+    "name": "Band Pallof Press",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Beginner",
+    "cue": "Press a resistance band straight out while resisting rotation.",
+    "description": "Keep your ribs down and core engaged. Avoid turning toward the band.",
+    "avoidIf": [],
+    "icon": "🔒",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Band Anti-Rotation Press"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-woodchopper",
+    "name": "Band Woodchopper",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Rotate and pull the band diagonally across your body.",
+    "description": "Use your core to drive the movement. Avoid letting the band pull you off balance.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🪓",
+    "mechanic": "Compound",
+    "pattern": "Rotation",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Resistance Band Chop"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "band-dead-bug",
+    "name": "Band Dead Bug",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "resistance-band"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Hold band tension while extending opposite arms and legs.",
+    "description": "Maintain a stable spine and braced core. Avoid arching your lower back.",
+    "avoidIf": [],
+    "icon": "🪲",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Banded Dead Bug"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-crunch",
+    "name": "TRX Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Place your feet in the straps and draw your knees toward your chest.",
+    "description": "Brace your core while controlling the straps. Avoid swinging your hips.",
+    "avoidIf": [
+      "lower-back",
+      "shoulder",
+      "pregnancy"
+    ],
+    "icon": "🔺",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Suspension Crunch"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-knee-tuck",
+    "name": "TRX Knee Tuck",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Pull your knees toward your chest from a suspended plank.",
+    "description": "Maintain a strong plank position throughout. Avoid dropping your hips.",
+    "avoidIf": [
+      "shoulder",
+      "wrist",
+      "lower-back"
+    ],
+    "icon": "🔺",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "endurance"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "TRX Pike Tuck"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-pike",
+    "name": "TRX Pike",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Lift your hips upward into a pike from a suspended plank.",
+    "description": "Move smoothly while keeping your body controlled. Avoid collapsing through your shoulders.",
+    "avoidIf": [
+      "shoulder",
+      "wrist"
+    ],
+    "icon": "🔺",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Suspension Pike"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "trx-oblique-crunch",
+    "name": "TRX Oblique Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "trx"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Draw your knees diagonally toward one side in the straps.",
+    "description": "Control the rotation through your core. Avoid swinging the straps.",
+    "avoidIf": [
+      "shoulder",
+      "wrist",
+      "lower-back"
+    ],
+    "icon": "↔️",
+    "mechanic": "Compound",
+    "pattern": "Rotation",
+    "force": "Pull",
+    "unilateral": true,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "TRX Side Crunch"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "decline-sit-up-bench",
+    "name": "Decline Sit-Up",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Anchor your feet on a decline bench and curl your torso upward.",
+    "description": "Use your abs to control the ascent and descent. Avoid pulling with your neck.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🪑",
+    "mechanic": "Compound",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Decline Bench Sit-Up"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "decline-crunch-bench",
+    "name": "Decline Crunch",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Perform a shortened crunch on a decline bench.",
+    "description": "Focus on curling your ribs toward your pelvis. Avoid lifting with your hips.",
+    "avoidIf": [
+      "lower-back",
+      "neck",
+      "pregnancy"
+    ],
+    "icon": "🪑",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength",
+      "hypertrophy"
+    ],
+    "homeFriendly": false,
+    "aliases": [
+      "Decline Bench Crunch"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "bench-leg-raise",
+    "name": "Bench Leg Raise",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Intermediate",
+    "cue": "Lie on a bench and raise your legs using controlled core tension.",
+    "description": "Keep the movement slow and controlled. Avoid arching the lower back.",
+    "avoidIf": [
+      "lower-back",
+      "pregnancy"
+    ],
+    "icon": "🪑",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Pull",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Bench Reverse Crunch"
+    ],
+    "category": "strength"
+  },
+  {
+    "id": "dragon-flag",
+    "name": "Dragon Flag",
+    "muscleGroup": "Core/Abs",
+    "secondaryMuscles": [
+      "Shoulders"
+    ],
+    "equipment": [
+      "bench"
+    ],
+    "difficulty": "Advanced",
+    "cue": "Lower your extended body under control while anchored on a bench.",
+    "description": "Maintain a rigid body position throughout. Avoid dropping your hips.",
+    "avoidIf": [
+      "lower-back",
+      "shoulder",
+      "neck"
+    ],
+    "icon": "🐉",
+    "mechanic": "Isolation",
+    "pattern": "Core",
+    "force": "Static",
+    "unilateral": false,
+    "focus": [
+      "strength"
+    ],
+    "homeFriendly": true,
+    "aliases": [
+      "Dragon Flag Negative"
+    ],
+    "category": "strength"
   },
   {
     "id": "burpee",
