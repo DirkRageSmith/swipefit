@@ -29,10 +29,26 @@
     </header>
 
     <main id="main">
+      <!-- ───────────── Onboarding (first run) ───────────── -->
+      <section id="screen-onboarding" class="screen screen-onboarding" hidden>
+        <div class="ob-head">
+          <span class="eyebrow">Set up FitFlexr</span>
+          <button id="ob-skip" class="text-btn" type="button">Skip</button>
+        </div>
+        <div class="ob-progress" aria-hidden="true"><span id="ob-progress-bar" class="ob-progress-bar"></span></div>
+        <div id="ob-body" class="ob-body"></div>
+        <div class="ob-nav">
+          <button id="ob-back" class="secondary-btn" type="button">Back</button>
+          <button id="ob-next" class="cta ob-next" type="button"><span id="ob-next-label">Next</span></button>
+        </div>
+      </section>
+
       <!-- ───────────── Setup / Filters ───────────── -->
       <section id="screen-filters" class="screen">
         <h1 class="screen-title">Build today's deck</h1>
         <p class="screen-sub">Pick what to train and what to protect. Only exercises your body can handle make it into the deck.</p>
+
+        <button id="profile-summary" class="profile-summary" type="button" hidden></button>
 
         <div class="filter-head">
           <span class="eyebrow">Today's muscles</span>
@@ -122,6 +138,12 @@
             <button class="seg-btn" data-theme-choice="light" type="button">Light</button>
             <button class="seg-btn" data-theme-choice="dark" type="button">Dark</button>
           </div>
+        </div>
+
+        <div class="setting-block">
+          <span class="eyebrow">Your profile</span>
+          <p id="settings-profile" class="hint"></p>
+          <button id="btn-redo-onboarding" class="secondary-btn" type="button">Edit goal, time, gear &amp; injuries</button>
         </div>
 
         <div class="setting-block">

@@ -39,9 +39,25 @@
     { label: "Full gym", gear: ALL_EQUIP_IDS.slice() },
   ];
 
+  // Onboarding personalization axes (Phase B). Stored in state.onboarding; Phase C
+  // will use them to bias generation. For now they're collected, shown, and editable.
+  const GOALS = [
+    { id: "lose-fat", label: "Lose fat", icon: "🔥" },
+    { id: "build-muscle", label: "Build muscle", icon: "💪" },
+    { id: "strength", label: "Get stronger", icon: "🏋️" },
+    { id: "athletic", label: "Athletic / power", icon: "⚡" },
+    { id: "general", label: "General fitness", icon: "✨" },
+    { id: "mobility", label: "Mobility", icon: "🧘" },
+    { id: "rehab", label: "Rehab / careful", icon: "🩹" },
+    { id: "beginner", label: "Just starting", icon: "🌱" },
+  ];
+  const GOAL_BY_ID = {};
+  GOALS.forEach((g) => { GOAL_BY_ID[g.id] = g; });
+  const TIME_OPTIONS = [15, 30, 45, 60, 90]; // minutes
+
   // ── Persistent state (localStorage, schema-versioned) ────
   const STORAGE_KEY = "fitflexr";
-  const SCHEMA_VERSION = 3;
+  const SCHEMA_VERSION = 4;
   const EQUIPMENT_SET = new Set(ALL_EQUIP_IDS);
   // Sensible starting gear (Matt's home setup); also the fallback when none is stored.
   const DEFAULT_GEAR = ["bodyweight", "dumbbell", "bench"];
@@ -53,6 +69,9 @@
     filters: { groups: [], equipment: DEFAULT_GEAR.slice(), conditions: [] },
     routine: [], // [{ id, sets, notes }] — references exercises by permanent id only
     theme: "dark",
+    // Phase B onboarding profile. completed gates the first-run flow; goal/time are
+    // the personalization axes Phase C will use to bias generated sessions.
+    onboarding: { completed: false, goal: null, timeAvailable: null },
   });
 
   function migrate(data) {
@@ -87,6 +106,14 @@
     // v1→v2 (one-time): the app now defaults to a black theme. Flip the old "system"
     // default to dark once. Guarded on version so a later deliberate "System" pick sticks.
     if (fromVersion < 2 && out.theme === "system") out.theme = "dark";
+    // v3→v4: onboarding profile added. Carry over any valid saved values; pre-v4 users
+    // land with completed=false so the first-run flow runs once.
+    const ob = data.onboarding && typeof data.onboarding === "object" ? data.onboarding : {};
+    out.onboarding = {
+      completed: ob.completed === true,
+      goal: GOAL_BY_ID[ob.goal] ? ob.goal : null,
+      timeAvailable: TIME_OPTIONS.includes(ob.timeAvailable) ? ob.timeAvailable : null,
+    };
     return out;
   }
 
@@ -218,10 +245,201 @@
     currentScreen = name;
     $$(".screen").forEach((s) => { s.hidden = s.id !== "screen-" + name; });
     $$(".tab-btn").forEach((b) => b.classList.toggle("tab-active", b.dataset.screen === name));
+    // The onboarding flow is full-screen: hide the tab bar so it can't be escaped mid-setup.
+    $("#app").classList.toggle("onboarding-active", name === "onboarding");
     if (name === "deck") renderDeck();
     if (name === "routine") renderRoutine();
     if (name === "filters") updateMatchCount();
     window.scrollTo(0, 0);
+  }
+
+  // ── Onboarding (Phase B first-run flow) ──────────────────
+  const OB_STEPS = ["welcome", "goal", "time", "gear", "injuries"];
+  let obIndex = 0;
+
+  function startOnboarding() {
+    obIndex = 0;
+    showScreen("onboarding");
+    renderOnboarding();
+  }
+
+  function finishOnboarding() {
+    state.onboarding.completed = true;
+    saveState();
+    updateProfileSummaries();
+    renderFilterChips();
+    showScreen("filters");
+  }
+
+  function obStepShell(title, sub) {
+    const wrap = el("div", "ob-step");
+    wrap.appendChild(el("h1", "ob-title", title));
+    if (sub) wrap.appendChild(el("p", "ob-sub", sub));
+    return wrap;
+  }
+
+  function obWelcome() {
+    const wrap = obStepShell("Welcome 👋",
+      "Four quick questions and your deck is tuned to you. Change any answer later in Settings.");
+    const list = el("ul", "ob-welcome-list");
+    [["🎯", "Your goal"], ["⏱️", "How long you train"], ["🏋️", "The gear you have"], ["🛡️", "Anything to protect"]]
+      .forEach(([ic, tx]) => {
+        const li = el("li");
+        li.appendChild(el("span", "ob-welcome-ic", ic));
+        li.appendChild(document.createTextNode(tx));
+        list.appendChild(li);
+      });
+    wrap.appendChild(list);
+    return wrap;
+  }
+
+  function obSingleSelect(grid, btn) {
+    grid.querySelectorAll(".ob-option").forEach((b) => b.setAttribute("aria-pressed", "false"));
+    btn.setAttribute("aria-pressed", "true");
+  }
+
+  function obGoal() {
+    const wrap = obStepShell("What's your main goal?", "Pick the one that fits best right now.");
+    const grid = el("div", "ob-grid");
+    GOALS.forEach((g) => {
+      const btn = el("button", "ob-option");
+      btn.type = "button";
+      btn.setAttribute("aria-pressed", String(state.onboarding.goal === g.id));
+      btn.appendChild(el("span", "ob-option-ic", g.icon));
+      btn.appendChild(el("span", "ob-option-label", g.label));
+      btn.addEventListener("click", () => {
+        state.onboarding.goal = g.id;
+        saveState();
+        obSingleSelect(grid, btn);
+      });
+      grid.appendChild(btn);
+    });
+    wrap.appendChild(grid);
+    return wrap;
+  }
+
+  function obTime() {
+    const wrap = obStepShell("How long do you usually train?",
+      "This sizes your generated sessions (coming soon).");
+    const grid = el("div", "ob-grid ob-grid-time");
+    TIME_OPTIONS.forEach((t) => {
+      const btn = el("button", "ob-option ob-option-time");
+      btn.type = "button";
+      btn.setAttribute("aria-pressed", String(state.onboarding.timeAvailable === t));
+      btn.appendChild(el("span", "ob-option-big", String(t)));
+      btn.appendChild(el("span", "ob-option-label", "min"));
+      btn.addEventListener("click", () => {
+        state.onboarding.timeAvailable = t;
+        saveState();
+        obSingleSelect(grid, btn);
+      });
+      grid.appendChild(btn);
+    });
+    wrap.appendChild(grid);
+    return wrap;
+  }
+
+  function obGear() {
+    const wrap = obStepShell("What gear do you have?",
+      "Tap a preset, or fine-tune below. We only show moves you can actually do.");
+    const presetRow = el("div", "preset-row");
+    const chipRow = el("div", "chip-row");
+    const syncPresets = () => {
+      Array.from(presetRow.children).forEach((pb, idx) => {
+        const p = GEAR_PRESETS[idx];
+        pb.classList.toggle("preset-active",
+          p.gear.length === state.filters.equipment.length &&
+          p.gear.every((g) => state.filters.equipment.includes(g)));
+      });
+    };
+    GEAR_PRESETS.forEach((preset) => {
+      const btn = el("button", "preset-btn", preset.label);
+      btn.type = "button";
+      btn.addEventListener("click", () => {
+        state.filters.equipment = preset.gear.slice();
+        saveState();
+        renderOnboarding();
+      });
+      presetRow.appendChild(btn);
+    });
+    EQUIPMENT.forEach((eq) => {
+      const btn = el("button", "chip chip-equip", eq.label);
+      btn.type = "button";
+      btn.setAttribute("aria-pressed", String(state.filters.equipment.includes(eq.id)));
+      btn.addEventListener("click", () => {
+        const i = state.filters.equipment.indexOf(eq.id);
+        if (i === -1) state.filters.equipment.push(eq.id);
+        else state.filters.equipment.splice(i, 1);
+        saveState();
+        btn.setAttribute("aria-pressed", String(i === -1));
+        syncPresets();
+      });
+      chipRow.appendChild(btn);
+    });
+    syncPresets();
+    wrap.appendChild(presetRow);
+    wrap.appendChild(chipRow);
+    return wrap;
+  }
+
+  function obInjuries() {
+    const wrap = obStepShell("Anything to protect?",
+      "Toggle any that apply — we keep risky moves out of your deck before you see them. Skip if none.");
+    const chipRow = el("div", "chip-row");
+    CONDITIONS.forEach((c) => {
+      const btn = el("button", "chip chip-cond", c.label);
+      btn.type = "button";
+      btn.setAttribute("aria-pressed", String(state.filters.conditions.includes(c.id)));
+      btn.addEventListener("click", () => {
+        const i = state.filters.conditions.indexOf(c.id);
+        if (i === -1) state.filters.conditions.push(c.id);
+        else state.filters.conditions.splice(i, 1);
+        saveState();
+        btn.setAttribute("aria-pressed", String(i === -1));
+      });
+      chipRow.appendChild(btn);
+    });
+    wrap.appendChild(chipRow);
+    return wrap;
+  }
+
+  const OB_RENDERERS = { welcome: obWelcome, goal: obGoal, time: obTime, gear: obGear, injuries: obInjuries };
+
+  function renderOnboarding() {
+    const step = OB_STEPS[obIndex];
+    const body = $("#ob-body");
+    body.innerHTML = "";
+    $("#ob-progress-bar").style.width = ((obIndex + 1) / OB_STEPS.length) * 100 + "%";
+    $("#ob-back").style.visibility = obIndex === 0 ? "hidden" : "visible";
+    const last = obIndex === OB_STEPS.length - 1;
+    $("#ob-next-label").textContent = step === "welcome" ? "Let's go" : last ? "Finish" : "Next";
+    body.appendChild((OB_RENDERERS[step] || obWelcome)());
+    window.scrollTo(0, 0);
+  }
+
+  function profileParts() {
+    const parts = [];
+    const g = state.onboarding.goal ? GOAL_BY_ID[state.onboarding.goal] : null;
+    if (g) parts.push(g.icon + " " + g.label);
+    if (state.onboarding.timeAvailable) parts.push("⏱️ " + state.onboarding.timeAvailable + " min");
+    return parts;
+  }
+
+  function updateProfileSummaries() {
+    const parts = profileParts();
+    const sum = $("#profile-summary");
+    if (sum) {
+      if (parts.length) {
+        sum.hidden = false;
+        sum.innerHTML = "";
+        parts.forEach((p) => sum.appendChild(el("span", "profile-chip", p)));
+        sum.appendChild(el("span", "profile-edit", "Edit"));
+      } else {
+        sum.hidden = true;
+      }
+    }
+    const sp = $("#settings-profile");
+    if (sp) sp.textContent = parts.length ? parts.join("   ·   ") : "Not set yet — tap below to personalize your deck.";
   }
 
   // ── Filters screen ───────────────────────────────────────
@@ -386,6 +604,15 @@
     card.dataset.id = ex.id;
     card.style.setProperty("--depth", depth);
     card.style.setProperty("--group-color", group.color);
+    // Primary group tints the card; the first secondary muscle (if any) tints the
+    // exercise-name text, so a multi-muscle move shows both groups at a glance.
+    const secGroup = (ex.secondaryMuscles || [])
+      .map((m) => GROUP_BY_NAME[m])
+      .find((g) => g && g.name !== ex.muscleGroup);
+    if (secGroup) {
+      card.style.setProperty("--secondary-color", secGroup.color);
+      card.dataset.hasSecondary = "true";
+    }
 
     const inner = el("div", "card-inner");
 
@@ -719,6 +946,18 @@
   function wireEvents() {
     $$(".tab-btn").forEach((b) => b.addEventListener("click", () => showScreen(b.dataset.screen)));
 
+    // Onboarding wizard nav
+    $("#ob-next").addEventListener("click", () => {
+      if (obIndex >= OB_STEPS.length - 1) finishOnboarding();
+      else { obIndex++; renderOnboarding(); }
+    });
+    $("#ob-back").addEventListener("click", () => {
+      if (obIndex > 0) { obIndex--; renderOnboarding(); }
+    });
+    $("#ob-skip").addEventListener("click", finishOnboarding);
+    $("#btn-redo-onboarding").addEventListener("click", startOnboarding);
+    $("#profile-summary").addEventListener("click", startOnboarding);
+
     $("#btn-groups-all").addEventListener("click", () => setAllGroups(true));
     $("#btn-groups-none").addEventListener("click", () => setAllGroups(false));
     $("#btn-start").addEventListener("click", () => {
@@ -837,8 +1076,11 @@
   renderFilterChips();
   renderAboutStats();
   renderRoutine();
+  updateProfileSummaries();
   wireEvents();
-  showScreen("filters");
+  // First run → onboarding; returning users land on the setup screen.
+  if (!state.onboarding.completed) startOnboarding();
+  else showScreen("filters");
   registerServiceWorker();
 
   // Read-only handle for scripted smoke tests (see CLAUDE.md checklist).

@@ -309,7 +309,8 @@ land *during* the beta as feedback comes in.
 **Phase A — Data & schema. — ✅ COMPLETE (2026-07-23).** All 11 groups produced by ChatGPT,
 integrated and deployed: **506 exercises, 100% metadata coverage, all 15 equipment types
 populated, zero duplicate ids.** Live at the URL above. Enum additions during the build:
-patterns gained `Hip Abduction`; categories gained `power`. Next up: **Phase B (onboarding)**.
+patterns gained `Hip Abduction`; categories gained `power`. **Phase B (onboarding) now also done
+(2026-07-23) — see below.** Next up: **Phase C (workout generation + swipe-to-learn)**.
 
 Final per-group counts: Chest 46 · Back 57 · Shoulders 51 · Biceps 35 · Triceps 33 ·
 Core/Abs 68 · Glutes 49 · Quads 52 · Hamstrings 36 · Calves 26 · Full Body/Cardio 53 = **506**.
@@ -318,17 +319,18 @@ Built group-by-group from ChatGPT batches (equipment-family sub-batches), each v
 protects finalized groups and de-dupes. Core/Abs was curated down from a large duplicate-heavy
 dump. Every batch swap bumped `sw.js` `CACHE_VERSION` (now v13).
 
-**Phase B — Onboarding & personalization axes.**
-Turn setup into a short, swipe-friendly questionnaire that sets the filters we already
-have plus new ones — all client-side:
-- **Equipment** as multi-select + **location presets** (Bodyweight-only / Dumbbells+Bench
-  / Full Gym / Hotel) that each select an equipment bundle.
-- **Goal** (lose fat / build muscle / strength / athletic / general / mobility / rehab /
-  beginner) → biases `focus` + difficulty.
-- **Time available** (15/30/45/60/90 min) → sizes generated sessions.
-- **Injuries** → this is the existing conditions system; just surface it in onboarding
-  and expand tags as the library grows.
-Remember answers in `localStorage`; editable anytime.
+**Phase B — Onboarding & personalization axes. — ✅ COMPLETE (2026-07-23).**
+First-run wizard (`#screen-onboarding`, JS-rendered steps): Welcome → Goal → Time → Gear →
+Injuries, with a progress bar and Back/Next/Skip. Shipped, `schemaVersion` → 4, sw cache v16.
+- **Goal** (8 options: lose fat / build muscle / strength / athletic / general / mobility /
+  rehab / beginner) and **Time** (15/30/45/60/90 min) stored in `state.onboarding = {completed,
+  goal, timeAvailable}`. **Collected & stored now; the biasing of `focus`/difficulty and session
+  sizing happens in Phase C** — B just captures the axes.
+- **Equipment** step reuses the existing presets + gear multiselect (writes `state.filters.equipment`).
+- **Injuries** step reuses the existing conditions chips (writes `state.filters.conditions`).
+- Gated on `onboarding.completed` (first run shows it; returning users skip). Editable anytime:
+  a profile summary pill on Setup and a "Edit goal, time, gear & injuries" button in Settings both
+  re-launch the wizard. Tab bar hidden during the flow.
 
 **Phase C — Workout generation + swipe-to-learn.**
 - From (goal + time + gear + injuries) build a balanced session (pattern coverage, sane
