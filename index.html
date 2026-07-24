@@ -161,6 +161,18 @@
         </div>
       </section>
 
+      <!-- ───────────── Progress ───────────── -->
+      <section id="screen-progress" class="screen" hidden>
+        <h1 class="screen-title">Progress</h1>
+        <div id="progress-empty" class="deck-message" hidden>
+          <span class="deck-message-emoji">📈</span>
+          <h2>No workouts logged yet</h2>
+          <p>Finish a workout from your FitFlex Stack and it'll show up here — streaks, weekly volume, and history.</p>
+          <button id="btn-progress-stack" class="cta" type="button">Go to my Stack</button>
+        </div>
+        <div id="progress-body"></div>
+      </section>
+
       <!-- ───────────── Settings / About ───────────── -->
       <section id="screen-settings" class="screen" hidden>
         <h1 class="screen-title">Settings</h1>
@@ -203,6 +215,7 @@
       <button class="tab-btn" data-screen="filters" type="button"><span class="tab-ico" aria-hidden="true">🎛️</span><span>Setup</span></button>
       <button class="tab-btn" data-screen="deck" type="button"><span class="tab-ico" aria-hidden="true">🔥</span><span>Swipe</span></button>
       <button class="tab-btn" data-screen="routine" type="button"><span class="tab-ico" aria-hidden="true">📋</span><span>Stack</span></button>
+      <button class="tab-btn" data-screen="progress" type="button"><span class="tab-ico" aria-hidden="true">📈</span><span>Progress</span></button>
       <button class="tab-btn" data-screen="settings" type="button"><span class="tab-ico" aria-hidden="true">⚙️</span><span>Settings</span></button>
     </nav>
   </div>

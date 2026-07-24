@@ -363,10 +363,18 @@ sw cache v17.
 - **Deferred:** logging the completed run (that's Phase E history). Next: **Phase E (progress &
   motivation)**.
 
-**Phase E — Progress & motivation.**
-Log completed workouts with dates; history/calendar; **PRs**, **streaks**,
-**progressive-overload suggestions** (track weight → recommend increases), simple
-hand-rolled SVG charts (no chart CDNs). Keep motivation subtle, not cheesy.
+**Phase E — Progress & motivation. — ✅ COMPLETE (2026-07-23).** schemaVersion → 6, sw cache v22.
+- Finishing (or exiting) an in-workout run **logs it** to `state.history = [{date, exercises, sets,
+  groups}]` when ≥1 set was marked done; you land on **Progress** afterward (the reward).
+- New **Progress tab** (`#screen-progress`): stat cards (**week streak** / this week / total
+  workouts), "last workout N days ago", a **hand-rolled SVG bar chart** of workouts-per-week over
+  the last 8 weeks (no chart library), and a **history list** with per-muscle-group colored dots.
+- Dates stored as local `YYYY-MM-DD` and parsed back as local (`parseLocalDate`) to avoid UTC
+  day-shift. Empty state until the first workout is logged.
+- **Deferred to a later pass:** **PRs** and **progressive-overload suggestions** — those need
+  per-set *weight* logging (a meatier add to in-workout mode), so they're not in this cut. A
+  calendar view was also skipped in favor of the weekly chart + list. Next: **Phase F (rule-based
+  adjustments)**.
 
 **Phase F — Rule-based "smart" adjustments (the honest kind of AI).**
 "Slept 5h / have DOMS / low energy / traveling / skipped yesterday" → **deterministic

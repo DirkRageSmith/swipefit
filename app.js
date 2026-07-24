@@ -71,7 +71,7 @@
 
   // ── Persistent state (localStorage, schema-versioned) ────
   const STORAGE_KEY = "fitflexr";
-  const SCHEMA_VERSION = 5;
+  const SCHEMA_VERSION = 6;
   const EQUIPMENT_SET = new Set(ALL_EQUIP_IDS);
   // Sensible starting gear (Matt's home setup); also the fallback when none is stored.
   const DEFAULT_GEAR = ["bodyweight", "dumbbell", "bench"];
@@ -88,6 +88,8 @@
     onboarding: { completed: false, goal: null, timeAvailable: null },
     // Phase C swipe-to-learn taste profile: attribute weights nudged by every swipe.
     taste: { swipes: 0, weights: {} },
+    // Phase E: completed-workout log. [{ date:"YYYY-MM-DD", exercises, sets, groups }]
+    history: [],
   });
 
   function migrate(data) {
@@ -136,6 +138,17 @@
       swipes: Number.isFinite(t.swipes) ? t.swipes : 0,
       weights: t.weights && typeof t.weights === "object" ? t.weights : {},
     };
+    // v5→v6: workout history added. Carry over well-formed entries.
+    out.history = Array.isArray(data.history)
+      ? data.history
+          .filter((h) => h && typeof h.date === "string")
+          .map((h) => ({
+            date: h.date,
+            exercises: Number(h.exercises) || 0,
+            sets: Number(h.sets) || 0,
+            groups: Array.isArray(h.groups) ? h.groups.filter((g) => GROUP_BY_NAME[g]) : [],
+          }))
+      : [];
     return out;
   }
 
@@ -385,6 +398,7 @@
     $("#app").classList.toggle("workout-active", name === "workout");
     if (name === "deck") renderDeck();
     if (name === "routine") renderRoutine();
+    if (name === "progress") renderProgress();
     if (name === "filters") { updateMatchCount(); updateGenerateUI(); }
     window.scrollTo(0, 0);
   }
@@ -1074,8 +1088,26 @@
 
   function finishWorkout() {
     stopRest();
+    const logged = logWorkout();
     workout = null;
-    showScreen("routine");
+    // Land on Progress when something was logged (the reward), else back to the Stack.
+    showScreen(logged ? "progress" : "routine");
+  }
+
+  // Log a completed run to history if at least one set was marked done.
+  function logWorkout() {
+    if (!workout) return false;
+    const totalSets = workout.items.reduce((s, i) => s + i.doneSets, 0);
+    if (totalSets <= 0) return false;
+    const done = workout.items.filter((i) => i.doneSets > 0);
+    const groups = [];
+    done.forEach((i) => {
+      const ex = EX_BY_ID[i.id];
+      if (ex && !groups.includes(ex.muscleGroup)) groups.push(ex.muscleGroup);
+    });
+    state.history.push({ date: dateKey(new Date()), exercises: done.length, sets: totalSets, groups });
+    saveState();
+    return true;
   }
 
   function stopRest() {
@@ -1197,6 +1229,157 @@
     $("#screen-workout").style.setProperty("--group-color", group.color);
   }
 
+  // ── Progress & motivation (Phase E) ──────────────────────
+  function dateKey(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+
+  function startOfDay(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
+
+  // Parse a "YYYY-MM-DD" key as a LOCAL date (new Date(str) would treat it as UTC
+  // and shift the day across timezones).
+  function parseLocalDate(str) {
+    const [y, m, d] = String(str).split("-").map(Number);
+    return new Date(y, (m || 1) - 1, d || 1);
+  }
+
+  // Monday 00:00 of the week containing d.
+  function mondayOf(d) {
+    const x = startOfDay(d);
+    const back = (x.getDay() + 6) % 7; // 0 = Monday
+    x.setDate(x.getDate() - back);
+    return x;
+  }
+
+  // Consecutive weeks (ending this week, or last week if this one's empty) with ≥1 workout.
+  function weeklyStreak() {
+    const weeks = new Set(state.history.map((h) => dateKey(mondayOf(parseLocalDate(h.date)))));
+    let cur = mondayOf(new Date());
+    if (!weeks.has(dateKey(cur))) {
+      cur.setDate(cur.getDate() - 7);
+      if (!weeks.has(dateKey(cur))) return 0;
+    }
+    let streak = 0;
+    while (weeks.has(dateKey(cur))) { streak += 1; cur.setDate(cur.getDate() - 7); }
+    return streak;
+  }
+
+  function daysAgoLabel(dateStr) {
+    const diff = Math.round((startOfDay(new Date()) - parseLocalDate(dateStr)) / 86400000);
+    if (diff <= 0) return "today";
+    if (diff === 1) return "yesterday";
+    return diff + " days ago";
+  }
+
+  function statCard(value, label) {
+    const c = el("div", "stat-card");
+    c.appendChild(el("span", "stat-value", String(value)));
+    c.appendChild(el("span", "stat-label", label));
+    return c;
+  }
+
+  // Hand-rolled SVG: workouts per week for the last 8 weeks (no chart library).
+  function weeklyChart() {
+    const weeks = [];
+    let cur = mondayOf(new Date());
+    for (let i = 0; i < 8; i++) { weeks.unshift(new Date(cur)); cur.setDate(cur.getDate() - 7); }
+    const counts = weeks.map((w) => {
+      const key = dateKey(w);
+      return state.history.filter((h) => dateKey(mondayOf(parseLocalDate(h.date))) === key).length;
+    });
+    const max = Math.max(1, ...counts);
+    const W = 320, H = 132, padX = 6, padTop = 10, base = H - 22, n = counts.length;
+    const slot = (W - padX * 2) / n;
+    const bw = slot * 0.56;
+    const NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("class", "progress-chart");
+    counts.forEach((c, i) => {
+      const x = padX + slot * i + (slot - bw) / 2;
+      const h = c > 0 ? Math.max(6, (base - padTop) * (c / max)) : 2;
+      const y = base - h;
+      const rect = document.createElementNS(NS, "rect");
+      rect.setAttribute("x", x.toFixed(1));
+      rect.setAttribute("y", y.toFixed(1));
+      rect.setAttribute("width", bw.toFixed(1));
+      rect.setAttribute("height", h.toFixed(1));
+      rect.setAttribute("rx", "3");
+      rect.setAttribute("class", c > 0 ? "bar bar-on" : "bar bar-off");
+      svg.appendChild(rect);
+      if (c > 0) {
+        const t = document.createElementNS(NS, "text");
+        t.setAttribute("x", (x + bw / 2).toFixed(1));
+        t.setAttribute("y", (y - 3).toFixed(1));
+        t.setAttribute("class", "bar-count");
+        t.setAttribute("text-anchor", "middle");
+        t.textContent = String(c);
+        svg.appendChild(t);
+      }
+      const lbl = document.createElementNS(NS, "text");
+      lbl.setAttribute("x", (x + bw / 2).toFixed(1));
+      lbl.setAttribute("y", (H - 6).toFixed(1));
+      lbl.setAttribute("class", "bar-label");
+      lbl.setAttribute("text-anchor", "middle");
+      // week-of label: month/day of that Monday
+      lbl.textContent = (weeks[i].getMonth() + 1) + "/" + weeks[i].getDate();
+      svg.appendChild(lbl);
+    });
+    return svg;
+  }
+
+  function renderProgress() {
+    const empty = state.history.length === 0;
+    $("#progress-empty").hidden = !empty;
+    const body = $("#progress-body");
+    body.innerHTML = "";
+    body.hidden = empty;
+    if (empty) return;
+
+    const total = state.history.length;
+    const streak = weeklyStreak();
+    const mon = mondayOf(new Date());
+    const thisWeek = state.history.filter((h) => startOfDay(parseLocalDate(h.date)) >= mon).length;
+    const lastDate = state.history.map((h) => h.date).sort().slice(-1)[0];
+
+    const stats = el("div", "stat-row");
+    stats.appendChild(statCard(streak, streak === 1 ? "week streak" : "week streak"));
+    stats.appendChild(statCard(thisWeek, "this week"));
+    stats.appendChild(statCard(total, total === 1 ? "workout" : "workouts"));
+    body.appendChild(stats);
+
+    body.appendChild(el("p", "progress-last", "Last workout: " + daysAgoLabel(lastDate)));
+
+    const chartCard = el("div", "chart-card");
+    chartCard.appendChild(el("span", "eyebrow", "Last 8 weeks"));
+    const chartWrap = el("div", "chart-wrap");
+    chartWrap.appendChild(weeklyChart());
+    chartCard.appendChild(chartWrap);
+    body.appendChild(chartCard);
+
+    const histWrap = el("div", "history-list");
+    histWrap.appendChild(el("span", "eyebrow", "History"));
+    state.history.slice().reverse().slice(0, 20).forEach((h) => {
+      const row = el("div", "history-row");
+      const primary = h.groups[0] ? GROUP_BY_NAME[h.groups[0]] : null;
+      if (primary) row.style.setProperty("--group-color", primary.color);
+      row.appendChild(el("span", "history-dot"));
+      const meta = el("div", "history-meta");
+      const d = parseLocalDate(h.date);
+      const dateStr = d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+      meta.appendChild(el("span", "history-date", dateStr));
+      const detail = h.groups.length ? h.groups.join(" · ") : "Workout";
+      meta.appendChild(el("span", "history-detail", detail));
+      row.appendChild(meta);
+      row.appendChild(el("span", "history-sets", h.sets + (h.sets === 1 ? " set" : " sets")));
+      histWrap.appendChild(row);
+    });
+    body.appendChild(histWrap);
+  }
+
   // ── Modal (custom confirm — never window.confirm) ────────
   let modalConfirmAction = null;
 
@@ -1294,6 +1477,7 @@
     $("#btn-empty-filters").addEventListener("click", () => showScreen("filters"));
     $("#btn-empty-routine").addEventListener("click", () => showScreen("routine"));
     $("#btn-routine-swipe").addEventListener("click", () => showScreen("deck"));
+    $("#btn-progress-stack").addEventListener("click", () => showScreen("routine"));
 
     // In-workout mode (Phase D)
     $("#btn-start-workout").addEventListener("click", startWorkout);
