@@ -427,8 +427,8 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
   flex-direction: column;
   border-radius: var(--radius);
   background: var(--surface);
-  /* Tinted border; the top half's colored frame is drawn by .card-visual. */
-  border: 1.5px solid color-mix(in srgb, var(--group-color, #888) 42%, var(--border));
+  /* The whole card is framed in the group color; the shading is top-half only. */
+  border: 9px solid var(--group-color, #888);
   box-shadow: var(--shadow-card);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -442,12 +442,8 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Monopoly-style colored band: the top half is framed on its top edge and both
-     sides (with rounded top corners) in the group color, fading into the card below. */
-  border: 9px solid var(--group-color, #888);
-  border-bottom: none;
-  border-top-left-radius: calc(var(--radius) - 1.5px);
-  border-top-right-radius: calc(var(--radius) - 1.5px);
+  /* The colored frame now wraps the whole card (.card-face); the visual keeps just
+     the top-half shading, fading down into the card surface. */
   background:
     linear-gradient(180deg,
       color-mix(in srgb, var(--group-color, #888) 55%, var(--surface)) 0%,
@@ -1090,8 +1086,7 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
   gap: 10px;
   padding: 20px;
   background: var(--surface);
-  border: 1.5px solid color-mix(in srgb, var(--group-color, #888) 42%, var(--border));
-  border-top: 9px solid var(--group-color, #888);
+  border: 9px solid var(--group-color, #888);
   border-radius: var(--radius);
   box-shadow: var(--shadow-card);
 }
