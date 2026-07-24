@@ -776,13 +776,10 @@
 
     const inner = el("div", "card-inner");
 
-    // Front
+    // Front — type-forward: colored frame + top-half shading carry it, no emoji.
     const front = el("div", "card-face card-front");
     front.appendChild(el("div", "stamp stamp-save", "SAVE"));
     front.appendChild(el("div", "stamp stamp-skip", "SKIP"));
-    const visual = el("div", "card-visual");
-    visual.appendChild(el("span", "card-emoji", ex.icon || "💪"));
-    front.appendChild(visual);
     const body = el("div", "card-body");
     body.appendChild(groupPill(ex.muscleGroup));
     body.appendChild(el("h2", "card-name", ex.name));

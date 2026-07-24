@@ -7,7 +7,7 @@
 const MUSCLE_GROUPS = [
   {
     "name": "Chest",
-    "color": "#ff6b6b"
+    "color": "#c41e28"
   },
   {
     "name": "Back",
