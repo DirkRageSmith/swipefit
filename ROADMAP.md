@@ -376,11 +376,17 @@ sw cache v17.
   calendar view was also skipped in favor of the weekly chart + list. Next: **Phase F (rule-based
   adjustments)**.
 
-**Phase F — Rule-based "smart" adjustments (the honest kind of AI).**
-"Slept 5h / have DOMS / low energy / traveling / skipped yesterday" → **deterministic
-if/then adjustments** to volume, intensity, or equipment. These *feel* like an AI coach
-but are plain rules over the metadata — **no LLM, no network, still offline.** This
-captures most of the "AI features" value at zero cost and zero privacy risk.
+**Phase F — Rule-based "smart" adjustments (the honest kind of AI). — ✅ COMPLETE (2026-07-24).**
+sw cache v23; no schema change (modifiers are ephemeral). A **"Today I'm feeling"** chip row on
+Setup (`READINESS`: low-energy / sore / short-time / no-gear / strong) deterministically biases
+**Generate my session** — no LLM, no network:
+- **short-time** → ~60% fewer exercises; **low-energy** → −2 exercises, +30s rest, favor easier
+  (Beginner) moves; **sore** → −1 exercise, favor easier, and **steer away from the muscle groups
+  in your last logged workout** (recovery-aware, uses Phase E history); **strong** → +1 exercise/
+  set, slight bias to Advanced; **no-gear** → bodyweight-only regardless of owned gear.
+- Set/rep scheme trimmed/raised (`adjustScheme`), rest default shifted (`currentRestDefault`), and a
+  coach-y amber note summarizes what changed (`readinessSummary`). All verified in-browser.
+This is the last core Tier 1 phase.
 
 **Phase G — Card clarity pass (content quality). — PLANNED (added 2026-07-23).**
 Matt hit an exercise he couldn't perform from the card text alone. Goal: every card's `cue` +
@@ -390,6 +396,8 @@ descriptions per muscle-group batch against the brief below; Claude validates (`
 swaps each group in, bumping `sw.js` `CACHE_VERSION`. Optional schema add: a `steps: [..]` array
 (additive, warn-only) rendered as a numbered how-to on the card back — decide during the pilot.
 Pilot first on the specific exercise Matt names, then roll the format across all 11 groups.
+**Pilot DONE (2026-07-24): `dumbbell-high-pull` rewritten** to the target format (clear setup →
+step-by-step → the one mistake) — use it as the reference example for the GPT batches.
 
 > **Brief for ChatGPT (Phase G clarity pass).** For each exercise in this muscle-group batch, keep
 > every existing field and id EXACTLY, but rewrite only `cue` and `description` for clarity:

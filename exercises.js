@@ -2340,8 +2340,8 @@ const EXERCISES = [
       "dumbbell"
     ],
     "difficulty": "Intermediate",
-    "cue": "Drive through your hips before pulling your elbows high.",
-    "description": "Generate power from your lower body before finishing with your upper back. Avoid curling the dumbbells upward.",
+    "cue": "Snap your hips forward, then pull the dumbbells up to chest height, leading with your elbows.",
+    "description": "Stand holding a dumbbell in each hand in front of your thighs, feet hip-width apart, knees slightly bent. Dip a few inches by pushing your hips back, then explosively stand up straight and use that momentum to pull both dumbbells straight up your body to about chest height, with your elbows leading high and out to the sides. Lower under control and reset. Don't turn it into a slow biceps curl — the power comes from your hips and legs, not your arms.",
     "avoidIf": [
       "shoulder",
       "lower-back"

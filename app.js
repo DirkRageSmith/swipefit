@@ -69,6 +69,16 @@
   };
   const TIME_COUNT = { 15: 3, 30: 5, 45: 7, 60: 9, 90: 12 };
 
+  // Phase F — "how you're feeling today" modifiers. Deterministic if/then rules over
+  // the metadata bias the generated session — no LLM, no network. Ephemeral per session.
+  const READINESS = [
+    { id: "low-energy", label: "Low energy", icon: "🔋" },
+    { id: "sore", label: "Sore / DOMS", icon: "🥵" },
+    { id: "short-time", label: "Short on time", icon: "⏱️" },
+    { id: "no-gear", label: "No gear", icon: "🎒" },
+    { id: "strong", label: "Feeling strong", icon: "💪" },
+  ];
+
   // ── Persistent state (localStorage, schema-versioned) ────
   const STORAGE_KEY = "fitflexr";
   const SCHEMA_VERSION = 6;
@@ -194,6 +204,7 @@
   let deckBuilt = false;
   let deckMode = "browse"; // "browse" | "generated"
   let sessionSetsDefault = ""; // set/rep scheme prefilled when saving a generated card
+  const readiness = new Set(); // Phase F "today I'm feeling…" modifiers (ephemeral)
   const sessionSkipped = new Set();
   let swipeHistory = []; // [{ id, action: "save" | "skip" }]
   let currentScreen = "filters";
@@ -318,20 +329,90 @@
     return s;
   }
 
+  // ── Phase F: readiness rules (deterministic, offline) ────
+  // The last logged workout's muscle groups — used to steer away from still-sore muscles.
+  function lastTrainedGroups() {
+    if (!state.history.length) return [];
+    return state.history[state.history.length - 1].groups || [];
+  }
+
+  function readinessScore(ex) {
+    let s = 0;
+    // Tired or sore → favour easier moves, avoid the most demanding.
+    if (readiness.has("low-energy") || readiness.has("sore")) {
+      if (ex.difficulty === "Beginner") s += 2.5;
+      else if (ex.difficulty === "Advanced") s -= 4;
+    }
+    if (readiness.has("strong") && ex.difficulty === "Advanced") s += 1.5;
+    // Sore → deprioritise muscles you trained last time (let them recover).
+    if (readiness.has("sore")) {
+      const recent = lastTrainedGroups();
+      if (recent.includes(ex.muscleGroup)) s -= 5;
+      if ((ex.secondaryMuscles || []).some((m) => recent.includes(m))) s -= 1.5;
+    }
+    return s;
+  }
+
+  function readinessCount(count) {
+    let c = count;
+    if (readiness.has("short-time")) c = Math.round(c * 0.6);
+    if (readiness.has("low-energy")) c -= 2;
+    if (readiness.has("sore")) c -= 1;
+    if (readiness.has("strong")) c += 1;
+    return Math.max(3, Math.min(14, c));
+  }
+
+  // Trim/raise the set count in a "S × R" scheme by how you're feeling.
+  function adjustScheme(scheme) {
+    const m = String(scheme).match(/^(\d+)\s*[×x]\s*(\d+)$/);
+    if (!m) return scheme;
+    let sets = parseInt(m[1], 10);
+    const reps = m[2];
+    if (readiness.has("low-energy")) sets -= 1;
+    if (readiness.has("sore")) sets -= 1;
+    if (readiness.has("strong")) sets += 1;
+    sets = Math.max(1, Math.min(8, sets));
+    return sets + " × " + reps;
+  }
+
+  function currentRestDefault() {
+    let rest = REST_DEFAULT;
+    if (readiness.has("low-energy")) rest += 30; // more recovery when drained
+    if (readiness.has("strong")) rest -= 15;
+    return Math.max(30, rest);
+  }
+
+  // Human-readable summary of what today's modifiers changed (for the coach-y note).
+  function readinessSummary() {
+    if (!readiness.size) return "";
+    const bits = [];
+    if (readiness.has("short-time")) bits.push("shorter session");
+    if (readiness.has("low-energy")) bits.push("lighter volume, longer rest");
+    if (readiness.has("sore")) bits.push("easing off sore muscles");
+    if (readiness.has("no-gear")) bits.push("bodyweight only");
+    if (readiness.has("strong")) bits.push("extra work");
+    return "Adjusted for today: " + bits.join(" · ") + ".";
+  }
+
   function generateSession() {
     const cfg = GOAL_CONFIG[state.onboarding.goal] || {};
-    const count = TIME_COUNT[state.onboarding.timeAvailable] || 6;
+    const count = readinessCount(TIME_COUNT[state.onboarding.timeAvailable] || 6);
     const inRoutine = new Set(state.routine.map((r) => r.id));
     let pool = EXERCISES.filter(
       (ex) => ownsGear(ex) && passesConditions(ex) && !inRoutine.has(ex.id)
     );
+    // "No gear today" overrides your owned gear → bodyweight-only moves.
+    if (readiness.has("no-gear")) {
+      const bw = pool.filter((ex) => equipOf(ex).length === 1 && equipOf(ex)[0] === "bodyweight");
+      if (bw.length) pool = bw;
+    }
     // Honor today's muscle-group picks if any; otherwise build a full-body session.
     const groups = state.filters.groups;
     if (groups.length) pool = pool.filter((ex) => groups.includes(ex.muscleGroup));
     if (!pool.length) return [];
 
     const scored = pool
-      .map((ex) => ({ ex, score: goalScore(ex, cfg) + tasteScore(ex) * 0.5 + Math.random() * 2 }))
+      .map((ex) => ({ ex, score: goalScore(ex, cfg) + readinessScore(ex) + tasteScore(ex) * 0.5 + Math.random() * 2 }))
       .sort((a, b) => b.score - a.score);
 
     // Bucket by muscle group (each bucket already best-first), group order = best rep first.
@@ -365,7 +446,7 @@
     swipeHistory = [];
     deckBuilt = true;
     deckMode = "generated";
-    sessionSetsDefault = cfg.setsReps || "";
+    sessionSetsDefault = adjustScheme(cfg.setsReps || "");
     renderDeck();
     showScreen("deck");
   }
@@ -603,6 +684,12 @@
       if (g) parts.push(g.label);
       sub.textContent = parts.join(" · ") || "balanced";
     }
+    const note = $("#readiness-note");
+    if (note) {
+      const summary = readinessSummary();
+      note.hidden = !summary;
+      note.textContent = summary;
+    }
     const hint = $("#taste-hint");
     if (!hint) return;
     if (message) { hint.hidden = false; hint.textContent = message; return; }
@@ -612,6 +699,27 @@
     hint.textContent = n >= TASTE_MIN_SWIPES
       ? "🧠 Decks are now tuned to your taste · " + n + " swipes"
       : "🧠 Learning your taste · " + n + "/" + TASTE_MIN_SWIPES + " swipes";
+  }
+
+  // Phase F: the "Today I'm feeling" toggle chips on Setup.
+  function renderReadinessChips() {
+    const wrap = $("#readiness-chips");
+    if (!wrap) return;
+    wrap.innerHTML = "";
+    READINESS.forEach((r) => {
+      const btn = el("button", "chip chip-readiness");
+      btn.type = "button";
+      btn.setAttribute("aria-pressed", String(readiness.has(r.id)));
+      btn.appendChild(el("span", "chip-ico", r.icon));
+      btn.appendChild(document.createTextNode(r.label));
+      btn.addEventListener("click", () => {
+        if (readiness.has(r.id)) readiness.delete(r.id);
+        else readiness.add(r.id);
+        btn.setAttribute("aria-pressed", String(readiness.has(r.id)));
+        updateGenerateUI();
+      });
+      wrap.appendChild(btn);
+    });
   }
 
   // ── Filters screen ───────────────────────────────────────
@@ -1210,7 +1318,7 @@
       pill.addEventListener("click", () => {
         if (i >= item.doneSets) {
           item.doneSets = i + 1;
-          if (item.doneSets < n) startRest(REST_DEFAULT);
+          if (item.doneSets < n) startRest(currentRestDefault());
           else stopRest();
         } else {
           item.doneSets = i; // tap a completed set to un-check from there
@@ -1586,6 +1694,7 @@
   validateDataset();
   applyTheme();
   renderFilterChips();
+  renderReadinessChips();
   renderAboutStats();
   renderRoutine();
   updateProfileSummaries();

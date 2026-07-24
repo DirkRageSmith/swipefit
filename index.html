@@ -50,11 +50,17 @@
 
         <button id="profile-summary" class="profile-summary" type="button" hidden></button>
 
+        <div class="readiness">
+          <span class="eyebrow">Today I'm feeling</span>
+          <div id="readiness-chips" class="chip-row" role="group" aria-label="How you feel today"></div>
+        </div>
+
         <div class="generate-block">
           <button id="btn-generate" class="cta cta-generate" type="button">
             <span>⚡ Generate my session</span>
             <span id="generate-sub" class="cta-count"></span>
           </button>
+          <p id="readiness-note" class="hint readiness-note" hidden></p>
           <p id="taste-hint" class="hint taste-hint" hidden></p>
         </div>
 

@@ -1026,6 +1026,26 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
   font-weight: 600;
 }
 
+/* Phase F — "Today I'm feeling" readiness chips + adjustment note */
+.readiness { margin-bottom: 8px; }
+
+.readiness .eyebrow { display: block; margin: 10px 0 8px; }
+
+.chip-ico { font-size: 0.95em; line-height: 1; }
+
+.chip-readiness[aria-pressed="true"] {
+  background: color-mix(in srgb, #f59e0b 16%, var(--surface));
+  border-color: #f59e0b;
+  color: var(--text);
+}
+
+.readiness-note {
+  text-align: center;
+  margin: 10px 0 0;
+  font-weight: 700;
+  color: color-mix(in srgb, #f59e0b 60%, var(--text));
+}
+
 .or-divider {
   display: flex;
   align-items: center;
