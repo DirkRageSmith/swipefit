@@ -55,9 +55,23 @@
   GOALS.forEach((g) => { GOAL_BY_ID[g.id] = g; });
   const TIME_OPTIONS = [15, 30, 45, 60, 90]; // minutes
 
+  // Phase C generation: how each goal biases exercise selection + a default set/rep
+  // scheme, and how many exercises fit a session length. All heuristics, all local.
+  const GOAL_CONFIG = {
+    "lose-fat":     { focus: ["endurance", "power"], setsReps: "3 × 15" },
+    "build-muscle": { focus: ["hypertrophy"], setsReps: "4 × 10" },
+    "strength":     { focus: ["strength"], setsReps: "5 × 5", preferMechanic: "Compound" },
+    "athletic":     { focus: ["power"], setsReps: "5 × 3" },
+    "general":      { focus: ["strength", "hypertrophy"], setsReps: "3 × 12" },
+    "mobility":     { focus: ["mobility"], setsReps: "2 × 10" },
+    "rehab":        { focus: ["mobility", "endurance"], setsReps: "2 × 12", maxDifficulty: "Beginner" },
+    "beginner":     { focus: ["strength"], setsReps: "3 × 10", maxDifficulty: "Beginner" },
+  };
+  const TIME_COUNT = { 15: 3, 30: 5, 45: 7, 60: 9, 90: 12 };
+
   // ── Persistent state (localStorage, schema-versioned) ────
   const STORAGE_KEY = "fitflexr";
-  const SCHEMA_VERSION = 4;
+  const SCHEMA_VERSION = 5;
   const EQUIPMENT_SET = new Set(ALL_EQUIP_IDS);
   // Sensible starting gear (Matt's home setup); also the fallback when none is stored.
   const DEFAULT_GEAR = ["bodyweight", "dumbbell", "bench"];
@@ -70,8 +84,10 @@
     routine: [], // [{ id, sets, notes }] — references exercises by permanent id only
     theme: "dark",
     // Phase B onboarding profile. completed gates the first-run flow; goal/time are
-    // the personalization axes Phase C will use to bias generated sessions.
+    // the personalization axes Phase C uses to bias generated sessions.
     onboarding: { completed: false, goal: null, timeAvailable: null },
+    // Phase C swipe-to-learn taste profile: attribute weights nudged by every swipe.
+    taste: { swipes: 0, weights: {} },
   });
 
   function migrate(data) {
@@ -113,6 +129,12 @@
       completed: ob.completed === true,
       goal: GOAL_BY_ID[ob.goal] ? ob.goal : null,
       timeAvailable: TIME_OPTIONS.includes(ob.timeAvailable) ? ob.timeAvailable : null,
+    };
+    // v4→v5: taste profile added. Carry over a valid weights map + swipe count.
+    const t = data.taste && typeof data.taste === "object" ? data.taste : {};
+    out.taste = {
+      swipes: Number.isFinite(t.swipes) ? t.swipes : 0,
+      weights: t.weights && typeof t.weights === "object" ? t.weights : {},
     };
     return out;
   }
@@ -157,6 +179,8 @@
   let deck = [];
   let deckIndex = 0;
   let deckBuilt = false;
+  let deckMode = "browse"; // "browse" | "generated"
+  let sessionSetsDefault = ""; // set/rep scheme prefilled when saving a generated card
   const sessionSkipped = new Set();
   let swipeHistory = []; // [{ id, action: "save" | "skip" }]
   let currentScreen = "filters";
@@ -214,12 +238,117 @@
     return a;
   }
 
+  // ── Swipe-to-learn taste profile ─────────────────────────
+  // Every swipe nudges attribute weights; liked attributes float exercises up in
+  // future decks. Pure client-side, stored in state.taste. Bias only kicks in once
+  // there's enough signal so the first sessions stay pure discovery.
+  const TASTE_MIN_SWIPES = 8;
+
+  function tasteKeys(ex) {
+    const keys = equipOf(ex).map((e) => "equip:" + e);
+    if (ex.pattern) keys.push("pattern:" + ex.pattern);
+    keys.push("group:" + ex.muscleGroup);
+    if (ex.difficulty) keys.push("diff:" + ex.difficulty);
+    if (ex.mechanic) keys.push("mechanic:" + ex.mechanic);
+    return keys;
+  }
+
+  function recordTaste(ex, action) {
+    const w = state.taste.weights;
+    const delta = action === "save" ? 1 : -0.4;
+    tasteKeys(ex).forEach((k) => { w[k] = (w[k] || 0) + delta; });
+    state.taste.swipes = (state.taste.swipes || 0) + 1;
+  }
+
+  function tasteScore(ex) {
+    const w = state.taste.weights || {};
+    return tasteKeys(ex).reduce((s, k) => s + (w[k] || 0), 0);
+  }
+
+  // Weighted shuffle: taste score plus jitter, so liked traits lead but variety stays.
+  function tasteBiasedOrder(pool) {
+    return pool
+      .map((ex) => ({ ex, s: tasteScore(ex) + Math.random() * 3 }))
+      .sort((a, b) => b.s - a.s)
+      .map((o) => o.ex);
+  }
+
   function buildDeck() {
-    deck = shuffle(eligiblePool());
+    const pool = eligiblePool();
+    deck = state.taste.swipes >= TASTE_MIN_SWIPES ? tasteBiasedOrder(pool) : shuffle(pool);
     deckIndex = 0;
     swipeHistory = [];
     deckBuilt = true;
+    deckMode = "browse";
+    sessionSetsDefault = "";
     renderDeck();
+  }
+
+  // ── Workout generation (Phase C) ─────────────────────────
+  // Deterministic-ish heuristics over the metadata: goal → focus/difficulty bias +
+  // set/rep scheme, time → session size, then a muscle-group round-robin for balance.
+  function goalScore(ex, cfg) {
+    let s = 0;
+    const focus = ex.focus || [];
+    (cfg.focus || []).forEach((f) => { if (focus.includes(f)) s += 3; });
+    if (cfg.preferMechanic && ex.mechanic === cfg.preferMechanic) s += 1.5;
+    if (cfg.maxDifficulty === "Beginner") {
+      if (ex.difficulty === "Beginner") s += 2;
+      else if (ex.difficulty === "Advanced") s -= 3;
+    }
+    return s;
+  }
+
+  function generateSession() {
+    const cfg = GOAL_CONFIG[state.onboarding.goal] || {};
+    const count = TIME_COUNT[state.onboarding.timeAvailable] || 6;
+    const inRoutine = new Set(state.routine.map((r) => r.id));
+    let pool = EXERCISES.filter(
+      (ex) => ownsGear(ex) && passesConditions(ex) && !inRoutine.has(ex.id)
+    );
+    // Honor today's muscle-group picks if any; otherwise build a full-body session.
+    const groups = state.filters.groups;
+    if (groups.length) pool = pool.filter((ex) => groups.includes(ex.muscleGroup));
+    if (!pool.length) return [];
+
+    const scored = pool
+      .map((ex) => ({ ex, score: goalScore(ex, cfg) + tasteScore(ex) * 0.5 + Math.random() * 2 }))
+      .sort((a, b) => b.score - a.score);
+
+    // Bucket by muscle group (each bucket already best-first), group order = best rep first.
+    const byGroup = {};
+    const groupOrder = [];
+    scored.forEach(({ ex }) => {
+      if (!byGroup[ex.muscleGroup]) { byGroup[ex.muscleGroup] = []; groupOrder.push(ex.muscleGroup); }
+      byGroup[ex.muscleGroup].push(ex);
+    });
+
+    // Round-robin across groups for balanced pattern/muscle coverage.
+    const picked = [];
+    let i = 0;
+    while (picked.length < count && groupOrder.some((g) => byGroup[g].length)) {
+      const g = groupOrder[i % groupOrder.length];
+      if (byGroup[g].length) picked.push(byGroup[g].shift());
+      i++;
+    }
+    return picked.slice(0, count);
+  }
+
+  function startGeneratedSession() {
+    const session = generateSession();
+    if (!session.length) {
+      updateGenerateUI("No matching moves — add gear or clear an injury filter.");
+      return;
+    }
+    const cfg = GOAL_CONFIG[state.onboarding.goal] || {};
+    deck = session;
+    deckIndex = 0;
+    swipeHistory = [];
+    deckBuilt = true;
+    deckMode = "generated";
+    sessionSetsDefault = cfg.setsReps || "";
+    renderDeck();
+    showScreen("deck");
   }
 
   function matchesFilters(ex) {
@@ -249,7 +378,7 @@
     $("#app").classList.toggle("onboarding-active", name === "onboarding");
     if (name === "deck") renderDeck();
     if (name === "routine") renderRoutine();
-    if (name === "filters") updateMatchCount();
+    if (name === "filters") { updateMatchCount(); updateGenerateUI(); }
     window.scrollTo(0, 0);
   }
 
@@ -440,6 +569,28 @@
     }
     const sp = $("#settings-profile");
     if (sp) sp.textContent = parts.length ? parts.join("   ·   ") : "Not set yet — tap below to personalize your deck.";
+    updateGenerateUI();
+  }
+
+  // The "Generate my session" button subtitle + the swipe-to-learn status line.
+  function updateGenerateUI(message) {
+    const sub = $("#generate-sub");
+    if (sub) {
+      const parts = [];
+      if (state.onboarding.timeAvailable) parts.push(state.onboarding.timeAvailable + " min");
+      const g = state.onboarding.goal ? GOAL_BY_ID[state.onboarding.goal] : null;
+      if (g) parts.push(g.label);
+      sub.textContent = parts.join(" · ") || "balanced";
+    }
+    const hint = $("#taste-hint");
+    if (!hint) return;
+    if (message) { hint.hidden = false; hint.textContent = message; return; }
+    const n = state.taste.swipes || 0;
+    if (n <= 0) { hint.hidden = true; return; }
+    hint.hidden = false;
+    hint.textContent = n >= TASTE_MIN_SWIPES
+      ? "🧠 Decks are now tuned to your taste · " + n + " swipes"
+      : "🧠 Learning your taste · " + n + "/" + TASTE_MIN_SWIPES + " swipes";
   }
 
   // ── Filters screen ───────────────────────────────────────
@@ -565,6 +716,8 @@
     $("#deck-empty").hidden = !(deckBuilt && remaining <= 0);
     $("#deck-counter").textContent =
       deckBuilt && remaining > 0 ? `${deckIndex + 1} / ${deck.length}` : "";
+    const eyebrow = $(".deck-top .eyebrow");
+    if (eyebrow) eyebrow.textContent = deckMode === "generated" ? "Your session" : "Flexr Deck";
     updateActionButtons();
 
     if (!deckBuilt || remaining <= 0) return;
@@ -731,8 +884,10 @@
     const ex = EX_BY_ID[card.dataset.id];
     if (!ex) return;
 
-    if (action === "save") addToRoutine(ex.id);
+    if (action === "save") addToRoutine(ex.id, sessionSetsDefault);
     else sessionSkipped.add(ex.id);
+    recordTaste(ex, action);
+    saveState();
     swipeHistory.push({ id: ex.id, action });
     deckIndex++;
 
@@ -753,14 +908,22 @@
     const last = swipeHistory.pop();
     if (last.action === "save") removeFromRoutine(last.id);
     else sessionSkipped.delete(last.id);
+    const ex = EX_BY_ID[last.id];
+    if (ex) { // roll back the taste nudge this swipe made
+      const w = state.taste.weights;
+      const delta = last.action === "save" ? -1 : 0.4;
+      tasteKeys(ex).forEach((k) => { w[k] = (w[k] || 0) + delta; });
+      state.taste.swipes = Math.max(0, (state.taste.swipes || 0) - 1);
+      saveState();
+    }
     deckIndex = Math.max(0, deckIndex - 1);
     renderDeck(true);
   }
 
   // ── Routine ──────────────────────────────────────────────
-  function addToRoutine(id) {
+  function addToRoutine(id, sets) {
     if (state.routine.some((r) => r.id === id)) return;
-    state.routine.push({ id, sets: "", notes: "" });
+    state.routine.push({ id, sets: sets || "", notes: "" });
     saveState();
   }
 
@@ -957,6 +1120,8 @@
     $("#ob-skip").addEventListener("click", finishOnboarding);
     $("#btn-redo-onboarding").addEventListener("click", startOnboarding);
     $("#profile-summary").addEventListener("click", startOnboarding);
+
+    $("#btn-generate").addEventListener("click", startGeneratedSession);
 
     $("#btn-groups-all").addEventListener("click", () => setAllGroups(true));
     $("#btn-groups-none").addEventListener("click", () => setAllGroups(false));

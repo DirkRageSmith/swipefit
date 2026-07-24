@@ -8,7 +8,7 @@ renamed 2026-07-23 — the localStorage key is now `fitflexr`.)
 ## Ground rules (don't relitigate these in any session)
 
 - Plain HTML/CSS/JS, no frameworks, no build step, no backend, no login, no external network calls.
-- All user data lives in `localStorage` on-device, under a `schemaVersion` key (now **4**). User data references exercises only by their permanent `id`. State also holds `onboarding = { completed, goal, timeAvailable }` (Phase B).
+- All user data lives in `localStorage` on-device, under a `schemaVersion` key (now **5**). User data references exercises only by their permanent `id`. State also holds `onboarding = { completed, goal, timeAvailable }` (Phase B) and `taste = { swipes, weights }` (Phase C swipe-to-learn).
 - Exercise data, the conditions list, and the `EQUIPMENT` taxonomy live in `exercises.js`, separate from app logic in `app.js`. See `ROADMAP.md` for the full schema + the product plan.
 - **`equipment` is an ARRAY of `EQUIPMENT` ids** (gating gear needed beyond your body; bodyweight-only = `["bodyweight"]`). `EQUIPMENT` is `[{id,label}]`, 15 types. The gear filter is a **superset test**: an exercise shows only if you own every item it lists. Chest is the fully-produced group; the other 10 are placeholders (dumbbell/bodyweight, arrays) until each is regenerated per ROADMAP §7 Phase A.
 - Every `avoidIf` tag must match a condition id; every `equipment` id must be in `EQUIPMENT`. The muscle/gear/condition filter UIs are all generated from their arrays, never hardcoded.

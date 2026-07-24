@@ -309,8 +309,9 @@ land *during* the beta as feedback comes in.
 **Phase A — Data & schema. — ✅ COMPLETE (2026-07-23).** All 11 groups produced by ChatGPT,
 integrated and deployed: **506 exercises, 100% metadata coverage, all 15 equipment types
 populated, zero duplicate ids.** Live at the URL above. Enum additions during the build:
-patterns gained `Hip Abduction`; categories gained `power`. **Phase B (onboarding) now also done
-(2026-07-23) — see below.** Next up: **Phase C (workout generation + swipe-to-learn)**.
+patterns gained `Hip Abduction`; categories gained `power`. **Phases B (onboarding) and C
+(generation + swipe-to-learn) now also done (2026-07-23) — see below.** F&F-ready target (A–C) is
+met. Next up: **Phase D (in-workout mode)** — polish that can land during the beta.
 
 Final per-group counts: Chest 46 · Back 57 · Shoulders 51 · Biceps 35 · Triceps 33 ·
 Core/Abs 68 · Glutes 49 · Quads 52 · Hamstrings 36 · Calves 26 · Full Body/Cardio 53 = **506**.
@@ -332,13 +333,21 @@ Injuries, with a progress bar and Back/Next/Skip. Shipped, `schemaVersion` → 4
   a profile summary pill on Setup and a "Edit goal, time, gear & injuries" button in Settings both
   re-launch the wizard. Tab bar hidden during the flow.
 
-**Phase C — Workout generation + swipe-to-learn.**
-- From (goal + time + gear + injuries) build a balanced session (pattern coverage, sane
-  set/rep defaults). Present it as a swipeable stack.
-- **The differentiator (GPT's 9.5 idea):** onboarding *is* the swipe — "like incline
-  bench / no cables today / love supersets / no squats" — after ~30 swipes the app has
-  learned a taste profile (stored locally) that seeds future decks. This is the feature
-  to get right; it's pure client-side and maximally on-brand.
+**Phase C — Workout generation + swipe-to-learn. — ✅ COMPLETE (2026-07-23).** schemaVersion → 5,
+sw cache v17.
+- **Generation:** a "⚡ Generate my session" CTA on Setup builds a session from goal + time + gear +
+  injuries. `GOAL_CONFIG` maps each goal → `focus`/difficulty bias + a set/rep scheme; `TIME_COUNT`
+  maps 15/30/45/60/90 min → 3/5/7/9/12 exercises. `generateSession()` scores the eligible pool
+  (goal-fit + taste + jitter) and round-robins across muscle groups for a balanced full-body deck
+  (honors today's group picks if any). Presented as a swipeable deck (`deckMode="generated"`,
+  eyebrow "Your session"); swiping right saves with the goal's set/rep scheme prefilled.
+- **Swipe-to-learn:** `state.taste = { swipes, weights }`. Every save (+1) / skip (−0.4) nudges
+  attribute weights (equip / pattern / group / difficulty / mechanic); `tasteScore()` biases future
+  deck ordering once `swipes ≥ 8` (before that: pure shuffle discovery). Undo rolls the nudge back.
+  A "🧠 Learning your taste · N/8" indicator shows under the Generate CTA.
+- **Deferred to a later pass (not blocking F&F):** the richer taste UI (explicit "like incline
+  bench / no squats" prompts) and tuning the ~30-swipe convergence target; current model is the
+  lightweight version. Next: **Phase D (in-workout mode)** — see below.
 
 **Phase D — In-workout mode.**
 Step through today's session one card at a time: mark set done, **rest timer**, and
