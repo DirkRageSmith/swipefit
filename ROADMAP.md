@@ -382,6 +382,25 @@ if/then adjustments** to volume, intensity, or equipment. These *feel* like an A
 but are plain rules over the metadata — **no LLM, no network, still offline.** This
 captures most of the "AI features" value at zero cost and zero privacy risk.
 
+**Phase G — Card clarity pass (content quality). — PLANNED (added 2026-07-23).**
+Matt hit an exercise he couldn't perform from the card text alone. Goal: every card's `cue` +
+`description` should let a **beginner do the move from reading only** — no assumed jargon, no
+ambiguity. This is a **ChatGPT bulk-content job** (per §3/§6 division of labor): GPT regenerates
+descriptions per muscle-group batch against the brief below; Claude validates (`validate.js`) and
+swaps each group in, bumping `sw.js` `CACHE_VERSION`. Optional schema add: a `steps: [..]` array
+(additive, warn-only) rendered as a numbered how-to on the card back — decide during the pilot.
+Pilot first on the specific exercise Matt names, then roll the format across all 11 groups.
+
+> **Brief for ChatGPT (Phase G clarity pass).** For each exercise in this muscle-group batch, keep
+> every existing field and id EXACTLY, but rewrite only `cue` and `description` for clarity:
+> - `cue`: one short imperative line — the single most important thing to get right.
+> - `description`: 2–3 short sentences a total beginner can follow: (1) starting position / setup,
+>   (2) the movement step-by-step (what moves, direction, tempo, where it should be felt),
+>   (3) the most common mistake to avoid. Plain language; define or avoid jargon (e.g. "hinge at the
+>   hips" → "push your hips back like closing a car door with your butt"). No brand names, no
+>   equipment the exercise doesn't use, no invented metrics. Output the full array, unchanged except
+>   those two fields.
+
 Every phase above holds the offline/no-backend/no-CDN rules and ends with the
 smoke-test + a `CACHE_VERSION` bump.
 
