@@ -309,9 +309,9 @@ land *during* the beta as feedback comes in.
 **Phase A — Data & schema. — ✅ COMPLETE (2026-07-23).** All 11 groups produced by ChatGPT,
 integrated and deployed: **506 exercises, 100% metadata coverage, all 15 equipment types
 populated, zero duplicate ids.** Live at the URL above. Enum additions during the build:
-patterns gained `Hip Abduction`; categories gained `power`. **Phases B (onboarding) and C
-(generation + swipe-to-learn) now also done (2026-07-23) — see below.** F&F-ready target (A–C) is
-met. Next up: **Phase D (in-workout mode)** — polish that can land during the beta.
+patterns gained `Hip Abduction`; categories gained `power`. **Phases B (onboarding), C (generation
++ swipe-to-learn), and D (in-workout mode) now also done (2026-07-23) — see below.** F&F-ready
+target (A–C) met. Next up: **Phase E (progress & motivation)** — polish that can land during the beta.
 
 Final per-group counts: Chest 46 · Back 57 · Shoulders 51 · Biceps 35 · Triceps 33 ·
 Core/Abs 68 · Glutes 49 · Quads 52 · Hamstrings 36 · Calves 26 · Full Body/Cardio 53 = **506**.
@@ -349,10 +349,19 @@ sw cache v17.
   bench / no squats" prompts) and tuning the ~30-swipe convergence target; current model is the
   lightweight version. Next: **Phase D (in-workout mode)** — see below.
 
-**Phase D — In-workout mode.**
-Step through today's session one card at a time: mark set done, **rest timer**, and
-**smart substitution** — swipe to swap the current move for an equivalent one (same
-pattern/muscle, allowed gear, respects injuries). "Bench occupied? Swipe." No backend.
+**Phase D — In-workout mode. — ✅ COMPLETE (2026-07-23).** sw cache v18; no schema change
+(the workout run is ephemeral, not persisted).
+- A green **"▶ Start workout"** CTA on the Stack steps through its exercises one card at a time
+  (`#screen-workout`, `startWorkout()`/`renderWorkout()`; tab bar hidden like onboarding).
+- **Set tracking:** per-exercise set pills (count parsed from the saved set/rep scheme, default 3);
+  tap to mark done / tap a done one to un-check.
+- **Rest timer:** marking a set (not the last) auto-starts a 90s countdown with −15s / Skip / +15s.
+- **Smart substitution:** a **🔄 Swap** button replaces the current move with an equivalent — same
+  muscle group, prefers same `pattern`, gear you own, passes injury filters, not already in the run.
+  Session-only (the saved Stack is untouched).
+- Prev / Next navigation with a Finish on the last card; Exit returns to the Stack.
+- **Deferred:** logging the completed run (that's Phase E history). Next: **Phase E (progress &
+  motivation)**.
 
 **Phase E — Progress & motivation.**
 Log completed workouts with dates; history/calendar; **PRs**, **streaks**,

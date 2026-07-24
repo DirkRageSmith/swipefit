@@ -185,6 +185,12 @@
   let swipeHistory = []; // [{ id, action: "save" | "skip" }]
   let currentScreen = "filters";
 
+  // In-workout mode (Phase D). Ephemeral: a run through the Stack, not persisted.
+  let workout = null;      // { items: [{id, sets, notes, doneSets}], index }
+  let restTimer = null;
+  let restRemaining = 0;
+  const REST_DEFAULT = 90; // seconds
+
   // ── Dataset sanity check (dev aid; validate.js is the scripted gate) ──
   function validateDataset() {
     const problems = [];
@@ -374,8 +380,9 @@
     currentScreen = name;
     $$(".screen").forEach((s) => { s.hidden = s.id !== "screen-" + name; });
     $$(".tab-btn").forEach((b) => b.classList.toggle("tab-active", b.dataset.screen === name));
-    // The onboarding flow is full-screen: hide the tab bar so it can't be escaped mid-setup.
+    // Onboarding and in-workout mode are full-screen: hide the tab bar during them.
     $("#app").classList.toggle("onboarding-active", name === "onboarding");
+    $("#app").classList.toggle("workout-active", name === "workout");
     if (name === "deck") renderDeck();
     if (name === "routine") renderRoutine();
     if (name === "filters") { updateMatchCount(); updateGenerateUI(); }
@@ -1016,6 +1023,9 @@
     $("#routine-count").textContent = n ? n + (n === 1 ? " exercise" : " exercises") : "";
     $("#routine-empty").hidden = n > 0;
     $("#btn-clear-routine").hidden = n === 0;
+    // Only offer "Start workout" when there are exercises the library still knows.
+    const doable = items.filter((r) => EX_BY_ID[r.id]).length;
+    $("#btn-start-workout").hidden = doable === 0;
     if (!n) return;
 
     MUSCLE_GROUPS.forEach((g) => {
@@ -1045,6 +1055,149 @@
       orphans.forEach((entry) => section.appendChild(routineItemEl(entry, orphans)));
       wrap.appendChild(section);
     }
+  }
+
+  // ── In-workout mode (Phase D) ────────────────────────────
+  function parseSetCount(s) {
+    const m = String(s || "").match(/^\s*(\d+)/);
+    const n = m ? parseInt(m[1], 10) : 0;
+    return n > 0 && n <= 12 ? n : 3; // default 3 sets when unspecified
+  }
+
+  function startWorkout() {
+    const items = state.routine
+      .filter((r) => EX_BY_ID[r.id])
+      .map((r) => ({ id: r.id, sets: r.sets, notes: r.notes, doneSets: 0 }));
+    if (!items.length) return;
+    workout = { items, index: 0 };
+    stopRest();
+    showScreen("workout");
+    renderWorkout();
+  }
+
+  function finishWorkout() {
+    stopRest();
+    workout = null;
+    showScreen("routine");
+  }
+
+  function stopRest() {
+    if (restTimer) { clearInterval(restTimer); restTimer = null; }
+    restRemaining = 0;
+    const r = $("#wo-rest");
+    if (r) r.hidden = true;
+  }
+
+  function fmtTime(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return m + ":" + String(s).padStart(2, "0");
+  }
+
+  function updateRestDisplay() {
+    const t = $("#wo-rest-time");
+    if (t) t.textContent = fmtTime(Math.max(0, restRemaining));
+  }
+
+  function startRest(seconds) {
+    stopRest();
+    restRemaining = seconds;
+    $("#wo-rest").hidden = false;
+    updateRestDisplay();
+    restTimer = setInterval(() => {
+      restRemaining -= 1;
+      if (restRemaining <= 0) stopRest();
+      else updateRestDisplay();
+    }, 1000);
+  }
+
+  // Smart substitution: same muscle group, prefer same pattern, gear you own,
+  // passes conditions, not already in this workout. Session-only (Stack unchanged).
+  function swapCurrent() {
+    if (!workout) return;
+    const item = workout.items[workout.index];
+    const ex = EX_BY_ID[item.id];
+    if (!ex) return;
+    const used = new Set(workout.items.map((i) => i.id));
+    const candidates = EXERCISES.filter(
+      (c) => c.id !== ex.id && !used.has(c.id) &&
+        c.muscleGroup === ex.muscleGroup && ownsGear(c) && passesConditions(c)
+    );
+    const samePattern = candidates.filter((c) => c.pattern && c.pattern === ex.pattern);
+    const pool = samePattern.length ? samePattern : candidates;
+    if (!pool.length) { updateSwapHint("No equivalent move available"); return; }
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    workout.items[workout.index] = { id: pick.id, sets: item.sets, notes: "", doneSets: 0 };
+    stopRest();
+    renderWorkout();
+  }
+
+  function updateSwapHint(msg) {
+    const el2 = $("#wo-swap");
+    if (!el2) return;
+    const original = "🔄 Swap";
+    el2.textContent = msg;
+    el2.disabled = true;
+    setTimeout(() => { el2.textContent = original; el2.disabled = false; }, 1400);
+  }
+
+  function goToExercise(idx) {
+    if (!workout) return;
+    if (idx >= workout.items.length) { finishWorkout(); return; }
+    workout.index = Math.max(0, Math.min(idx, workout.items.length - 1));
+    stopRest();
+    renderWorkout();
+  }
+
+  function renderWorkout() {
+    if (!workout) return;
+    const item = workout.items[workout.index];
+    const ex = EX_BY_ID[item.id];
+    if (!ex) { finishWorkout(); return; }
+    const total = workout.items.length;
+    $("#wo-progress").textContent = "Exercise " + (workout.index + 1) + " / " + total;
+
+    const group = GROUP_BY_NAME[ex.muscleGroup] || { color: "#888" };
+    const card = $("#wo-card");
+    card.innerHTML = "";
+    card.style.setProperty("--group-color", group.color);
+    const secGroup = (ex.secondaryMuscles || []).map((m) => GROUP_BY_NAME[m])
+      .find((g) => g && g.name !== ex.muscleGroup);
+    if (secGroup) { card.style.setProperty("--secondary-color", secGroup.color); card.dataset.hasSecondary = "true"; }
+    else { card.removeAttribute("data-has-secondary"); }
+
+    card.appendChild(groupPill(ex.muscleGroup));
+    card.appendChild(el("h2", "wo-name card-name", ex.name));
+    card.appendChild(el("p", "wo-cue", ex.cue));
+    if (item.sets) card.appendChild(el("p", "wo-target", "Target: " + item.sets));
+
+    const n = parseSetCount(item.sets);
+    const setsWrap = el("div", "wo-sets");
+    for (let i = 0; i < n; i++) {
+      const done = i < item.doneSets;
+      const pill = el("button", "wo-set" + (done ? " wo-set-done" : ""));
+      pill.type = "button";
+      pill.textContent = done ? "✓ Set " + (i + 1) : "Set " + (i + 1);
+      pill.addEventListener("click", () => {
+        if (i >= item.doneSets) {
+          item.doneSets = i + 1;
+          if (item.doneSets < n) startRest(REST_DEFAULT);
+          else stopRest();
+        } else {
+          item.doneSets = i; // tap a completed set to un-check from there
+        }
+        renderWorkout();
+      });
+      setsWrap.appendChild(pill);
+    }
+    card.appendChild(setsWrap);
+
+    const allDone = item.doneSets >= n;
+    if (allDone) card.appendChild(el("p", "wo-alldone", "All sets done — nice. On to the next."));
+
+    $("#wo-prev").disabled = workout.index === 0;
+    $("#wo-next").textContent = workout.index === total - 1 ? "Finish ✓" : "Next →";
+    $("#screen-workout").style.setProperty("--group-color", group.color);
   }
 
   // ── Modal (custom confirm — never window.confirm) ────────
@@ -1144,6 +1297,19 @@
     $("#btn-empty-filters").addEventListener("click", () => showScreen("filters"));
     $("#btn-empty-routine").addEventListener("click", () => showScreen("routine"));
     $("#btn-routine-swipe").addEventListener("click", () => showScreen("deck"));
+
+    // In-workout mode (Phase D)
+    $("#btn-start-workout").addEventListener("click", startWorkout);
+    $("#wo-exit").addEventListener("click", finishWorkout);
+    $("#wo-prev").addEventListener("click", () => goToExercise(workout ? workout.index - 1 : 0));
+    $("#wo-next").addEventListener("click", () => goToExercise(workout ? workout.index + 1 : 0));
+    $("#wo-swap").addEventListener("click", swapCurrent);
+    $("#wo-rest-skip").addEventListener("click", stopRest);
+    $("#wo-rest-minus").addEventListener("click", () => {
+      restRemaining -= 15;
+      if (restRemaining <= 0) stopRest(); else updateRestDisplay();
+    });
+    $("#wo-rest-plus").addEventListener("click", () => { restRemaining += 15; updateRestDisplay(); });
 
     $("#btn-clear-routine").addEventListener("click", () =>
       showModal({

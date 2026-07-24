@@ -133,8 +133,32 @@
           <p>Swipe right on the exercises you want and they'll collect here, grouped by muscle.</p>
           <button id="btn-routine-swipe" class="cta" type="button">Go swipe</button>
         </div>
+        <button id="btn-start-workout" class="cta cta-workout" type="button" hidden>▶ Start workout</button>
         <div id="routine-groups"></div>
         <button id="btn-clear-routine" class="danger-link" type="button" hidden>Clear all &amp; start over</button>
+      </section>
+
+      <!-- ───────────── In-workout mode ───────────── -->
+      <section id="screen-workout" class="screen screen-workout" hidden>
+        <div class="wo-top">
+          <button id="wo-exit" class="text-btn" type="button">✕ Exit</button>
+          <span id="wo-progress" class="wo-progress"></span>
+        </div>
+        <div id="wo-card" class="wo-card"></div>
+        <div id="wo-rest" class="wo-rest" hidden>
+          <span class="wo-rest-label">Rest</span>
+          <span id="wo-rest-time" class="wo-rest-time">1:30</span>
+          <div class="wo-rest-actions">
+            <button id="wo-rest-minus" class="secondary-btn" type="button">−15s</button>
+            <button id="wo-rest-skip" class="secondary-btn" type="button">Skip rest</button>
+            <button id="wo-rest-plus" class="secondary-btn" type="button">+15s</button>
+          </div>
+        </div>
+        <div class="wo-nav">
+          <button id="wo-prev" class="secondary-btn" type="button">← Prev</button>
+          <button id="wo-swap" class="secondary-btn" type="button">🔄 Swap</button>
+          <button id="wo-next" class="cta wo-next" type="button">Next →</button>
+        </div>
       </section>
 
       <!-- ───────────── Settings / About ───────────── -->
