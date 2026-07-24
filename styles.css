@@ -362,13 +362,13 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
 
 /* The deck header echoes the current card's muscle-group color. */
 .deck-top .eyebrow {
-  color: var(--group-color, var(--muted));
+  color: color-mix(in srgb, var(--group-color, var(--muted)) 62%, var(--text));
   transition: color 0.35s ease;
 }
 
 .deck-counter {
-  color: var(--group-color, var(--muted));
-  background: color-mix(in srgb, var(--group-color, #888) 14%, var(--surface));
+  color: color-mix(in srgb, var(--group-color, var(--muted)) 62%, var(--text));
+  background: color-mix(in srgb, var(--group-color, #888) 16%, var(--surface));
   border: 1px solid color-mix(in srgb, var(--group-color, #888) 38%, transparent);
   border-radius: 999px;
   padding: 3px 11px;
@@ -491,7 +491,7 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
 /* When a move also hits a secondary muscle, its name carries that group's color
    (mixed toward the theme text so it stays readable in both light and dark). */
 [data-has-secondary="true"] .card-name {
-  color: color-mix(in srgb, var(--secondary-color) 80%, var(--text));
+  color: color-mix(in srgb, var(--secondary-color) 62%, var(--text));
 }
 
 .card-cue { color: var(--muted); font-size: 0.92rem; }
@@ -1065,7 +1065,7 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
 }
 
 .wo-progress {
-  color: var(--group-color, var(--muted));
+  color: color-mix(in srgb, var(--group-color, var(--muted)) 62%, var(--text));
   font-weight: 800;
   font-size: 0.85rem;
   font-variant-numeric: tabular-nums;
@@ -1111,7 +1111,7 @@ input::placeholder { color: var(--muted); opacity: 0.7; }
   border-color: var(--group-color, #888);
 }
 
-.wo-alldone { color: var(--group-color, var(--muted)); font-weight: 700; margin-top: 4px; }
+.wo-alldone { color: color-mix(in srgb, var(--group-color, var(--muted)) 62%, var(--text)); font-weight: 700; margin-top: 4px; }
 
 .wo-rest {
   display: flex;

@@ -4,50 +4,53 @@
  * should preserve permanent ids (user data references them). Run `node validate.js`.
  */
 
+// Deep, saturated jewel-tone palette (no pastels). Each is distinct in hue so
+// "___ day" reads at a glance; derived text uses color-mix toward the theme text
+// so these dark values stay legible in both light and dark themes.
 const MUSCLE_GROUPS = [
   {
     "name": "Chest",
-    "color": "#c41e28"
+    "color": "#a4161e"
   },
   {
     "name": "Back",
-    "color": "#4d9dff"
+    "color": "#1746a3"
   },
   {
     "name": "Shoulders",
-    "color": "#ffa62b"
+    "color": "#a85c12"
   },
   {
     "name": "Biceps",
-    "color": "#a98bff"
+    "color": "#6d28d9"
   },
   {
     "name": "Triceps",
-    "color": "#ff74c3"
+    "color": "#a81e63"
   },
   {
     "name": "Core/Abs",
-    "color": "#2dd4bf"
+    "color": "#047857"
   },
   {
     "name": "Glutes",
-    "color": "#ff8f4d"
+    "color": "#b23a0b"
   },
   {
     "name": "Quads",
-    "color": "#38bdf8"
+    "color": "#3730a3"
   },
   {
     "name": "Hamstrings",
-    "color": "#a3e635"
+    "color": "#4d7c0f"
   },
   {
     "name": "Calves",
-    "color": "#34d3e0"
+    "color": "#0e7490"
   },
   {
     "name": "Full Body/Cardio",
-    "color": "#8b7cff"
+    "color": "#86198f"
   }
 ];
 
